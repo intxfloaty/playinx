@@ -1,6 +1,7 @@
 import React from "react"
 import '@radix-ui/themes/styles.css';
 import { Theme } from '@radix-ui/themes';
+import { Providers } from "./providers";
 
 export default function RootLayout({
   children,
@@ -10,11 +11,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={{
-        backgroundColor:"#ffffff"
-        // backgroundColor:"#161616"
-        }}>
+        // backgroundColor: "#ffffff"
+        backgroundColor:"#161616"
+      }}>
         <Theme>
-          {children}
+          <Providers>
+            {children}
+          </Providers>
         </Theme>
       </body>
     </html>

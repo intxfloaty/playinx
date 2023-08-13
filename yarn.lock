@@ -1858,6 +1858,11 @@ find-root@^1.1.0:
   resolved "https://registry.yarnpkg.com/find-root/-/find-root-1.1.0.tgz#abcfc8ba76f708c42a97b3d685b7e9450bfb9ce4"
   integrity sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==
 
+flat-color-icons@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/flat-color-icons/-/flat-color-icons-1.1.0.tgz#a52820a73ccbe3df007ac22e5d539be67b4b2710"
+  integrity sha512-duN0PycToLxktav7Asyw0hYCSxH8dvoCbeZHw0zSTw+KXg4rAH4CcLViDrGjg//nLfoZjiDV34kw8xmJJfSfqA==
+
 focus-lock@^0.11.6:
   version "0.11.6"
   resolved "https://registry.yarnpkg.com/focus-lock/-/focus-lock-0.11.6.tgz#e8821e21d218f03e100f7dc27b733f9c4f61e683"
@@ -2089,6 +2094,11 @@ react-focus-lock@^2.9.4:
     react-clientside-effect "^1.2.6"
     use-callback-ref "^1.3.0"
     use-sidecar "^1.1.2"
+
+react-icons@^4.10.1:
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.10.1.tgz#3f3b5eec1f63c1796f6a26174a1091ca6437a500"
+  integrity sha512-/ngzDP/77tlCfqthiiGNZeYFACw85fUjZtLbedmJ5DTlNDIwETxhwBzdOJ21zj4iJdvc0J3y7yOsX3PpxAJzrw==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"

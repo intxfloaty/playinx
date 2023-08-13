@@ -7,7 +7,7 @@ export default function Page() {
       <Flex direction="column" gap="2">
       <Text color="tomato">Hello, Playinx!</Text>
       <Button>Let's go</Button>
-      <Input placeholder='Basic usage' />
+      <Input placeholder='Basic usage' size='lg'/>
     </Flex>
     )
   } 

@@ -1,18 +1,10 @@
 import React from 'react'
-import { Box, Input, Stack, Text, Button, Center, Divider, AbsoluteCenter } from '../chakraExports'
+import { Box, Input, Stack, Text, Button, Center, Divider, AbsoluteCenter } from '../../chakraExports'
 import { FcGoogle } from 'react-icons/fc'
 import Link from 'next/link'
 
-function page() {
+function login() {
   return (
-    <main style={{ paddingInline: "5%" }}>
-      <div>
-        <img
-          style={{ maxWidth: "100%", objectFit: "contain" }}
-          alt="Logo"
-          src="/images/logo5.svg" />
-      </div>
-
       <Stack spacing={5}>
         <Input textColor='antiquewhite' placeholder='Email or Phone' size='lg' />
         <Input textColor='antiquewhite' placeholder='Password' type='password' size='lg' />
@@ -29,8 +21,7 @@ function page() {
         </Button>
         <Center mt={5}><Link href={"#"}><Text fontSize='lg' color="white">Don't have an account? Sign Up</Text></Link></Center>
       </Stack>
-    </main>
   )
 }
 
-export default page
+export default login

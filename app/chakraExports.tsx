@@ -5,6 +5,7 @@ export {
     Divider,
     AbsoluteCenter,
     Center,
+    Select,
     FormControl,
     FormLabel,
     FormErrorMessage,

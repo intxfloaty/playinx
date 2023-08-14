@@ -6,6 +6,8 @@ import NameStep from './NameStep';
 // import GenderStep from './GenderStep'; 
 import { Stack } from '../../chakraExports';
 import Phone from './Phone';
+import PlayingPosition from './PlayingPosition';
+import ProgressIndicator from './ProgressIndicator';
 
 function ProfileWorkflow() {
   const [step, setStep] = useState(0);
@@ -14,7 +16,7 @@ function ProfileWorkflow() {
     NameStep,
     Phone,
     DOBStep,
-    // GenderStep,
+    PlayingPosition,
     // Add other step components here
   ];
 
@@ -22,10 +24,17 @@ function ProfileWorkflow() {
     setStep(step + 1);
   };
 
+  const handleBack = () => {
+    setStep(step - 1);
+  }
+
   const CurrentStep = steps[step];
 
   return (
-      <CurrentStep onNext={handleNext} />
+    <>
+      <CurrentStep onNext={handleNext} goBack={handleBack} />
+      <ProgressIndicator totalSteps={steps.length} currentStep={step} />
+    </>
   );
 }
 

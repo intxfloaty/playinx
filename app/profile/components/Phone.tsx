@@ -3,7 +3,7 @@ import { AbsoluteCenter, Box, Button, Text, Center, Heading, Divider, Input, Inp
 import Link from 'next/link'
 
 
-function Phone({ onNext }) {
+function Phone({ onNext, goBack }) {
   return (
     <Stack spacing={5}>
       <Center>
@@ -14,7 +14,7 @@ function Phone({ onNext }) {
         <Input type='number' placeholder='phone number' textColor='antiquewhite' />
       </InputGroup>
       <Button mt={7} colorScheme='messenger' size='lg' onClick={onNext}>Continue</Button>
-      <Center mt={1}><Link href={"#"}><Text fontSize='lg' color="messenger.300">Go Back</Text></Link></Center>
+      <Center mt={1}><button onClick={goBack}><Text fontSize='lg' color="messenger.300">Go Back</Text></button></Center>
     </Stack>
   )
 }

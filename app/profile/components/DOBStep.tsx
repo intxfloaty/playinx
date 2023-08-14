@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack, Center, Heading, Input, Button, Select, Text } from '../../chakraExports';
 import Link from 'next/link';
 
-function DOBStep({ onNext }) {
+function DOBStep({ onNext, goBack }) {
   return (
     <Stack spacing={5}>
       <Center>
@@ -16,7 +16,7 @@ function DOBStep({ onNext }) {
       <Button mt={7} colorScheme='messenger' size='lg' onClick={onNext}>
         Continue
       </Button>
-      <Center mt={1}><Link href={"#"}><Text fontSize='lg' color="messenger.300">Go Back</Text></Link></Center>
+      <Center mt={1}><button onClick={goBack}><Text fontSize='lg' color="messenger.300">Go Back</Text></button></Center>
 
     </Stack>
   );

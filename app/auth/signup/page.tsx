@@ -19,6 +19,17 @@ function page() {
     }
   }
 
+  const handleGoogleClick = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google'
+      })
+      console.log(data, "data")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <Stack spacing={5}>
       <Input type='email' textColor='antiquewhite' placeholder='Email' size='lg' />
@@ -30,7 +41,7 @@ function page() {
           Or sign up with
         </AbsoluteCenter>
       </Box>
-      <Button colorScheme='messenger' size='lg' leftIcon={<FcGoogle />}>
+      <Button colorScheme='messenger' size='lg' leftIcon={<FcGoogle />} onClick={handleGoogleClick}>
         Google
       </Button>
       <Center mt={5}><Link href={"#"}><Text fontSize='lg' color="white">Already have an account? Log In</Text></Link></Center>

@@ -6,6 +6,8 @@ export {
     AbsoluteCenter,
     Center,
     Select,
+    IconButton,
+    InputRightAddon,
     FormControl,
     FormLabel,
     FormErrorMessage,

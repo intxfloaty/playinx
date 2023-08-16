@@ -10,8 +10,12 @@ import {
   Input,
   Link,
   Stack,
+  IconButton,
+  InputGroup,
+  InputRightElement,
 } from "../../chakraExports";
 import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import supabase from "../../../src/utils/supabase";
 
 interface Errors {
@@ -21,6 +25,7 @@ interface Errors {
 function page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
 
   const validate = () => {
@@ -93,14 +98,33 @@ function page() {
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <Input
-        textColor="antiquewhite"
-        placeholder="Password"
-        type="password"
-        size="lg"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <InputGroup>
+        <Input
+          textColor="antiquewhite"
+          placeholder="Password"
+          type={showPassword ? "text" : "password"}
+          size="lg"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <InputRightElement width="2rem">
+          <IconButton
+            h="1.5rem"
+            size="sm"
+            variant="unstyled"
+            icon={
+              showPassword ? (
+                <FaEyeSlash color="white" />
+              ) : (
+                <FaEye color="white" />
+              )
+            }
+            onClick={() => setShowPassword(!showPassword)}
+            aria-label={""}
+          />
+        </InputRightElement>
+      </InputGroup>
+
       {fieldErrors.password && (
         <Text fontSize="md" color="tomato">
           {fieldErrors.password}

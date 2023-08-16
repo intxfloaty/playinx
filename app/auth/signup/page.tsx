@@ -8,7 +8,6 @@ import {
   Center,
   Divider,
   Input,
-  Link,
   Stack,
   IconButton,
   InputGroup,
@@ -17,12 +16,15 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import supabase from "../../../src/utils/supabase";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Errors {
   [key: string]: string;
 }
 
 function page() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +55,12 @@ function page() {
           email: email,
           password: password,
         });
-        if (error.message === "User already registered") {
+        console.log(data);
+        console.log(error);
+        if (data.user !== null && data.session !== null && error === null) {
+          router.push("/profile");
+        }
+        if (error?.message === "User already registered") {
           setFieldErrors({
             userExists: "User is already registered with this email",
           });
@@ -68,6 +75,7 @@ function page() {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
+        options: { redirectTo: "http//localhost:3000/profile" },
       });
       console.log(data, "data");
       console.log(error.message, "mess");
@@ -165,7 +173,7 @@ function page() {
       </Button>
 
       <Center mt={5}>
-        <Link href={"#"}>
+        <Link href={"/auth/login"}>
           <Text fontSize="lg" color="white">
             Already have an account? Log In
           </Text>

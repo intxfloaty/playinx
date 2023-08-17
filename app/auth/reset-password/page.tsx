@@ -60,27 +60,31 @@ function resetPassword() {
   }, [email, password]);
 
   return (
-    <Stack spacing={3}
-    w={{
-      base: "100%", // 0-48em
-      md: "75%", // 48em-80em,
-      xl: "50%", // 80em+
-    }}
-    p={{
-      base: null,
-      md: "10%",
-      xl: "8%",
-    }}>
+    <Stack
+      spacing={3}
+      w={{
+        base: "100%", // 0-48em
+        md: "75%", // 48em-80em,
+        xl: "50%", // 80em+
+      }}
+      p={{
+        base: null,
+        md: "10%",
+        xl: "8%",
+      }}
+    >
       <Text fontSize="md" color="white">
         Enter the email associated with your account
       </Text>
       {fieldErrors.email && (
-        <Text fontSize="md" color="tomato">
+        <Text fontSize="md" color="#FFB400">
           {fieldErrors.email}
         </Text>
       )}
       <Input
         type="email"
+        isInvalid={!!fieldErrors.email}
+        errorBorderColor={fieldErrors.email ? "#FFB400" : ""}
         textColor="antiquewhite"
         placeholder="Email"
         size="md"
@@ -93,6 +97,8 @@ function resetPassword() {
       <InputGroup>
         <Input
           textColor="antiquewhite"
+          isInvalid={!!fieldErrors.password}
+          errorBorderColor={fieldErrors.password ? "#FFB400" : ""}
           placeholder="Password"
           type={showPassword ? "text" : "password"}
           size="md"
@@ -117,7 +123,7 @@ function resetPassword() {
         </InputRightElement>
       </InputGroup>
       {fieldErrors.password && (
-        <Text fontSize="md" color="tomato">
+        <Text fontSize="md" color="#FFB400">
           {fieldErrors.password}
         </Text>
       )}

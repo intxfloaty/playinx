@@ -99,19 +99,21 @@ function page() {
         xl: "50%", // 80em+
       }}
       p={{
-        base:null,
-        md:"10%",
-        xl:'8%'
+        base: null,
+        md: "10%",
+        xl: "8%",
       }}
     >
       {fieldErrors.email && (
-        <Text fontSize="md" color="tomato">
+        <Text fontSize="md" color="#FFB400">
           {fieldErrors.email}
         </Text>
       )}
       <Input
         type="email"
         textColor="antiquewhite"
+        isInvalid={!!fieldErrors.email}
+        errorBorderColor={fieldErrors.email ? "#FFB400" : ""}
         placeholder="Email"
         size="md"
         value={email}
@@ -121,6 +123,8 @@ function page() {
       <InputGroup>
         <Input
           textColor="antiquewhite"
+          isInvalid={!!fieldErrors.password}
+          errorBorderColor={fieldErrors.password ? "#FFB400" : ""}
           placeholder="Password"
           type={showPassword ? "text" : "password"}
           size="md"
@@ -146,7 +150,7 @@ function page() {
       </InputGroup>
 
       {fieldErrors.password && (
-        <Text fontSize="md" color="tomato">
+        <Text fontSize="md" color="#FFB400">
           {fieldErrors.password}
         </Text>
       )}
@@ -162,7 +166,7 @@ function page() {
 
       {fieldErrors.userExists && (
         <Center>
-          <Text fontSize="md" color="tomato">
+          <Text fontSize="md" color="#FFB400">
             {fieldErrors.userExists}
           </Text>
         </Center>

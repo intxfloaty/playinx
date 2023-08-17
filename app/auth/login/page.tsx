@@ -38,7 +38,7 @@ function login() {
       errors.email = "Invalid email address";
     }
     if (!password) {
-      errors.password = "Please enter a password";
+      errors.password = "Please enter your password to login";
     } else if (!/^(?=.*[0-9])(?=.*[!@#$%^&*])(.{8,})$/i.test(password)) {
       errors.password =
         "Password must have minimum of 8 characters, including at least one number and one special character";
@@ -92,24 +92,28 @@ function login() {
   }, [email, password]);
 
   return (
-    <Stack spacing={3}
-    w={{
-      base: "100%", // 0-48em
-      md: "75%", // 48em-80em,
-      xl: "50%", // 80em+
-    }}
-    p={{
-      base:null,
-      md:"10%",
-      xl:'8%'
-    }}>
+    <Stack
+      spacing={3}
+      w={{
+        base: "100%", // 0-48em
+        md: "75%", // 48em-80em,
+        xl: "50%", // 80em+
+      }}
+      p={{
+        base: null,
+        md: "10%",
+        xl: "8%",
+      }}
+    >
       {fieldErrors.email && (
-        <Text fontSize="md" color="tomato">
+        <Text fontSize="md" color="#FFB400">
           {fieldErrors.email}
         </Text>
       )}
       <Input
         textColor="antiquewhite"
+        isInvalid={!!fieldErrors.email}
+        errorBorderColor={fieldErrors.email ? "#FFB400" : ""}
         placeholder="Email"
         size="md"
         value={email}
@@ -118,6 +122,8 @@ function login() {
       <InputGroup>
         <Input
           textColor="antiquewhite"
+          isInvalid={!!fieldErrors.password}
+          errorBorderColor={fieldErrors.password ? "#FFB400" : ""}
           placeholder="Password"
           type={showPassword ? "text" : "password"}
           size="md"
@@ -142,7 +148,7 @@ function login() {
         </InputRightElement>
       </InputGroup>
       {fieldErrors.password && (
-        <Text fontSize="md" color="tomato">
+        <Text fontSize="md" color="#FFB400">
           {fieldErrors.password}
         </Text>
       )}
@@ -152,7 +158,7 @@ function login() {
 
       {fieldErrors.userExists && (
         <Center>
-          <Text fontSize="md" color="tomato">
+          <Text fontSize="md" color="#FFB400">
             {fieldErrors.userExists}
           </Text>
         </Center>

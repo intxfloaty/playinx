@@ -63,13 +63,15 @@ function recoverPassword() {
       </Text>
       <Input
         type="email"
+        isInvalid={!!emailError}
+        errorBorderColor={emailError ? "#FFB400" : ""}
         textColor="antiquewhite"
         placeholder="Email"
         size="md"
         onChange={(e) => setEmail(e.target.value)}
       />
       {emailError && (
-        <Text fontSize="md" color="tomato">
+        <Text fontSize="md" color="#FFB400">
           {emailError}
         </Text>
       )}

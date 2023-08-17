@@ -12,14 +12,6 @@ import ProgressIndicator from "./ProgressIndicator";
 function ProfileWorkflow() {
   const [step, setStep] = useState(0);
 
-  const steps = [
-    NameStep,
-    Phone,
-    DOBStep,
-    PlayingPosition,
-    // Add other step components here
-  ];
-
   const handleNext = () => {
     setStep(step + 1);
   };
@@ -27,6 +19,41 @@ function ProfileWorkflow() {
   const handleBack = () => {
     setStep(step - 1);
   };
+
+  const handleNameChange = (name: string) => {
+    console.log("Name received in parent:", name);
+    // Do something with the received name in the parent component
+  };
+
+  const handlePhoneChange = (phone: string) => {
+    console.log(phone, "phone")
+  }
+
+  const handleDOBgenderChange = (dob: string, gender: string) => {
+    console.log(dob,gender, "dobGender")
+  }
+
+  
+  const handlePositionChange = (position: string) => {
+    console.log(position, "position")
+  }
+
+  const stepProps = {
+    onNext: handleNext,
+    goBack: handleBack,
+    onNameChange: handleNameChange,
+    onPhoneChange: handlePhoneChange,
+    onDOBgenderChange: handleDOBgenderChange,
+    onPositionChange: handlePositionChange
+  };
+
+  const steps = [
+    (props) => <NameStep {...props} />,
+    (props) => <Phone {...props} />,
+    (props) => <DOBStep {...props} />,
+    (props) => <PlayingPosition {...props} />,
+    // Add other step components here
+  ];
 
   const CurrentStep = steps[step];
 
@@ -44,7 +71,7 @@ function ProfileWorkflow() {
         xl: "8%",
       }}
     >
-      <CurrentStep onNext={handleNext} goBack={handleBack} />
+      <CurrentStep {...stepProps} />
       <ProgressIndicator totalSteps={steps.length} currentStep={step} />
     </Stack>
   );

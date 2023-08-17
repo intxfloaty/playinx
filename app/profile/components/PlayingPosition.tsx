@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Stack,
   Center,
@@ -10,7 +10,13 @@ import {
 } from "../../chakraExports";
 import Link from "next/link";
 
-function PlayingPosition({ onNext, goBack }) {
+function PlayingPosition({ onNext, goBack, onPositionChange }) {
+  const [position, setPosition] = useState("");
+
+  const handlePositionUpdate = () => {
+    onPositionChange(position);
+  };
+  console.log(position, "pos");
   return (
     <>
       <Center>
@@ -18,19 +24,34 @@ function PlayingPosition({ onNext, goBack }) {
           What is your playing position?
         </Heading>
       </Center>
-      <Select placeholder=" select position" size="md" bg="antiquewhite">
-        <option value="option1">GK</option>
-        <option value="option2">CB</option>
-        <option value="option2">LB</option>
-        <option value="option2">RB</option>
-        <option value="option2">CDM</option>
-        <option value="option2">CM</option>
-        <option value="option2">CAM</option>
-        <option value="option2">LW</option>
-        <option value="option2">RW</option>
-        <option value="option2">ST</option>
+      <Select
+        placeholder=" select position"
+        size="md"
+        bg="antiquewhite"
+        value={position}
+        onChange={(e) => {
+          setPosition(e.target.value);
+        }}
+      >
+        <option value="GK">GK</option>
+        <option value="CB">CB</option>
+        <option value="LB">LB</option>
+        <option value="RB">RB</option>
+        <option value="CDM">CDM</option>
+        <option value="CM">CM</option>
+        <option value="CAM">CAM</option>
+        <option value="LW">LW</option>
+        <option value="RW">RW</option>
+        <option value="ST">ST</option>
       </Select>
-      <Button mt={7} colorScheme="messenger" size="md" onClick={onNext}>
+      <Button
+        mt={7}
+        colorScheme="messenger"
+        size="md"
+        onClick={() => {
+          handlePositionUpdate();
+        }}
+      >
         Continue
       </Button>
       <Center mt={1}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Stack,
   Center,
@@ -12,11 +12,26 @@ import Link from "next/link";
 
 function PlayingPosition({ onNext, goBack, onPositionChange }) {
   const [position, setPosition] = useState("");
+  const [positionError, setPositionError] = useState("");
+
+  const validate = () => {
+    let error = "";
+    if (!position) {
+      error = "Phone number is required";
+    }
+    return error;
+  };
 
   const handlePositionUpdate = () => {
     onPositionChange(position);
   };
   console.log(position, "pos");
+
+  useEffect(() => {
+    if (positionError !== "") {
+      setPositionError(validate());
+    }
+  }, [position]);
   return (
     <>
       <Center>
@@ -25,7 +40,9 @@ function PlayingPosition({ onNext, goBack, onPositionChange }) {
         </Heading>
       </Center>
       <Select
-        placeholder=" select position"
+        placeholder="Select position"
+        isInvalid={!!positionError}
+        errorBorderColor={positionError ? "#FFB400" : ""}
         size="md"
         bg="antiquewhite"
         value={position}
@@ -44,12 +61,21 @@ function PlayingPosition({ onNext, goBack, onPositionChange }) {
         <option value="RW">RW</option>
         <option value="ST">ST</option>
       </Select>
+      {positionError && (
+        <Text fontSize="md" color="#FFB400">
+          {positionError}
+        </Text>
+      )}
       <Button
         mt={7}
         colorScheme="messenger"
         size="md"
         onClick={() => {
-          handlePositionUpdate();
+          const error = validate();
+          setPositionError(error);
+          if (!error) {
+            handlePositionUpdate();
+          }
         }}
       >
         Continue

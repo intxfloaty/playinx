@@ -12,11 +12,11 @@ export default function RootLayout({
         base: "100%", // 0-48em
         md: "50%", // 48em-80em,
         xl: "25%", // 80em+
-      }}>
+      }} my={{base:"25%", xl:"5%"}}>
         <img
           style={{ maxWidth: "100%", objectFit: "contain" }}
           alt="Logo"
-          src="/images/logo5.svg" />
+          src="/images/logotransparent.svg" />
       </Box>
       {children}
     </main>

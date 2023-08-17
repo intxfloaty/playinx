@@ -91,7 +91,19 @@ function page() {
   }, [email, password]);
 
   return (
-    <Stack spacing={5}>
+    <Stack
+      spacing={3}
+      w={{
+        base: "100%", // 0-48em
+        md: "75%", // 48em-80em,
+        xl: "50%", // 80em+
+      }}
+      p={{
+        base:null,
+        md:"10%",
+        xl:'8%'
+      }}
+    >
       {fieldErrors.email && (
         <Text fontSize="md" color="tomato">
           {fieldErrors.email}
@@ -101,7 +113,7 @@ function page() {
         type="email"
         textColor="antiquewhite"
         placeholder="Email"
-        size="lg"
+        size="md"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
@@ -111,7 +123,7 @@ function page() {
           textColor="antiquewhite"
           placeholder="Password"
           type={showPassword ? "text" : "password"}
-          size="lg"
+          size="md"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -142,7 +154,7 @@ function page() {
       <Button
         mt={7}
         colorScheme="messenger"
-        size="lg"
+        size="md"
         onClick={handleContinueClick}
       >
         Continue
@@ -156,7 +168,7 @@ function page() {
         </Center>
       )}
 
-      <Box mt={3} position="relative" padding="10">
+      <Box my={1} position="relative" padding="10">
         <Divider />
         <AbsoluteCenter bg="#161616" textColor="gray" px="4">
           Or sign up with
@@ -165,7 +177,7 @@ function page() {
 
       <Button
         colorScheme="messenger"
-        size="lg"
+        size="md"
         leftIcon={<FcGoogle />}
         onClick={handleGoogleClick}
       >

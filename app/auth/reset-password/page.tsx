@@ -60,8 +60,18 @@ function resetPassword() {
   }, [email, password]);
 
   return (
-    <Stack spacing={5}>
-      <Text fontSize="lg" color="white">
+    <Stack spacing={3}
+    w={{
+      base: "100%", // 0-48em
+      md: "75%", // 48em-80em,
+      xl: "50%", // 80em+
+    }}
+    p={{
+      base: null,
+      md: "10%",
+      xl: "8%",
+    }}>
+      <Text fontSize="md" color="white">
         Enter the email associated with your account
       </Text>
       {fieldErrors.email && (
@@ -73,11 +83,11 @@ function resetPassword() {
         type="email"
         textColor="antiquewhite"
         placeholder="Email"
-        size="lg"
+        size="md"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Text fontSize="lg" color="white">
+      <Text fontSize="md" color="white">
         Enter new password
       </Text>
       <InputGroup>
@@ -85,7 +95,7 @@ function resetPassword() {
           textColor="antiquewhite"
           placeholder="Password"
           type={showPassword ? "text" : "password"}
-          size="lg"
+          size="md"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -114,7 +124,7 @@ function resetPassword() {
       <Button
         mt={7}
         colorScheme="messenger"
-        size="lg"
+        size="md"
         onClick={handleContinueClick}
       >
         Continue

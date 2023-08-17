@@ -92,7 +92,17 @@ function login() {
   }, [email, password]);
 
   return (
-    <Stack spacing={5}>
+    <Stack spacing={3}
+    w={{
+      base: "100%", // 0-48em
+      md: "75%", // 48em-80em,
+      xl: "50%", // 80em+
+    }}
+    p={{
+      base:null,
+      md:"10%",
+      xl:'8%'
+    }}>
       {fieldErrors.email && (
         <Text fontSize="md" color="tomato">
           {fieldErrors.email}
@@ -101,7 +111,7 @@ function login() {
       <Input
         textColor="antiquewhite"
         placeholder="Email"
-        size="lg"
+        size="md"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
@@ -110,7 +120,7 @@ function login() {
           textColor="antiquewhite"
           placeholder="Password"
           type={showPassword ? "text" : "password"}
-          size="lg"
+          size="md"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -136,7 +146,7 @@ function login() {
           {fieldErrors.password}
         </Text>
       )}
-      <Button mt={7} colorScheme="messenger" size="lg" onClick={handleLogin}>
+      <Button mt={7} colorScheme="messenger" size="md" onClick={handleLogin}>
         Log In
       </Button>
 
@@ -155,7 +165,7 @@ function login() {
           </Text>
         </Link>
       </Center>
-      <Box mt={3} position="relative" padding="10">
+      <Box my={1} position="relative" padding="10">
         <Divider />
         <AbsoluteCenter bg="#161616" textColor="gray" px="4">
           Or log in with
@@ -163,7 +173,7 @@ function login() {
       </Box>
       <Button
         colorScheme="messenger"
-        size="lg"
+        size="md"
         leftIcon={<FcGoogle />}
         onClick={handleGoogleClick}
       >

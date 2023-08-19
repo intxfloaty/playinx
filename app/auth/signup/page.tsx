@@ -15,7 +15,8 @@ import {
 } from "../../chakraExports";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import supabase from "../../../src/utils/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Database } from "../../../database.types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -29,6 +30,13 @@ function page() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
+  const supabase = createClientComponentClient<Database>({
+    supabaseUrl,
+    supabaseKey,
+  });
 
   const validate = () => {
     let errors: Errors = {};
@@ -54,9 +62,13 @@ function page() {
         let { data, error } = await supabase.auth.signUp({
           email: email,
           password: password,
+          options: {
+            emailRedirectTo: `${location.origin}/auth/callback`,
+          },
         });
         console.log(data);
         console.log(error);
+        // for when email confirmation is not required to sign up
         if (data.user !== null && data.session !== null && error === null) {
           router.push("/profile");
         }
@@ -75,7 +87,9 @@ function page() {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: "http//localhost:3000/profile" },
+        options: {
+          redirectTo: `${location.origin}/auth/callback`,
+        },
       });
       console.log(data, "data");
       console.log(error.message, "mess");

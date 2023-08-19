@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button, Text, Center, Input, Stack } from "../../chakraExports";
-import supabase from "../../../src/utils/supabase";
 import Link from "next/link";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-function recoverPassword() {
+function ResetPassword() {
+  const supabase = createClientComponentClient();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isResetPasswordLink, setIsPasswordLink] = useState(false);
@@ -25,7 +26,7 @@ function recoverPassword() {
     if (!error) {
       try {
         let { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: "http://localhost:3000/auth/reset-password",
+          redirectTo: `${window.location.origin}/auth/update-password`,
         });
         console.log(data, "data");
         console.log(error, "error");
@@ -91,7 +92,7 @@ function recoverPassword() {
         </Text>
       )}
       <Center mt={3}>
-        <Link href={"/auth/login"}>
+        <Link href={"/auth/sign-in"}>
           <Text fontSize="md" color="messenger.300">
             Go Back
           </Text>
@@ -101,4 +102,4 @@ function recoverPassword() {
   );
 }
 
-export default recoverPassword;
+export default ResetPassword;

@@ -10,8 +10,12 @@ export async function middleware(req: NextRequest) {
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
   const supabase = createMiddlewareClient<Database>(
     { req, res },
-    { supabaseUrl, supabaseKey }
+    // { supabaseUrl, supabaseKey }
   );
   await supabase.auth.getSession();
   return res;
 }
+
+export const config = {
+  matcher: ['/', '/profile'],
+};

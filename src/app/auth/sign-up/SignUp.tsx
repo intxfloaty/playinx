@@ -1,28 +1,42 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  AbsoluteCenter,
+  Box,
   Button,
   Text,
+  Center,
+  Divider,
   Input,
   Stack,
   IconButton,
   InputGroup,
   InputRightElement,
 } from "../../chakraExports";
-import supabase from "../../../src/utils/supabase";
+import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Database } from "../../../database.types";
 import { useRouter } from "next/navigation";
-import { FaEyeSlash, FaEye } from "react-icons/fa";
+import Link from "next/link";
 
 interface Errors {
   [key: string]: string;
 }
 
-function resetPassword() {
+const SignUp = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
+  const supabase = createClientComponentClient<Database>({
+    supabaseUrl,
+    supabaseKey,
+  });
 
   const validate = () => {
     let errors: Errors = {};
@@ -45,11 +59,42 @@ function resetPassword() {
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
       try {
-        await supabase.auth.updateUser({ password: password });
-        router.push("/");
-      } catch (e) {
-        console.log(e);
+        let { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          // options: {
+          //   emailRedirectTo: `${location.origin}/auth/callback`,
+          // },
+        });
+        console.log(data);
+        console.log(error);
+        // for when email confirmation is not required to sign up
+        if (data.user !== null && data.session !== null && error === null) {
+          router.push("/profile");
+        }
+        if (error?.message === "User already registered") {
+          setFieldErrors({
+            userExists: "User is already registered with this email",
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
+    }
+  };
+
+  const handleGoogleClick = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${location.origin}/auth/callback`,
+        },
+      });
+      console.log(data, "data");
+      console.log(error.message, "mess");
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -73,9 +118,6 @@ function resetPassword() {
         xl: "8%",
       }}
     >
-      <Text fontSize="md" color="white">
-        Enter the email associated with your account
-      </Text>
       {fieldErrors.email && (
         <Text fontSize="md" color="#FFB400">
           {fieldErrors.email}
@@ -83,17 +125,15 @@ function resetPassword() {
       )}
       <Input
         type="email"
+        textColor="antiquewhite"
         isInvalid={!!fieldErrors.email}
         errorBorderColor={fieldErrors.email ? "#FFB400" : ""}
-        textColor="antiquewhite"
         placeholder="Email"
         size="md"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Text fontSize="md" color="white">
-        Enter new password
-      </Text>
+
       <InputGroup>
         <Input
           textColor="antiquewhite"
@@ -122,11 +162,13 @@ function resetPassword() {
           />
         </InputRightElement>
       </InputGroup>
+
       {fieldErrors.password && (
         <Text fontSize="md" color="#FFB400">
           {fieldErrors.password}
         </Text>
       )}
+
       <Button
         mt={7}
         colorScheme="messenger"
@@ -135,8 +177,40 @@ function resetPassword() {
       >
         Continue
       </Button>
+
+      {fieldErrors.userExists && (
+        <Center>
+          <Text fontSize="md" color="#FFB400">
+            {fieldErrors.userExists}
+          </Text>
+        </Center>
+      )}
+
+      <Box my={1} position="relative" padding="10">
+        <Divider />
+        <AbsoluteCenter bg="#161616" textColor="gray" px="4">
+          Or sign up with
+        </AbsoluteCenter>
+      </Box>
+
+      <Button
+        colorScheme="messenger"
+        size="md"
+        leftIcon={<FcGoogle />}
+        onClick={handleGoogleClick}
+      >
+        Google
+      </Button>
+
+      <Center mt={5}>
+        <Link href={"/auth/sign-in"}>
+          <Text fontSize="lg" color="white">
+            Already have an account? Log In
+          </Text>
+        </Link>
+      </Center>
     </Stack>
   );
-}
+};
 
-export default resetPassword;
+export default SignUp;

@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Database } from "../../../database.types";
 import {
   Box,
   Input,
@@ -15,7 +17,6 @@ import {
 } from "../../chakraExports";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
-import supabase from "../../../src/utils/supabase";
 import { useRouter } from "next/navigation";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 
@@ -23,12 +24,14 @@ interface Errors {
   [key: string]: string;
 }
 
-function login() {
+function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
+
+  const supabase = createClientComponentClient<Database>();
 
   const validate = () => {
     let errors: Errors = {};
@@ -165,7 +168,7 @@ function login() {
       )}
 
       <Center mt={2}>
-        <Link href={"/auth/recover-password"}>
+        <Link href={"/auth/reset-password"}>
           <Text fontSize="md" color="white">
             Forgotten Password?
           </Text>
@@ -186,7 +189,7 @@ function login() {
         Google
       </Button>
       <Center mt={5}>
-        <Link href={"/auth/signup"}>
+        <Link href={"/auth/sign-up"}>
           <Text fontSize="lg" color="white">
             Don't have an account? Sign Up
           </Text>
@@ -196,4 +199,4 @@ function login() {
   );
 }
 
-export default login;
+export default SignIn;

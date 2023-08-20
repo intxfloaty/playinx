@@ -3,14 +3,22 @@
 import React, { useState } from "react";
 import DOBStep from "./DOBStep";
 import NameStep from "./NameStep";
-// import GenderStep from './GenderStep';
 import { Stack } from "../../chakraExports";
 import Phone from "./Phone";
 import PlayingPosition from "./PlayingPosition";
 import ProgressIndicator from "./ProgressIndicator";
+import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 function ProfileWorkflow() {
+  const supabase = createClientComponentClient();
   const [step, setStep] = useState(0);
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dob, setDob] = useState("");
+  const [gender, setGender] = useState("");
+  const [position, setPosition] = useState("");
 
   const handleNext = () => {
     setStep(step + 1);
@@ -20,23 +28,35 @@ function ProfileWorkflow() {
     setStep(step - 1);
   };
 
-  const handleNameChange = (name: string) => {
-    console.log("Name received in parent:", name);
-    // Do something with the received name in the parent component
+  const handleNameChange = async (newName) => {
+    setName(`${newName.firstName} ${newName.lastName}`);
+    console.log(name, "name");
   };
 
-  const handlePhoneChange = (phone: string) => {
-    console.log(phone, "phone")
-  }
+  const handlePhoneChange = (phoneNumber: string) => {
+    setPhone(phoneNumber);
+  };
 
-  const handleDOBgenderChange = (dob: string, gender: string) => {
-    console.log(dob,gender, "dobGender")
-  }
+  const handleDOBgenderChange = (newDob: string, newGender: string) => {
+    setDob(newDob);
+    setGender(newGender);
+  };
 
-  
-  const handlePositionChange = (position: string) => {
-    console.log(position, "position")
-  }
+  const handlePositionChange = async (newPosition: string) => {
+    const { data, error } = await supabase.from("profiles").insert([
+      {
+        name: name,
+        phone: phone,
+        dob: dob,
+        gender: gender,
+        position: newPosition,
+      },
+    ]);
+
+    console.log(data, "data");
+    console.log(error, "error");
+    if (error === null) router.push("/");
+  };
 
   const stepProps = {
     onNext: handleNext,
@@ -44,7 +64,7 @@ function ProfileWorkflow() {
     onNameChange: handleNameChange,
     onPhoneChange: handlePhoneChange,
     onDOBgenderChange: handleDOBgenderChange,
-    onPositionChange: handlePositionChange
+    onPositionChange: handlePositionChange,
   };
 
   const steps = [

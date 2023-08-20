@@ -3,6 +3,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Input } from "./chakraExports";
+import Drawer from "../components/Drawer";
 
 export default async function Page() {
   const supabase = createServerComponentClient({ cookies });
@@ -14,5 +15,5 @@ export default async function Page() {
   if (!user) {
     redirect("/auth/sign-in");
   }
-  return <Input placeholder="Basic usage" size="lg" />;
+  return <Drawer />;
 }

@@ -16,10 +16,9 @@ import {
   Flex,
 } from "../app/chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { FaUser, FaUserFriends, FaTrophy } from "react-icons/fa";
-import { IoIosFootball, IoIosStats, IoMdLogOut } from "react-icons/io";
+import { IoPersonOutline, IoPeopleOutline, IoTrophyOutline, IoPodiumOutline, IoLogOutOutline } from "react-icons/io5";
 
-const Drawer = () => {
+const Drawer = ({ children }) => {
   const supabase = createClientComponentClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
@@ -58,7 +57,7 @@ const Drawer = () => {
         <DrawerOverlay />
         <DrawerContent padding={4}>
           <DrawerHeader borderBottomWidth="1px" borderBottomColor="gray">
-            <Text color="#ffffff" fontSize="lg">
+            <Text color="#ffffff" fontSize="md">
               {name}
             </Text>
             <Text color="#ffffff" fontSize="sm">
@@ -69,8 +68,8 @@ const Drawer = () => {
             <Stack spacing={8}>
               <Box>
                 <Flex align="center" flexDir="row" gap={5}>
-                  <FaUser color="#ffffff" size={20} />
-                  <Text color="#ffffff" fontSize="lg">
+                  <IoPersonOutline color="#ffffff" size={20} />
+                  <Text color="#ffffff" fontSize="md">
                     Profile
                   </Text>
                 </Flex>
@@ -78,8 +77,8 @@ const Drawer = () => {
 
               <Box>
                 <Flex align="center" flexDir="row" gap={5}>
-                  <FaUserFriends color="#ffffff" size={20} />
-                  <Text color="#ffffff" fontSize="lg">
+                  <IoPeopleOutline color="#ffffff" size={20} />
+                  <Text color="#ffffff" fontSize="md">
                     My Teams
                   </Text>
                 </Flex>
@@ -87,17 +86,8 @@ const Drawer = () => {
 
               <Box>
                 <Flex align="center" flexDir="row" gap={5}>
-                  <IoIosFootball color="#ffffff" size={24} />
-                  <Text color="#ffffff" fontSize="lg">
-                    Matches
-                  </Text>
-                </Flex>
-              </Box>
-
-              <Box>
-                <Flex align="center" flexDir="row" gap={5}>
-                  <FaTrophy color="#ffffff" size={20} />
-                  <Text color="#ffffff" fontSize="lg">
+                  <IoTrophyOutline color="#ffffff" size={20} />
+                  <Text color="#ffffff" fontSize="md">
                     Tournaments
                   </Text>
                 </Flex>
@@ -105,8 +95,8 @@ const Drawer = () => {
 
               <Box>
                 <Flex align="center" flexDir="row" gap={5}>
-                  <IoIosStats color="#ffffff" size={24} />
-                  <Text color="#ffffff" fontSize="lg">
+                  <IoPodiumOutline color="#ffffff" size={20} />
+                  <Text color="#ffffff" fontSize="md">
                     Leaderboard
                   </Text>
                 </Flex>
@@ -114,19 +104,17 @@ const Drawer = () => {
             </Stack>
           </DrawerBody>
 
-          <DrawerFooter>
-            <Box>
+          <DrawerFooter borderTopWidth="1px" borderTopColor="gray">
               <Flex align="center" flexDir="row" gap={3}>
-                <IoMdLogOut color="#ffffff" size={24} />
-                <Text color="#ffffff" fontSize="lg">
+                <IoLogOutOutline color="#ffffff" size={20} />
+                <Text color="#ffffff" fontSize="md">
                   Logout
                 </Text>
               </Flex>
-            </Box>
-
           </DrawerFooter>
         </DrawerContent>
       </SideMenu>
+      {children}
     </>
   );
 };

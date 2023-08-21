@@ -19,7 +19,7 @@ import {
   FormHelperText,
   Select,
   Box,
-} from "../../chakraExports";
+} from "../app/chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 interface Errors {

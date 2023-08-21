@@ -13,7 +13,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   Text,
-} from "../../chakraExports";
+} from "../app/chakraExports";
 
 const JoinTeam = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

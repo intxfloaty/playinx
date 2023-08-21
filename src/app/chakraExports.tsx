@@ -49,6 +49,11 @@ export {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Avatar,
+  AvatarBadge,
+  AvatarGroup,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 
 export { Link } from "@chakra-ui/next-js";

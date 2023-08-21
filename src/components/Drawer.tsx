@@ -54,7 +54,7 @@ const Drawer = ({ children }) => {
   return (
     <>
       <Box padding={2}>
-        <IoMenu color="white" size={32} onClick={onOpen} />
+        <IoMenu color="#E7E9EA" size={32} onClick={onOpen} />
       </Box>
       <SideMenu
         colorScheme="blue"
@@ -68,10 +68,10 @@ const Drawer = ({ children }) => {
         <DrawerContent>
           <DrawerHeader borderBottomWidth="1px" borderBottomColor="gray">
             <Box padding={2}>
-              <Text color="#ffffff" fontSize="md">
+              <Text color="#E7E9EA" fontSize="md">
                 {name}
               </Text>
-              <Text color="#ffffff" fontSize="sm">
+              <Text color="#E7E9EA" fontSize="sm">
                 {phone}
               </Text>
             </Box>
@@ -79,11 +79,11 @@ const Drawer = ({ children }) => {
 
           <DrawerBody mt={5}>
             <Stack spacing={8}>
-              <Link href={"/"}>
+              <Link href={"/my-profile"}>
                 <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
                   <Flex align="center" flexDir="row" gap={5}>
-                    <IoPersonOutline color="#ffffff" size={20} />
-                    <Text color="#ffffff" fontSize="md">
+                    <IoPersonOutline color="#E7E9EA" size={20} />
+                    <Text color="#E7E9EA" fontSize="md">
                       Profile
                     </Text>
                   </Flex>
@@ -93,8 +93,8 @@ const Drawer = ({ children }) => {
               <Link href={"/my-teams"}>
                 <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
                   <Flex align="center" flexDir="row" gap={5}>
-                    <IoPeopleOutline color="#ffffff" size={20} />
-                    <Text color="#ffffff" fontSize="md">
+                    <IoPeopleOutline color="#E7E9EA" size={20} />
+                    <Text color="#E7E9EA" fontSize="md">
                       My Teams
                     </Text>
                   </Flex>
@@ -104,8 +104,8 @@ const Drawer = ({ children }) => {
               <Link href={"/"}>
                 <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
                   <Flex align="center" flexDir="row" gap={5}>
-                    <IoTrophyOutline color="#ffffff" size={20} />
-                    <Text color="#ffffff" fontSize="md">
+                    <IoTrophyOutline color="#E7E9EA" size={20} />
+                    <Text color="#E7E9EA" fontSize="md">
                       Tournaments
                     </Text>
                   </Flex>
@@ -115,8 +115,8 @@ const Drawer = ({ children }) => {
               <Link href={"/"}>
                 <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
                   <Flex align="center" flexDir="row" gap={5}>
-                    <IoPodiumOutline color="#ffffff" size={20} />
-                    <Text color="#ffffff" fontSize="md">
+                    <IoPodiumOutline color="#E7E9EA" size={20} />
+                    <Text color="#E7E9EA" fontSize="md">
                       Leaderboard
                     </Text>
                   </Flex>
@@ -128,8 +128,8 @@ const Drawer = ({ children }) => {
           <DrawerFooter borderTopWidth="1px" borderTopColor="gray">
             <Button variant="unstyled">
               <Flex align="center" flexDir="row" gap={3}>
-                <IoLogOutOutline color="#ffffff" size={20} />
-                <Text color="#ffffff" fontSize="md">
+                <IoLogOutOutline color="#E7E9EA" size={20} />
+                <Text color="#E7E9EA" fontSize="md">
                   Logout
                 </Text>
               </Flex>

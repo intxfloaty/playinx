@@ -17,6 +17,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
           },
         },
       },
+      // Modal:{
+      //   parts:["dialog", "header", "body"],
+      //   baseStyle:{
+      //     dialog:{
+      //       background: "#101010", 
+      //     }
+      //   }
+      // }
     },
   });
 

@@ -4,7 +4,7 @@ import {
   Stack,
   Button,
   Text,
-} from "../../chakraExports";
+} from "../app/chakraExports";
 import CreateTeam from "./CreateTeam";
 import JoinTeam from "./JoinTeam";
 

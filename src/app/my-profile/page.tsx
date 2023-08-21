@@ -3,7 +3,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Drawer from "../../components/Drawer";
-import MyTeam from "../../components/MyTeam";
+import MyProfile from "./components/MyProfile";
 
 async function page() {
   const supabase = createServerComponentClient({ cookies });
@@ -16,9 +16,9 @@ async function page() {
     redirect("/auth/sign-in");
   }
   return (
-    <Drawer>
-      <MyTeam />
-    </Drawer>
+    // <Drawer>
+      <MyProfile />
+    // </Drawer>
   );
 }
 

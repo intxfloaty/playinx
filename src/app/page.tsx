@@ -15,5 +15,9 @@ export default async function Page() {
   if (!user) {
     redirect("/auth/sign-in");
   }
-  return <Drawer />;
+  return (
+    <Drawer>
+      
+    </Drawer>
+  )
 }

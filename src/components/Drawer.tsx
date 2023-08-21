@@ -17,6 +17,7 @@ import {
 } from "../app/chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
+  IoMenu,
   IoPersonOutline,
   IoPeopleOutline,
   IoTrophyOutline,
@@ -52,9 +53,9 @@ const Drawer = ({ children }) => {
 
   return (
     <>
-      <Button colorScheme="blue" onClick={onOpen}>
-        Open
-      </Button>
+      <Box padding={2}>
+        <IoMenu color="white" size={32} onClick={onOpen} />
+      </Box>
       <SideMenu
         colorScheme="blue"
         placement="left"
@@ -66,7 +67,7 @@ const Drawer = ({ children }) => {
 
         <DrawerContent>
           <DrawerHeader borderBottomWidth="1px" borderBottomColor="gray">
-            <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
+            <Box padding={2}>
               <Text color="#ffffff" fontSize="md">
                 {name}
               </Text>
@@ -89,7 +90,7 @@ const Drawer = ({ children }) => {
                 </Box>
               </Link>
 
-              <Link href={"/"}>
+              <Link href={"/my-teams"}>
                 <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
                   <Flex align="center" flexDir="row" gap={5}>
                     <IoPeopleOutline color="#ffffff" size={20} />

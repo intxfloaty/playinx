@@ -48,12 +48,18 @@ const CreateTeam = () => {
     return errors;
   };
 
+  const getUserId = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (data && error === null) {
+      return data.user.id;
+    }
+  };
+
   const onCreateClicked = async () => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
-      console.log("Team Created");
-
+      const user_id = await getUserId();
       const { data, error } = await supabase
         .from("teams")
         .insert([
@@ -61,6 +67,7 @@ const CreateTeam = () => {
             team_name: teamName,
             format: format,
             location: location,
+            team_admin: user_id,
             rating: "2000",
           },
         ])

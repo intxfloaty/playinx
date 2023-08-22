@@ -15,13 +15,15 @@ import {
 import { IoArrowBack } from "react-icons/io5";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import MyTeam from "../../../components/MyTeam";
+import { useRouter } from "next/navigation";
 
 const MyProfile = () => {
   const supabase = createClientComponentClient();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  // const [name, setName] = useState("")
+  const router = useRouter();
 
+  
   const getNameAndPhone = async () => {
     try {
       let { data: profiles, error } = await supabase
@@ -42,7 +44,11 @@ const MyProfile = () => {
   return (
     <>
       <Flex alignItems="center" justifyContent="space-between" padding={4}>
-        <IoArrowBack color="#E7E9EA" size={30} />
+        <IoArrowBack
+          onClick={() => router.push("/")}
+          color="#E7E9EA"
+          size={30}
+        />
         <Button size="sm">Edit Profile</Button>
       </Flex>
       <Flex mt={2} alignItems="center" justifyContent="center" flexDir="column">

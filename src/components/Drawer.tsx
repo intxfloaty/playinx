@@ -14,6 +14,11 @@ import {
   Stack,
   Box,
   Flex,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from "../app/chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
@@ -23,6 +28,7 @@ import {
   IoTrophyOutline,
   IoPodiumOutline,
   IoLogOutOutline,
+  IoFootballOutline,
 } from "react-icons/io5";
 import Link from "next/link";
 import { after } from "node:test";
@@ -32,6 +38,7 @@ const Drawer = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [myTeams, setMyTeams] = useState([]);
 
   const getNameAndPhone = async () => {
     try {
@@ -47,8 +54,24 @@ const Drawer = ({ children }) => {
     }
   };
 
+  console.log(myTeams, "myteams");
+  const getMyTeams = async () => {
+    try {
+      let { data: teams, error } = await supabase
+        .from("teams")
+        .select("team_name");
+
+      if (teams && error === null) {
+        setMyTeams(teams);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     getNameAndPhone();
+    getMyTeams();
   }, []);
 
   return (
@@ -80,7 +103,11 @@ const Drawer = ({ children }) => {
           <DrawerBody mt={5}>
             <Stack spacing={8}>
               <Link href={"/my-profile"}>
-                <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
+                <Box
+                  padding={2}
+                  _hover={{ backgroundColor: "#161616" }}
+                  borderRadius={5}
+                >
                   <Flex align="center" flexDir="row" gap={5}>
                     <IoPersonOutline color="#E7E9EA" size={20} />
                     <Text color="#E7E9EA" fontSize="md">
@@ -90,19 +117,59 @@ const Drawer = ({ children }) => {
                 </Box>
               </Link>
 
-              <Link href={"/my-teams"}>
-                <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
-                  <Flex align="center" flexDir="row" gap={5}>
-                    <IoPeopleOutline color="#E7E9EA" size={20} />
-                    <Text color="#E7E9EA" fontSize="md">
-                      My Teams
-                    </Text>
+              <Accordion defaultIndex={[0]} allowMultiple>
+                <AccordionItem border="none">
+                  <Flex
+                    flexDir="row"
+                    justifyContent="space-between"
+                    padding={2}
+                    _hover={{ backgroundColor: "#161616" }}
+                    borderRadius={5}
+                  >
+                    <Flex align="center" flexDir="row" gap={5}>
+                      <IoPeopleOutline color="#E7E9EA" size={20} />
+                      <Text color="#E7E9EA" fontSize="md">
+                        My Teams
+                      </Text>
+                    </Flex>
+
+                    <Box>
+                      <AccordionButton>
+                        <AccordionIcon color="#E7E9EA" />
+                      </AccordionButton>
+                    </Box>
                   </Flex>
-                </Box>
-              </Link>
+
+                  <AccordionPanel color="#E7E9EA">
+                    {myTeams?.map((myTeam, idx) => {
+                      return (
+                        <React.Fragment key={idx}>
+                          <Flex
+                            padding={3}
+                            _hover={{ backgroundColor: "#161616" }}
+                            borderRadius={5}
+                            align="center"
+                            flexDir="row"
+                            gap={5}
+                          >
+                            <IoFootballOutline color="#E7E9EA" size={20} />
+                            <Text color="#E7E9EA" fontSize="md">
+                              {myTeam?.team_name}
+                            </Text>
+                          </Flex>
+                        </React.Fragment>
+                      );
+                    })}
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
 
               <Link href={"/"}>
-                <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
+                <Box
+                  padding={2}
+                  _hover={{ backgroundColor: "#161616" }}
+                  borderRadius={5}
+                >
                   <Flex align="center" flexDir="row" gap={5}>
                     <IoTrophyOutline color="#E7E9EA" size={20} />
                     <Text color="#E7E9EA" fontSize="md">
@@ -113,7 +180,11 @@ const Drawer = ({ children }) => {
               </Link>
 
               <Link href={"/"}>
-                <Box padding={2} _hover={{ backgroundColor: "#161616" }}>
+                <Box
+                  padding={2}
+                  _hover={{ backgroundColor: "#161616" }}
+                  borderRadius={5}
+                >
                   <Flex align="center" flexDir="row" gap={5}>
                     <IoPodiumOutline color="#E7E9EA" size={20} />
                     <Text color="#E7E9EA" fontSize="md">

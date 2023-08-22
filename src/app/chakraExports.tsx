@@ -54,6 +54,11 @@ export {
   AvatarGroup,
   Wrap,
   WrapItem,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from "@chakra-ui/react";
 
 export { Link } from "@chakra-ui/next-js";

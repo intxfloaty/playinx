@@ -32,9 +32,11 @@ import {
 } from "react-icons/io5";
 import Link from "next/link";
 import { after } from "node:test";
+import { useRouter } from 'next/navigation'
 
 const Drawer = ({ children }) => {
   const supabase = createClientComponentClient();
+  const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -151,6 +153,9 @@ const Drawer = ({ children }) => {
                             align="center"
                             flexDir="row"
                             gap={5}
+                            onClick={()=>{
+                              router.push(`/my-teams/${myTeam?.team_name}`)
+                            }}
                           >
                             <IoFootballOutline color="#E7E9EA" size={20} />
                             <Text color="#E7E9EA" fontSize="md">

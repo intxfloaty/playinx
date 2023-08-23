@@ -11,9 +11,28 @@ async function page() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const getProfile = async () => {
+    const myUserId = user.id;
+    let { data: profiles, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", `${myUserId}`);
+
+    if (profiles && error === null) {
+      return profiles;
+    }
+  };
+
+  const profiles = await getProfile();
+
   if (!user) {
     redirect("/auth/sign-in");
   }
+
+  if (profiles.length !== 0) {
+    redirect("/");
+  }
+
   return <ProfileWorkflow />;
 }
 

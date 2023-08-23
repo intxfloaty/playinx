@@ -75,7 +75,7 @@ const CreateTeam = () => {
 
       console.log(data, "data");
       console.log(error, "error");
-
+        onClose();
       try {
       } catch (e) {
         console.log(e);

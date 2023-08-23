@@ -23,12 +23,20 @@ const MyProfile = () => {
   const [phone, setPhone] = useState("");
   const router = useRouter();
 
-  
+  const getUserId = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (data && error === null) {
+      return data.user.id;
+    }
+  };
+
   const getNameAndPhone = async () => {
     try {
+      const myUserId = await getUserId();
       let { data: profiles, error } = await supabase
         .from("profiles")
-        .select("name,phone");
+        .select("name,phone")
+        .eq("user_id", `${myUserId}`);
       if (profiles && error === null) {
         setName(profiles[0].name);
         setPhone(profiles[0].phone);
@@ -44,11 +52,13 @@ const MyProfile = () => {
   return (
     <>
       <Flex alignItems="center" justifyContent="space-between" padding={4}>
-        <IoArrowBack
-          onClick={() => router.push("/")}
-          color="#E7E9EA"
-          size={30}
-        />
+        <Button variant="unstyled">
+          <IoArrowBack
+            onClick={() => router.push("/")}
+            color="#E7E9EA"
+            size={30}
+          />
+        </Button>
         <Button size="sm">Edit Profile</Button>
       </Flex>
       <Flex mt={2} alignItems="center" justifyContent="center" flexDir="column">

@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  Input,
-  Stack,
-  Button,
-  Text,
-} from "../app/chakraExports";
+import { Input, Stack, Button, Text } from "../app/chakraExports";
 import CreateTeam from "./CreateTeam";
 import JoinTeam from "./JoinTeam";
 
 const MyTeam = () => {
-
   return (
     <>
       <Stack
@@ -25,7 +19,8 @@ const MyTeam = () => {
           xl: "8%",
         }}
       >
-        
+        <CreateTeam />
+        <JoinTeam />
       </Stack>
     </>
   );

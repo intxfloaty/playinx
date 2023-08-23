@@ -32,21 +32,30 @@ import {
 } from "react-icons/io5";
 import Link from "next/link";
 import { after } from "node:test";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 const Drawer = ({ children }) => {
   const supabase = createClientComponentClient();
-  const router = useRouter()
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [myTeams, setMyTeams] = useState([]);
 
+  const getUserId = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (data && error === null) {
+      return data.user.id;
+    }
+  };
+
   const getNameAndPhone = async () => {
     try {
+      const myUserId = await getUserId();
       let { data: profiles, error } = await supabase
         .from("profiles")
-        .select("name,phone");
+        .select("name,phone")
+        .eq("user_id", `${myUserId}`);
       if (profiles && error === null) {
         setName(profiles[0].name);
         setPhone(profiles[0].phone);
@@ -56,18 +65,28 @@ const Drawer = ({ children }) => {
     }
   };
 
-  console.log(myTeams, "myteams");
   const getMyTeams = async () => {
     try {
+      const myUserId = await getUserId();
       let { data: teams, error } = await supabase
         .from("teams")
-        .select("team_name");
+        .select("team_name")
+        .eq("team_admin", `${myUserId}`);
 
       if (teams && error === null) {
         setMyTeams(teams);
       }
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error("ERROR:", error);
     }
   };
 
@@ -153,9 +172,11 @@ const Drawer = ({ children }) => {
                             align="center"
                             flexDir="row"
                             gap={5}
-                            onClick={()=>{
+                            onClick={() => {
                               const team_name = myTeam?.team_name;
-                              router.push(`/my-teams/${team_name}?team_name=${team_name}`)
+                              router.push(
+                                `/my-teams/${team_name}?team_name=${team_name}`
+                              );
                             }}
                           >
                             <IoFootballOutline color="#E7E9EA" size={20} />
@@ -203,7 +224,7 @@ const Drawer = ({ children }) => {
           </DrawerBody>
 
           <DrawerFooter borderTopWidth="1px" borderTopColor="gray">
-            <Button variant="unstyled">
+            <Button variant="unstyled" onClick={handleSignOut}>
               <Flex align="center" flexDir="row" gap={3}>
                 <IoLogOutOutline color="#E7E9EA" size={20} />
                 <Text color="#E7E9EA" fontSize="md">

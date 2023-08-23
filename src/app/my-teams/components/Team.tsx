@@ -13,7 +13,7 @@ import {
   Button,
   TabIndicator,
 } from "../../chakraExports";
-import { IoArrowBack } from "react-icons/io5";
+import { IoArrowBack, IoAddOutline, IoSettingsOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 
 const Team = () => {
@@ -22,18 +22,33 @@ const Team = () => {
   return (
     <Box>
       <Flex alignItems="center" justifyContent="space-between" padding={4}>
-        <IoArrowBack
-          onClick={() => router.push("/")}
-          color="#E7E9EA"
-          size={30}
-        />
-        <Button size="sm">Edit</Button>
+        <Button variant="unstyled">
+          <IoArrowBack
+            onClick={() => router.push("/")}
+            color="#E7E9EA"
+            size={26}
+          />
+        </Button>
+        <Text fontSize="xl" color="#E7E9EA">Real Madrid F.C.</Text>
+        <Button variant="unstyled">
+          <IoSettingsOutline
+            onClick={() => console.log("settings")}
+            color="#E7E9EA"
+            size={26}
+          />
+        </Button>
       </Flex>
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
-          <Tab color="#E7E9EA">Matches</Tab>
-          <Tab color="#E7E9EA">Players</Tab>
-          <Tab color="#E7E9EA">Stats</Tab>
+          <Tab fontSize="lg" color="#E7E9EA">
+            Matches
+          </Tab>
+          <Tab fontSize="lg" color="#E7E9EA">
+            Players
+          </Tab>
+          <Tab fontSize="lg" color="#E7E9EA">
+            Stats
+          </Tab>
         </TabList>
         <TabIndicator
           mt="-1.5px"
@@ -44,7 +59,11 @@ const Team = () => {
 
         <TabPanels>
           <TabPanel>
-            <p style={{ color: "#E7E9EA" }}>one!</p>
+            <Box position="fixed" bottom={0} right={0} padding={8}>
+              <Button variant="unstyled">
+                <IoAddOutline color="#E7E9EA" size={40} />
+              </Button>
+            </Box>
           </TabPanel>
           <TabPanel>
             <p>two!</p>

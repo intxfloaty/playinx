@@ -14,10 +14,13 @@ import {
   TabIndicator,
 } from "../../chakraExports";
 import { IoArrowBack, IoAddOutline, IoSettingsOutline } from "react-icons/io5";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Team = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const team_name = searchParams.get("team_name");
 
   return (
     <Box>
@@ -29,7 +32,9 @@ const Team = () => {
             size={26}
           />
         </Button>
-        <Text fontSize="xl" color="#E7E9EA">Real Madrid F.C.</Text>
+        <Text fontSize="xl" color="#E7E9EA">
+          {team_name}
+        </Text>
         <Button variant="unstyled">
           <IoSettingsOutline
             onClick={() => console.log("settings")}

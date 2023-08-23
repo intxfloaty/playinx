@@ -154,7 +154,8 @@ const Drawer = ({ children }) => {
                             flexDir="row"
                             gap={5}
                             onClick={()=>{
-                              router.push(`/my-teams/${myTeam?.team_name}`)
+                              const team_name = myTeam?.team_name;
+                              router.push(`/my-teams/${team_name}?team_name=${team_name}`)
                             }}
                           >
                             <IoFootballOutline color="#E7E9EA" size={20} />

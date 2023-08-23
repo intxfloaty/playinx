@@ -59,6 +59,12 @@ export {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  TabIndicator
 } from "@chakra-ui/react";
 
 export { Link } from "@chakra-ui/next-js";

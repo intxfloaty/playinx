@@ -24,6 +24,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
       //       background: "#101010", 
       //     }
       //   }
+      // },
+      // Tabs:{
+      //   tab: {
+      //     colorScheme: "#E7E9EA"
+
+      //   },
+      //   tabpanel: {
+      //     fontFamily: 'mono', // change the font family
+      //   },
       // }
     },
   });

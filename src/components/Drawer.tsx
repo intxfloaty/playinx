@@ -31,11 +31,12 @@ import {
   IoFootballOutline,
 } from "react-icons/io5";
 import Link from "next/link";
-import { after } from "node:test";
 import { useRouter } from "next/navigation";
+import useTeamStore from "../utils/store/teamStore";
 
 const Drawer = ({ children }) => {
   const supabase = createClientComponentClient();
+  const setActiveTeam = useTeamStore((state) => state.setActiveTeam);
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
@@ -70,10 +71,10 @@ const Drawer = ({ children }) => {
       const myUserId = await getUserId();
       let { data: teams, error } = await supabase
         .from("teams")
-        .select("team_name")
+        .select("*")
         .eq("team_admin", `${myUserId}`);
 
-      if (teams && error === null) {
+      if (teams && teams.length > 0 && error === null) {
         setMyTeams(teams);
       }
     } catch (e) {
@@ -173,6 +174,7 @@ const Drawer = ({ children }) => {
                             flexDir="row"
                             gap={5}
                             onClick={() => {
+                              setActiveTeam(myTeam);
                               const team_name = myTeam?.team_name;
                               router.push(
                                 `/my-teams/${team_name}?team_name=${team_name}`

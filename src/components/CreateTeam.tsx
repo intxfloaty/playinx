@@ -21,6 +21,7 @@ import {
   Box,
 } from "../app/chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import useTeamStore from "../utils/store/teamStore";
 
 interface Errors {
   [key: string]: string;
@@ -28,6 +29,7 @@ interface Errors {
 
 const CreateTeam = () => {
   const supabase = createClientComponentClient();
+  const addTeam = useTeamStore((state) => state.addTeam);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [teamName, setTeamName] = useState("");
   const [location, setLocation] = useState("");
@@ -73,9 +75,14 @@ const CreateTeam = () => {
         ])
         .select();
 
+      if (data && data.length > 0 && error === null) {
+        const newTeam = data[0];
+        addTeam(newTeam);
+      }
+
       console.log(data, "data");
       console.log(error, "error");
-        onClose();
+      onClose();
       try {
       } catch (e) {
         console.log(e);

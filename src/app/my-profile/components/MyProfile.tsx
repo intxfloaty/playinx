@@ -16,6 +16,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import MyTeam from "../../../components/MyTeam";
 import { useRouter } from "next/navigation";
+import CreateTeam from "../../../components/CreateTeam";
 
 const MyProfile = () => {
   const supabase = createClientComponentClient();
@@ -78,7 +79,9 @@ const MyProfile = () => {
           {phone}
         </Text>
       </Flex>
-      <MyTeam />
+      <Flex alignItems="center" justifyContent="center" mt={5}>
+        <CreateTeam />
+      </Flex>
     </>
   );
 };

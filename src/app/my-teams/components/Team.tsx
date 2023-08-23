@@ -12,11 +12,14 @@ import {
   TabPanel,
   Button,
   TabIndicator,
+  useDisclosure,
 } from "../../chakraExports";
 import { IoArrowBack, IoAddOutline, IoSettingsOutline } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
+import Settings from "./SettingsModal";
 
 const Team = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -37,12 +40,13 @@ const Team = () => {
         </Text>
         <Button variant="unstyled">
           <IoSettingsOutline
-            onClick={() => console.log("settings")}
+            onClick={() => onOpen()}
             color="#E7E9EA"
             size={26}
           />
         </Button>
       </Flex>
+      <Settings isSettingsOpen={isOpen} onSettingsClose={onClose} />
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">
@@ -71,7 +75,11 @@ const Team = () => {
             </Box>
           </TabPanel>
           <TabPanel>
-            <p>two!</p>
+            <Box position="fixed" bottom={0} right={0} padding={8}>
+              <Button variant="unstyled">
+                <IoAddOutline color="#E7E9EA" size={40} />
+              </Button>
+            </Box>
           </TabPanel>
           <TabPanel>
             <p>three!</p>

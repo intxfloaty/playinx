@@ -11,20 +11,13 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
   Text,
-} from "../app/chakraExports";
+} from "../../chakraExports";
 
-const JoinTeam = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
+const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
   return (
     <>
-      <Button colorScheme="messenger" size="md" onClick={onOpen}>
-        Join Team
-      </Button>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isAddPlayerOpen} onClose={onAddPlayerClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Modal Title</ModalHeader>
@@ -33,7 +26,7 @@ const JoinTeam = () => {
             <Text>Hello</Text>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="blue" mr={3} onClick={onAddPlayerClose}>
               Close
             </Button>
             <Button variant="ghost">Secondary Action</Button>
@@ -44,4 +37,4 @@ const JoinTeam = () => {
   );
 };
 
-export default JoinTeam;
+export default AddPlayers;

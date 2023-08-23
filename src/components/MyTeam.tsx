@@ -1,7 +1,6 @@
 import React from "react";
 import { Input, Stack, Button, Text } from "../app/chakraExports";
 import CreateTeam from "./CreateTeam";
-import JoinTeam from "./JoinTeam";
 
 const MyTeam = () => {
   return (
@@ -20,7 +19,6 @@ const MyTeam = () => {
         }}
       >
         <CreateTeam />
-        <JoinTeam />
       </Stack>
     </>
   );

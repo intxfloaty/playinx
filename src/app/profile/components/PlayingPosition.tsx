@@ -50,16 +50,10 @@ function PlayingPosition({ onNext, goBack, onPositionChange }) {
           setPosition(e.target.value);
         }}
       >
-        <option value="GK">GK</option>
-        <option value="CB">CB</option>
-        <option value="LB">LB</option>
-        <option value="RB">RB</option>
-        <option value="CDM">CDM</option>
-        <option value="CM">CM</option>
-        <option value="CAM">CAM</option>
-        <option value="LW">LW</option>
-        <option value="RW">RW</option>
-        <option value="ST">ST</option>
+        <option value="Goal Keeper">Goal Keeper</option>
+        <option value="Defender">Defender</option>
+        <option value="Mid-Fielder">Mid-Fielder</option>
+        <option value="Forward">Forward</option>
       </Select>
       {positionError && (
         <Text fontSize="md" color="#FFB400">

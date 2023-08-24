@@ -30,7 +30,7 @@ const Settings = ({ isSettingsOpen, onSettingsClose }) => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Team Info</ModalHeader>
+          <ModalHeader>Team settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Button variant="unstyled" onClick={() => onOpen()}>

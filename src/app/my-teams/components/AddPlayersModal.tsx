@@ -18,18 +18,12 @@ import {
 } from "../../chakraExports";
 import useTeamStore from "../../../utils/store/teamStore";
 
-interface PlayerDetails {
+type PlayerDetails = {
+  user_id: string;
   name: string;
   dob: string;
   position: string;
-  rating: string;
-}
-
-const initialPlayerDetails: PlayerDetails = {
-  name: "",
-  dob: "",
-  position: "",
-  rating: "",
+  rating: number;
 };
 
 const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
@@ -37,9 +31,6 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneError, setPhoneError] = useState("");
-  const [playerDetails, setPlayerDetails] = useState<PlayerDetails>(initialPlayerDetails);
-
-  console.log(playerDetails, "playerDeta");
 
   const validate = () => {
     let error = "";
@@ -51,32 +42,59 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
     return error;
   };
 
-  const getPlayerDetails = async () => {
-    let { data: profiles, error } = await supabase.from("profiles").select("*");
+  const isPlayerDuplicate = async () => {
+    let { data: players, error } = await supabase
+      .from("players")
+      .select("*")
+      .eq("team_id", `${activeTeam.team_id}`)
+      .eq("player_phone", `${phoneNumber}`);
+
+    if (players.length > 0) {
+      setPhoneError("Player is already part of your squad!");
+      return true;
+    }
+  };
+
+  const getPlayerDetails = async (): Promise<PlayerDetails | undefined> => {
+    let { data: profiles, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("phone", `${phoneNumber}`);
 
     if (profiles && profiles.length > 0 && error === null) {
-      setPlayerDetails(profiles[0]);
+      return profiles[0];
     }
   };
 
   const handleAddClicked = async () => {
     const error = validate();
     setPhoneError(error);
-    getPlayerDetails();
-    if (!error) {
-      const { data, error } = await supabase
-        .from("players")
-        .insert([
-          {
-            team_id: activeTeam.team_id,
-            player_phone: phoneNumber,
-            player_name: playerDetails?.name,
-            player_dob: playerDetails?.dob,
-            player_position: playerDetails?.position,
-            player_rating: playerDetails?.rating
-          },
-        ])
-        .select();
+    const duplicatePlayer = await isPlayerDuplicate();
+    if (!duplicatePlayer) {
+      const playerDetails = await getPlayerDetails();
+      console.log(playerDetails, "data");
+      if (!error) {
+        const { data, error } = await supabase
+          .from("players")
+          .insert([
+            {
+              team_id: activeTeam.team_id,
+              player_phone: phoneNumber,
+              player_name: playerDetails?.name,
+              player_dob: playerDetails?.dob,
+              player_position: playerDetails?.position,
+              player_rating: playerDetails?.rating,
+            },
+          ])
+          .select();
+        console.log(error, "errdupl");
+        if (
+          error.message ===
+          'null value in column "player_name" of relation "players" violates not-null constraint'
+        ) {
+          setPhoneError("Player does not exist");
+        }
+      }
     }
   };
 
@@ -105,7 +123,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
                 isInvalid={!!phoneError}
                 errorBorderColor={phoneError ? "#FFB400" : ""}
                 placeholder="phone number"
-                textColor="antiquewhite"
+                textColor="black"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />

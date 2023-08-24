@@ -28,7 +28,7 @@ interface Errors {
 
 const CreateMatchModal = ({ isOpen, onClose }) => {
   const supabase = createClientComponentClient();
-  const addTeam = useTeamStore((state) => state.addTeam);
+  const activeTeam = useTeamStore((state) => state.activeTeam);
   const [format, setFormat] = useState("");
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
@@ -58,7 +58,24 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
-      console.log("match created");
+      const { data, error } = await supabase
+        .from("matches")
+        .insert([
+          {
+            format: format,
+            location: location,
+            date: date,
+            time: time,
+            opponent_name: "TBD",
+            team_id: activeTeam?.team_id,
+            // opponent_id:""
+          },
+        ])
+        .select();
+
+      console.log(data, "matchData");
+      console.log(error, "matchError");
+
     }
   };
 

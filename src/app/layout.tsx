@@ -22,7 +22,7 @@ export default async function RootLayout({
       <body
         style={{
           // backgroundColor: "#ffffff"
-          backgroundColor: "#161616",
+          backgroundColor: "black",
         }}
       >
         <AuthProvider accessToken={accessToken}>

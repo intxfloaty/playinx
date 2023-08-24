@@ -18,13 +18,28 @@ import {
 } from "../../chakraExports";
 import useTeamStore from "../../../utils/store/teamStore";
 
+interface PlayerDetails {
+  name: string;
+  dob: string;
+  position: string;
+  rating: string;
+}
+
+const initialPlayerDetails: PlayerDetails = {
+  name: "",
+  dob: "",
+  position: "",
+  rating: "",
+};
+
 const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
   const supabase = createClientComponentClient();
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [playerDetails, setPlayerDetails] = useState<PlayerDetails>(initialPlayerDetails);
 
-  console.log(activeTeam, "activeTeam");
+  console.log(playerDetails, "playerDeta");
 
   const validate = () => {
     let error = "";
@@ -36,14 +51,31 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
     return error;
   };
 
+  const getPlayerDetails = async () => {
+    let { data: profiles, error } = await supabase.from("profiles").select("*");
+
+    if (profiles && profiles.length > 0 && error === null) {
+      setPlayerDetails(profiles[0]);
+    }
+  };
+
   const handleAddClicked = async () => {
     const error = validate();
     setPhoneError(error);
+    getPlayerDetails();
     if (!error) {
       const { data, error } = await supabase
-        .from("teams")
-        .update({ other_column: "otherValue" })
-        .eq("", "someValue")
+        .from("players")
+        .insert([
+          {
+            team_id: activeTeam.team_id,
+            player_phone: phoneNumber,
+            player_name: playerDetails?.name,
+            player_dob: playerDetails?.dob,
+            player_position: playerDetails?.position,
+            player_rating: playerDetails?.rating
+          },
+        ])
         .select();
     }
   };

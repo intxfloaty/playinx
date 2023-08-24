@@ -50,6 +50,7 @@ function ProfileWorkflow() {
         dob: dob,
         gender: gender,
         position: newPosition,
+        rating: "2000",
       },
     ]);
 

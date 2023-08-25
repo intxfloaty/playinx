@@ -80,9 +80,11 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
             location: location,
             date: date,
             time: time,
-            opponent_name: opponentName,
             team_id: activeTeam?.team_id,
+            team_name: activeTeam?.team_name,
             opponent_id: opponentId,
+            opponent_name: opponentName,
+            match_status: "pending",
           },
         ])
         .select();

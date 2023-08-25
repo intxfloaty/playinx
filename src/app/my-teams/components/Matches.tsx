@@ -10,7 +10,11 @@ type Match = {
   date: string;
   location: string;
   time: string;
+  team_name: string;
   opponent_name: string;
+  opponent_id: string;
+  match_status: string;
+  opponent_status: string;
 };
 
 const Matches = () => {
@@ -24,12 +28,25 @@ const Matches = () => {
     let { data: matches, error } = await supabase
       .from("matches")
       .select("*")
-      .eq("team_id", `${activeTeam?.team_id}`);
+      .or(
+        `team_id.eq.${activeTeam?.team_id},opponent_id.eq.${activeTeam?.team_id}`
+      );
     if (matches && matches.length > 0 && error === null) {
       setMatches(matches);
     }
     // console.log(matches, "matchData");
     console.log(error, "matchError");
+  };
+
+  const handleAcceptBtn = async (match) => {
+    const { data, error } = await supabase
+      .from("matches")
+      .update({ opponent_status: "accepted" })
+      .eq("match_id", `${match.match_id}`)
+      .eq("opponent_id", `${match.opponent_id}`)
+      .select();
+    console.log(data, "currMatch");
+    console.log(error, "currError");
   };
 
   useEffect(() => {
@@ -91,7 +108,7 @@ const Matches = () => {
                 <Flex flexDir="column">
                   <Flex justifyContent="space-between" mb={2}>
                     <Text fontSize="lg" color="#E7E9EA">
-                      {activeTeam?.team_name}
+                      {match?.team_name}
                     </Text>
                     <Text fontSize="md" color="#E7E9EA">
                       1
@@ -120,6 +137,19 @@ const Matches = () => {
                 </Text>
               </Box>
             </Flex>
+            {activeTeam?.team_id === match?.opponent_id &&
+              activeTeam?.team_admin &&
+              match?.opponent_status === "pending" && (
+                <Flex flexDir="row" justifyContent="space-evenly" py={6}>
+                  <Button
+                    colorScheme="messenger"
+                    onClick={() => handleAcceptBtn(match)}
+                  >
+                    Accept
+                  </Button>
+                  <Button colorScheme="messenger">Decline</Button>
+                </Flex>
+              )}
           </Box>
         );
       })}

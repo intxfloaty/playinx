@@ -82,7 +82,7 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
             time: time,
             opponent_name: opponentName,
             team_id: activeTeam?.team_id,
-            // opponent_id:opponentId,
+            opponent_id: opponentId,
           },
         ])
         .select();
@@ -208,12 +208,18 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
               <Select
                 placeholder="Select opponent"
                 onChange={(e) => {
-                  setOpponentName(e.target.value);
-                  // setOpponentId(team?.opponent_id)
+                  const selectedOpponentId = e.target.value;
+                  const selectedOpponent = opponentTeams.find(
+                    (team) => team.team_id === selectedOpponentId
+                  );
+                  if (selectedOpponent) {
+                    setOpponentName(selectedOpponent.team_name);
+                    setOpponentId(selectedOpponent.team_id); // Assuming there's an 'id' property in your opponent's data structure
+                  }
                 }}
               >
                 {opponentTeams?.map((team, idx) => (
-                  <option key={idx} value={team.team_name}>
+                  <option key={idx} value={team.team_id}>
                     {team.team_name} - {team.location}
                   </option>
                 ))}

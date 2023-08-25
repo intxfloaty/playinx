@@ -72,10 +72,7 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
           },
         ])
         .select();
-
-      console.log(data, "matchData");
-      console.log(error, "matchError");
-
+        onClose();
     }
   };
 

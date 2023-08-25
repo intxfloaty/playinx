@@ -29,11 +29,13 @@ interface Errors {
 const CreateMatchModal = ({ isOpen, onClose }) => {
   const supabase = createClientComponentClient();
   const activeTeam = useTeamStore((state) => state.activeTeam);
+  const [opponentTeams, setOpponentTeams] = useState([]);
   const [format, setFormat] = useState("");
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
   const [time, setTime] = useState("");
-  const [opponent, setOpponent] = useState("");
+  const [opponentName, setOpponentName] = useState("");
+  const [opponentId, setOpponentId] = useState("");
 
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
 
@@ -54,6 +56,18 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
     return errors;
   };
 
+  const getOpponentTeams = async () => {
+    let { data: teams, error } = await supabase
+      .from("teams")
+      .select("*")
+      .neq("team_admin", `${activeTeam?.team_admin}`)
+      .eq("location", `${location}`);
+
+    if (!error) {
+      setOpponentTeams(teams);
+    }
+  };
+
   const onCreateClicked = async () => {
     const errors = validate();
     setFieldErrors(errors);
@@ -66,13 +80,13 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
             location: location,
             date: date,
             time: time,
-            opponent_name: "TBD",
+            opponent_name: opponentName,
             team_id: activeTeam?.team_id,
-            // opponent_id:""
+            // opponent_id:opponentId,
           },
         ])
         .select();
-        onClose();
+      onClose();
     }
   };
 
@@ -81,6 +95,14 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
       setFieldErrors(validate());
     }
   }, [format, date, time, location]);
+
+  useEffect(() => {
+    const fetchOpponentTeams = async () => {
+      await getOpponentTeams();
+    };
+
+    fetchOpponentTeams();
+  }, [location]);
 
   return (
     <Modal
@@ -183,11 +205,22 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
 
             <Box mb={5}>
               <FormLabel>Opponent</FormLabel>
-              <Input
-                type="text"
-                value={opponent}
-                onChange={(e) => setOpponent(e.target.value)}
-              />
+              <Select
+                placeholder="Select opponent"
+                onChange={(e) => {
+                  setOpponentName(e.target.value);
+                  // setOpponentId(team?.opponent_id)
+                }}
+              >
+                {opponentTeams?.map((team, idx) => (
+                  <option key={idx} value={team.team_name}>
+                    {team.team_name} - {team.location}
+                  </option>
+                ))}
+              </Select>
+              <FormHelperText>
+                Please select your opponent based on the location
+              </FormHelperText>
             </Box>
           </FormControl>
         </ModalBody>

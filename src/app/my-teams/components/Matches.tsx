@@ -10,6 +10,7 @@ type Match = {
   date: string;
   location: string;
   time: string;
+  opponent_name: string;
 };
 
 const Matches = () => {
@@ -98,7 +99,7 @@ const Matches = () => {
                   </Flex>
                   <Flex justifyContent="space-between">
                     <Text fontSize="lg" color="#E7E9EA">
-                      TBD
+                      {match?.opponent_name}
                     </Text>
                     <Text fontSize="md" color="#E7E9EA">
                       3

@@ -7,10 +7,12 @@ import useTeamStore from "../../../utils/store/teamStore";
 import { useRouter } from "next/navigation";
 
 type Match = {
+  match_id: string;
   date: string;
   location: string;
   time: string;
   team_name: string;
+  team_id: string;
   opponent_name: string;
   opponent_id: string;
   match_status: string;
@@ -49,6 +51,30 @@ const Matches = () => {
     console.log(error, "currError");
   };
 
+  const handleDeclineBtn = async (match) => {
+    const { data, error } = await supabase
+      .from("matches")
+      .update({
+        opponent_status: "declined",
+        opponent_name: null,
+        opponent_id: null,
+      })
+      .eq("match_id", `${match.match_id}`)
+      .eq("opponent_id", `${match.opponent_id}`)
+      .select();
+    console.log(data, "currMatch");
+    console.log(error, "currError");
+
+    setMatches((prevMatches) => {
+      const updatedMatches = prevMatches.map((prevMatch) =>
+        prevMatch.match_id === match.match_id
+          ? { ...prevMatch, opponent_name: null, opponent_id: null }
+          : prevMatch
+      );
+      return updatedMatches;
+    });
+  };
+
   useEffect(() => {
     getMatches();
   }, []);
@@ -64,6 +90,7 @@ const Matches = () => {
           table: "matches",
         },
         (payload) => {
+          console.log(payload, "payload");
           getMatches();
         }
       )
@@ -74,84 +101,101 @@ const Matches = () => {
     };
   }, [supabase, router]);
 
+  console.log(matches, "updatedMatch");
+
   return (
     <>
       {matches?.map((match, idx) => {
-        return (
-          <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}>
-            {/* upper container */}
-            <Flex
-              flexDir="column"
-              alignItems="flex-start"
-              paddingX={4}
-              paddingY={2}
-              borderBottomColor="gray"
-              borderBottomWidth="1px"
-            >
-              <Text fontSize="xl" color="#E7E9EA">
-                Matchday
-              </Text>
-              <Text fontSize="sm" color="gray">
-                {match?.date}
-              </Text>
-            </Flex>
-
-            {/* lower container */}
-            <Flex paddingX={4} paddingY={4} justifyContent="space-between">
-              {/* team box */}
-              <Box
-                flex="2"
-                borderRightColor="gray"
-                borderRightWidth="1px"
-                pr={3}
+        if (
+          activeTeam?.team_id === match?.team_id ||
+          activeTeam?.team_id === match?.opponent_id
+        ) {
+          return (
+            <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}>
+              {/* upper container */}
+              <Flex
+                flexDir="column"
+                alignItems="flex-start"
+                paddingX={4}
+                paddingY={2}
+                borderBottomColor="gray"
+                borderBottomWidth="1px"
               >
-                <Flex flexDir="column">
-                  <Flex justifyContent="space-between" mb={2}>
-                    <Text fontSize="lg" color="#E7E9EA">
-                      {match?.team_name}
-                    </Text>
-                    <Text fontSize="md" color="#E7E9EA">
-                      1
-                    </Text>
-                  </Flex>
-                  <Flex justifyContent="space-between">
-                    <Text fontSize="lg" color="#E7E9EA">
-                      {match?.opponent_name}
-                    </Text>
-                    <Text fontSize="md" color="#E7E9EA">
-                      3
-                    </Text>
-                  </Flex>
-                </Flex>
-              </Box>
-
-              {/*  score box */}
-              <Box
-                flex="1"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Text fontSize="md" color="gray">
-                  {match?.time}
+                <Text fontSize="xl" color="#E7E9EA">
+                  Matchday
                 </Text>
-              </Box>
-            </Flex>
-            {activeTeam?.team_id === match?.opponent_id &&
-              activeTeam?.team_admin &&
-              match?.opponent_status === "pending" && (
-                <Flex flexDir="row" justifyContent="space-evenly" py={6}>
-                  <Button
-                    colorScheme="messenger"
-                    onClick={() => handleAcceptBtn(match)}
-                  >
-                    Accept
-                  </Button>
-                  <Button colorScheme="messenger">Decline</Button>
-                </Flex>
-              )}
-          </Box>
-        );
+                <Text fontSize="sm" color="gray">
+                  {match?.date}
+                </Text>
+              </Flex>
+
+              {/* lower container */}
+              <Flex paddingX={4} paddingY={4} justifyContent="space-between">
+                {/* team box */}
+                <Box
+                  flex="2"
+                  borderRightColor="gray"
+                  borderRightWidth="1px"
+                  pr={3}
+                >
+                  <Flex flexDir="column">
+                    <Flex justifyContent="space-between" mb={2}>
+                      <Text fontSize="lg" color="#E7E9EA">
+                        {match?.team_name}
+                      </Text>
+                      <Text fontSize="md" color="#E7E9EA">
+                        1
+                      </Text>
+                    </Flex>
+                    <Flex justifyContent="space-between">
+                      {match?.opponent_name === null && (
+                        <Text fontSize="lg" color="#E7E9EA">
+                          TBD
+                        </Text>
+                      )}
+                      <Text fontSize="lg" color="#E7E9EA">
+                        {match?.opponent_name}
+                      </Text>
+                      <Text fontSize="md" color="#E7E9EA">
+                        3
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Box>
+
+                {/*  score box */}
+                <Box
+                  flex="1"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Text fontSize="md" color="gray">
+                    {match?.time}
+                  </Text>
+                </Box>
+              </Flex>
+              {activeTeam?.team_id === match?.opponent_id &&
+                activeTeam?.team_admin &&
+                match?.opponent_status === "pending" && (
+                  <Flex flexDir="row" justifyContent="space-evenly" py={6}>
+                    <Button
+                      colorScheme="messenger"
+                      onClick={() => handleAcceptBtn(match)}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      colorScheme="messenger"
+                      onClick={() => handleDeclineBtn(match)}
+                    >
+                      Decline
+                    </Button>
+                  </Flex>
+                )}
+            </Box>
+          );
+        }
       })}
       <Box position="fixed" bottom={0} right={0} padding={8}>
         <Button variant="unstyled" onClick={onOpen}>

@@ -23,7 +23,7 @@ const PlayersList = () => {
     getPlayers();
   }, []);
 
-  console.log(players, "players");
+  // console.log(players, "players");
 
   return (
     <Stack spacing={5}>

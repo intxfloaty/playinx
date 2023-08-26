@@ -25,6 +25,14 @@ const Matches = () => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [matches, setMatches] = useState<Match[]>([]);
+  const [userId, setUserId] = useState("");
+
+  const getUserId = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (data && error === null) {
+      setUserId(data.user.id);
+    }
+  };
 
   const getMatches = async () => {
     let { data: matches, error } = await supabase
@@ -76,6 +84,7 @@ const Matches = () => {
   };
 
   useEffect(() => {
+    getUserId();
     getMatches();
   }, []);
 
@@ -176,7 +185,7 @@ const Matches = () => {
                 </Box>
               </Flex>
               {activeTeam?.team_id === match?.opponent_id &&
-                activeTeam?.team_admin &&
+                activeTeam?.team_admin === userId &&
                 match?.opponent_status === "pending" && (
                   <Flex flexDir="row" justifyContent="space-evenly" py={6}>
                     <Button
@@ -197,12 +206,14 @@ const Matches = () => {
           );
         }
       })}
-      <Box position="fixed" bottom={0} right={0} padding={8}>
-        <Button variant="unstyled" onClick={onOpen}>
-          <IoAddOutline color="#E7E9EA" size={40} />
-        </Button>
-        <CreateMatchModal isOpen={isOpen} onClose={onClose} />
-      </Box>
+      {activeTeam?.team_admin === userId && (
+        <Box position="fixed" bottom={0} right={0} padding={8}>
+          <Button variant="unstyled" onClick={onOpen}>
+            <IoAddOutline color="#E7E9EA" size={40} />
+          </Button>
+          <CreateMatchModal isOpen={isOpen} onClose={onClose} />
+        </Box>
+      )}
     </>
   );
 };

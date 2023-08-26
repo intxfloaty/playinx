@@ -5,7 +5,7 @@ interface Team {
   team_name: string;
   format: string;
   location: string;
-  team_admin: number;
+  team_admin: string;
   rating: string;
   // Add other properties as needed
 }

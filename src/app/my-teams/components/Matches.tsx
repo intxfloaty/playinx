@@ -115,10 +115,12 @@ const Matches = () => {
   return (
     <>
       {matches?.map((match, idx) => {
-        if (
-          activeTeam?.team_id === match?.team_id ||
-          activeTeam?.team_id === match?.opponent_id
-        ) {
+        const isAdmin = activeTeam?.team_admin === userId;
+        const isPending = match.opponent_status === "pending";
+        const isAccepted = match.opponent_status === "accepted";
+        const isMyTeam = activeTeam?.team_id === match?.team_id;
+        const isOpponent = activeTeam?.team_id === match?.opponent_id;
+        if (isMyTeam) {
           return (
             <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}>
               {/* upper container */}
@@ -184,24 +186,192 @@ const Matches = () => {
                   </Text>
                 </Box>
               </Flex>
-              {activeTeam?.team_id === match?.opponent_id &&
-                activeTeam?.team_admin === userId &&
-                match?.opponent_status === "pending" && (
-                  <Flex flexDir="row" justifyContent="space-evenly" py={6}>
-                    <Button
-                      colorScheme="messenger"
-                      onClick={() => handleAcceptBtn(match)}
-                    >
-                      Accept
-                    </Button>
-                    <Button
-                      colorScheme="messenger"
-                      onClick={() => handleDeclineBtn(match)}
-                    >
-                      Decline
-                    </Button>
+              {isOpponent && isAdmin && isPending && (
+                <Flex flexDir="row" justifyContent="space-evenly" py={6}>
+                  <Button
+                    colorScheme="messenger"
+                    onClick={() => handleAcceptBtn(match)}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    colorScheme="messenger"
+                    onClick={() => handleDeclineBtn(match)}
+                  >
+                    Decline
+                  </Button>
+                </Flex>
+              )}
+            </Box>
+          );
+        }
+        if (isOpponent && isAdmin && isPending) {
+          return (
+            <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}>
+              {/* upper container */}
+              <Flex
+                flexDir="column"
+                alignItems="flex-start"
+                paddingX={4}
+                paddingY={2}
+                borderBottomColor="gray"
+                borderBottomWidth="1px"
+              >
+                <Text fontSize="xl" color="#E7E9EA">
+                  Matchday
+                </Text>
+                <Text fontSize="sm" color="gray">
+                  {match?.date}
+                </Text>
+              </Flex>
+
+              {/* lower container */}
+              <Flex paddingX={4} paddingY={4} justifyContent="space-between">
+                {/* team box */}
+                <Box
+                  flex="2"
+                  borderRightColor="gray"
+                  borderRightWidth="1px"
+                  pr={3}
+                >
+                  <Flex flexDir="column">
+                    <Flex justifyContent="space-between" mb={2}>
+                      <Text fontSize="lg" color="#E7E9EA">
+                        {match?.team_name}
+                      </Text>
+                      <Text fontSize="md" color="#E7E9EA">
+                        1
+                      </Text>
+                    </Flex>
+                    <Flex justifyContent="space-between">
+                      {match?.opponent_name === null && (
+                        <Text fontSize="lg" color="#E7E9EA">
+                          TBD
+                        </Text>
+                      )}
+                      <Text fontSize="lg" color="#E7E9EA">
+                        {match?.opponent_name}
+                      </Text>
+                      <Text fontSize="md" color="#E7E9EA">
+                        3
+                      </Text>
+                    </Flex>
                   </Flex>
-                )}
+                </Box>
+
+                {/*  score box */}
+                <Box
+                  flex="1"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Text fontSize="md" color="gray">
+                    {match?.time}
+                  </Text>
+                </Box>
+              </Flex>
+              {isOpponent && isAdmin && isPending && (
+                <Flex flexDir="row" justifyContent="space-evenly" py={6}>
+                  <Button
+                    colorScheme="messenger"
+                    onClick={() => handleAcceptBtn(match)}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    colorScheme="messenger"
+                    onClick={() => handleDeclineBtn(match)}
+                  >
+                    Decline
+                  </Button>
+                </Flex>
+              )}
+            </Box>
+          );
+        }
+        if (isOpponent && isAccepted) {
+          return (
+            <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}>
+              {/* upper container */}
+              <Flex
+                flexDir="column"
+                alignItems="flex-start"
+                paddingX={4}
+                paddingY={2}
+                borderBottomColor="gray"
+                borderBottomWidth="1px"
+              >
+                <Text fontSize="xl" color="#E7E9EA">
+                  Matchday
+                </Text>
+                <Text fontSize="sm" color="gray">
+                  {match?.date}
+                </Text>
+              </Flex>
+
+              {/* lower container */}
+              <Flex paddingX={4} paddingY={4} justifyContent="space-between">
+                {/* team box */}
+                <Box
+                  flex="2"
+                  borderRightColor="gray"
+                  borderRightWidth="1px"
+                  pr={3}
+                >
+                  <Flex flexDir="column">
+                    <Flex justifyContent="space-between" mb={2}>
+                      <Text fontSize="lg" color="#E7E9EA">
+                        {match?.team_name}
+                      </Text>
+                      <Text fontSize="md" color="#E7E9EA">
+                        1
+                      </Text>
+                    </Flex>
+                    <Flex justifyContent="space-between">
+                      {match?.opponent_name === null && (
+                        <Text fontSize="lg" color="#E7E9EA">
+                          TBD
+                        </Text>
+                      )}
+                      <Text fontSize="lg" color="#E7E9EA">
+                        {match?.opponent_name}
+                      </Text>
+                      <Text fontSize="md" color="#E7E9EA">
+                        3
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Box>
+
+                {/*  score box */}
+                <Box
+                  flex="1"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Text fontSize="md" color="gray">
+                    {match?.time}
+                  </Text>
+                </Box>
+              </Flex>
+              {isOpponent && isAdmin && !isAccepted && (
+                <Flex flexDir="row" justifyContent="space-evenly" py={6}>
+                  <Button
+                    colorScheme="messenger"
+                    onClick={() => handleAcceptBtn(match)}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    colorScheme="messenger"
+                    onClick={() => handleDeclineBtn(match)}
+                  >
+                    Decline
+                  </Button>
+                </Flex>
+              )}
             </Box>
           );
         }

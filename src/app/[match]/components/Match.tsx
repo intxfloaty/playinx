@@ -20,7 +20,6 @@ import {
   IoSettingsOutline,
   IoFootballOutline,
   IoFootball,
-  
 } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
 import useTeamStore from "../../../utils/store/teamStore";
@@ -38,14 +37,46 @@ type Match = {
   opponent_status: string;
 };
 
-const Team = () => {
+type Profile = {
+  name: string;
+  position: string;
+  rating: string;
+};
+
+type Squad = {
+  player_name: string;
+  player_rating: string;
+  player_position: string;
+};
+
+const Match = ({ user }) => {
   const supabase = createClientComponentClient();
+  const activeTeam = useTeamStore((state) => state.activeTeam);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [match, setMatch] = useState<Match[]>([]);
+  const [profile, setProfile] = useState<Profile>();
+  const [match, setMatch] = useState<Match>();
+  const [mySquad, setMySquad] = useState<Squad[]>([]);
+  const [oppSquad, setOppSquad] = useState<Squad[]>([]);
+
+  console.log(profile, "user");
 
   const matchId = searchParams.get("matchId");
+  const userId = user?.id;
+
+  const fetchPlayerDetails = async () => {
+    let { data: profile, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", `${userId}`);
+
+    console.log(profile, "profiles");
+    console.log(error, "err");
+    if (!error) {
+      setProfile(profile[0]);
+    }
+  };
 
   const fetchMatchDetails = async () => {
     let { data: matches, error } = await supabase
@@ -60,9 +91,73 @@ const Team = () => {
     }
   };
 
+  const fetchMyTeamLineup = async () => {
+    let { data: lineup, error } = await supabase
+      .from("lineup")
+      .select("*")
+      .eq("match_id", `${matchId}`)
+      .eq("team_id", `${match?.team_id}`);
+
+    // console.log(lineup, "lineup");
+    // console.log(error, "err");
+    if (!error) {
+      setMySquad(lineup);
+    }
+  };
+
+  const fetchOppTeamLineup = async () => {
+    let { data: lineup, error } = await supabase
+      .from("lineup")
+      .select("*")
+      .eq("match_id", `${matchId}`)
+      .eq("team_id", `${match?.opponent_id}`);
+
+    // console.log(lineup, "lineup");
+    // console.log(error, "err");
+    if (!error) {
+      setOppSquad(lineup);
+    }
+  };
+
+  const handleJoinMySquadBtn = async () => {
+    const { data, error } = await supabase.from("lineup").insert([
+      {
+        match_id: match?.match_id,
+        player_name: profile?.name,
+        player_position: profile?.position,
+        player_rating: profile?.rating,
+        team_id: match?.team_id,
+      },
+    ]);
+    // console.log(data, "lineupdata");
+    // console.log(error, "lineupERr");
+    fetchMyTeamLineup();
+  };
+
+  const handleJoinOppSquadBtn = async () => {
+    const { data, error } = await supabase.from("lineup").insert([
+      {
+        match_id: match?.match_id,
+        player_name: profile?.name,
+        player_position: profile?.position,
+        player_rating: profile?.rating,
+        team_id: match?.opponent_id,
+      },
+    ]);
+    // console.log(data, "lineupdata");
+    // console.log(error, "lineupERr");
+    fetchOppTeamLineup();
+  };
+
   useEffect(() => {
     fetchMatchDetails();
-  }, []);
+    fetchMyTeamLineup();
+    fetchOppTeamLineup();
+    fetchPlayerDetails();
+  }, [userId, matchId]);
+
+  console.log(mySquad, "mySquad");
+  console.log(oppSquad, "oppSquad");
 
   return (
     <Box>
@@ -120,7 +215,7 @@ const Team = () => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <IoFootball color="green"  size={36}/>
+          <IoFootball color="green" size={36} />
           <Text fontSize="md" color="#E7E9EA" mt={2}>
             {match?.opponent_name}
           </Text>
@@ -130,10 +225,10 @@ const Team = () => {
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">
-           Overview
+            Overview
           </Tab>
           <Tab fontSize="lg" color="#E7E9EA">
-           Line-up
+            Line-up
           </Tab>
           <Tab fontSize="lg" color="#E7E9EA">
             Stats
@@ -148,7 +243,20 @@ const Team = () => {
 
         <TabPanels>
           <TabPanel></TabPanel>
-          <TabPanel></TabPanel>
+          <TabPanel>
+            <Flex alignItems="center" justifyContent="center">
+              {match?.team_id === activeTeam?.team_id && (
+                <Button colorScheme="messenger" onClick={handleJoinMySquadBtn}>
+                  Join squad
+                </Button>
+              )}
+              {match?.opponent_id === activeTeam?.team_id && (
+                <Button colorScheme="messenger" onClick={handleJoinOppSquadBtn}>
+                  Join squad
+                </Button>
+              )}
+            </Flex>
+          </TabPanel>
           <TabPanel>
             <p>three!</p>
           </TabPanel>
@@ -158,4 +266,4 @@ const Team = () => {
   );
 };
 
-export default Team;
+export default Match;

@@ -338,7 +338,9 @@ const Matches = () => {
                 <Button
                   variant="unstyled"
                   onClick={() => {
-                    console.log("play");
+                    router.push(
+                      `/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
+                    );
                   }}
                   pr={6}
                 >

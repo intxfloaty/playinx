@@ -66,6 +66,16 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
     }
   };
 
+  const updateTeamWithPlayer = async (playerDetails) => {
+    const { data, error } = await supabase.rpc("add_player_to_team", {
+      p_team_id: activeTeam?.team_id,
+      p_user_id: `${playerDetails?.user_id}`,
+    });
+
+    console.log(data, "rpcData");
+    console.log(error, "rpcErr");
+  };
+
   const handleAddClicked = async () => {
     const error = validate();
     setPhoneError(error);
@@ -74,6 +84,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
       const playerDetails = await getPlayerDetails();
       console.log(playerDetails, "data");
       if (!error) {
+        await updateTeamWithPlayer(playerDetails);
         const { data, error } = await supabase
           .from("players")
           .insert([
@@ -89,7 +100,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
           .select();
         console.log(error, "errdupl");
         if (
-          error.message ===
+          error?.message ===
           'null value in column "player_name" of relation "players" violates not-null constraint'
         ) {
           setPhoneError("Player does not exist");

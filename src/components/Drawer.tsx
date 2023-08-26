@@ -72,7 +72,7 @@ const Drawer = ({ children }) => {
       let { data: teams, error } = await supabase
         .from("teams")
         .select("*")
-        .eq("team_admin", `${myUserId}`);
+        .or(`team_admin.eq.${myUserId},players.cs.{${myUserId}}`);
 
       if (teams && teams.length > 0 && error === null) {
         setMyTeams(teams);

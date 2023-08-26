@@ -13,27 +13,19 @@ import {
   TabPanel,
   Button,
   TabIndicator,
-  Avatar,
-  AvatarBadge,
-  AvatarGroup,
-  Wrap,
-  WrapItem,
   useDisclosure,
 } from "../../chakraExports";
-import { IoArrowBack, IoAddOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoArrowBack, IoSettingsOutline } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
 import Settings from "./SettingsModal";
 import useTeamStore from "../../../utils/store/teamStore";
-import Matches from "./Matches";
+import Matches from "./MatchList";
 import PlayersList from "./PlayersList";
 
 const Team = () => {
-  const supabase = createClientComponentClient();
-  const activeTeam = useTeamStore((state) => state.activeTeam);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [players, setPlayers] = useState([]);
 
   const team_name = searchParams.get("team_name");
 

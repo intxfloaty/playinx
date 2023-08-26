@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Box, Text, Button, useDisclosure, Flex } from "../../chakraExports";
-import { IoAddOutline } from "react-icons/io5";
+import {
+  IoAddOutline,
+  IoFootballOutline,
+  IoArrowForwardOutline,
+} from "react-icons/io5";
 import CreateMatchModal from "./CreateMatchModal";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import useTeamStore from "../../../utils/store/teamStore";
@@ -125,19 +129,36 @@ const Matches = () => {
             <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}>
               {/* upper container */}
               <Flex
-                flexDir="column"
-                alignItems="flex-start"
-                paddingX={4}
-                paddingY={2}
+                flexDir="row"
+                justifyContent="space-between"
+                alignItems="center"
                 borderBottomColor="gray"
                 borderBottomWidth="1px"
               >
-                <Text fontSize="xl" color="#E7E9EA">
-                  Matchday
-                </Text>
-                <Text fontSize="sm" color="gray">
-                  {match?.date}
-                </Text>
+                <Flex
+                  flexDir="column"
+                  alignItems="flex-start"
+                  paddingX={4}
+                  paddingY={2}
+                >
+                  <Text fontSize="xl" color="#E7E9EA">
+                    Matchday
+                  </Text>
+                  <Text fontSize="sm" color="gray">
+                    {match?.date}
+                  </Text>
+                </Flex>
+                <Button
+                  variant="unstyled"
+                  onClick={() => {
+                    router.push(
+                      `/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
+                    );
+                  }}
+                  pr={6}
+                >
+                  <IoArrowForwardOutline color="#E7E9EA" size={25} />
+                </Button>
               </Flex>
 
               {/* lower container */}
@@ -295,19 +316,34 @@ const Matches = () => {
             <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}>
               {/* upper container */}
               <Flex
-                flexDir="column"
-                alignItems="flex-start"
-                paddingX={4}
-                paddingY={2}
+                flexDir="row"
+                justifyContent="space-between"
+                alignItems="center"
                 borderBottomColor="gray"
                 borderBottomWidth="1px"
               >
-                <Text fontSize="xl" color="#E7E9EA">
-                  Matchday
-                </Text>
-                <Text fontSize="sm" color="gray">
-                  {match?.date}
-                </Text>
+                <Flex
+                  flexDir="column"
+                  alignItems="flex-start"
+                  paddingX={4}
+                  paddingY={2}
+                >
+                  <Text fontSize="xl" color="#E7E9EA">
+                    Matchday
+                  </Text>
+                  <Text fontSize="sm" color="gray">
+                    {match?.date}
+                  </Text>
+                </Flex>
+                <Button
+                  variant="unstyled"
+                  onClick={() => {
+                    console.log("play");
+                  }}
+                  pr={6}
+                >
+                  <IoArrowForwardOutline color="#E7E9EA" size={25} />
+                </Button>
               </Flex>
 
               {/* lower container */}

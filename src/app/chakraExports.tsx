@@ -64,7 +64,12 @@ export {
   TabPanels,
   Tab,
   TabPanel,
-  TabIndicator
+  TabIndicator,
+  List,
+  ListItem,
+  ListIcon,
+  OrderedList,
+  UnorderedList,
 } from "@chakra-ui/react";
 
 export { Link } from "@chakra-ui/next-js";

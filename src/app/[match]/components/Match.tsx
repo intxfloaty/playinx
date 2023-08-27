@@ -13,6 +13,11 @@ import {
   TabPanel,
   Button,
   TabIndicator,
+  List,
+  ListItem,
+  ListIcon,
+  OrderedList,
+  UnorderedList,
   useDisclosure,
 } from "../../chakraExports";
 import {
@@ -20,6 +25,7 @@ import {
   IoSettingsOutline,
   IoFootballOutline,
   IoFootball,
+  IoFlashOutline,
 } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
 import useTeamStore from "../../../utils/store/teamStore";
@@ -59,10 +65,9 @@ const Match = ({ user }) => {
   const [match, setMatch] = useState<Match>();
   const [mySquad, setMySquad] = useState<Squad[]>([]);
   const [oppSquad, setOppSquad] = useState<Squad[]>([]);
+  const [matchId, setMatchId] = useState("");
 
-  console.log(profile, "user");
-
-  const matchId = searchParams.get("matchId");
+  const match_Id = searchParams.get("matchId");
   const userId = user?.id;
 
   const fetchPlayerDetails = async () => {
@@ -71,8 +76,8 @@ const Match = ({ user }) => {
       .select("*")
       .eq("user_id", `${userId}`);
 
-    console.log(profile, "profiles");
-    console.log(error, "err");
+    // console.log(profile, "profiles");
+    console.log(error, "profileErr");
     if (!error) {
       setProfile(profile[0]);
     }
@@ -95,11 +100,11 @@ const Match = ({ user }) => {
     let { data: lineup, error } = await supabase
       .from("lineup")
       .select("*")
-      .eq("match_id", `${matchId}`)
-      .eq("team_id", `${match?.team_id}`);
+      .eq("match_id", matchId)
+      .eq("team_id", match?.team_id);
 
     // console.log(lineup, "lineup");
-    // console.log(error, "err");
+    console.log(error, "Myerr");
     if (!error) {
       setMySquad(lineup);
     }
@@ -109,11 +114,11 @@ const Match = ({ user }) => {
     let { data: lineup, error } = await supabase
       .from("lineup")
       .select("*")
-      .eq("match_id", `${matchId}`)
-      .eq("team_id", `${match?.opponent_id}`);
+      .eq("match_id", matchId)
+      .eq("team_id", match?.opponent_id);
 
     // console.log(lineup, "lineup");
-    // console.log(error, "err");
+    console.log(error, "Opperr");
     if (!error) {
       setOppSquad(lineup);
     }
@@ -150,11 +155,22 @@ const Match = ({ user }) => {
   };
 
   useEffect(() => {
-    fetchMatchDetails();
-    fetchMyTeamLineup();
-    fetchOppTeamLineup();
+    setMatchId(match_Id);
+  }, [match_Id]);
+
+  useEffect(() => {
+    if (matchId) {
+      fetchMatchDetails();
+    }
     fetchPlayerDetails();
-  }, [userId, matchId]);
+  }, [matchId]);
+
+  useEffect(() => {
+    if (match) {
+      fetchMyTeamLineup();
+      fetchOppTeamLineup();
+    }
+  }, [match]);
 
   console.log(mySquad, "mySquad");
   console.log(oppSquad, "oppSquad");
@@ -244,6 +260,33 @@ const Match = ({ user }) => {
         <TabPanels>
           <TabPanel></TabPanel>
           <TabPanel>
+            <Flex flexDir="row" alignItems="center" justifyContent="center">
+              {mySquad?.map((player, idx) => {
+                return (
+                  <Flex key={idx} flexDir="column">
+                    <List spacing={3}>
+                      <ListItem color="#E7E9EA">
+                        <ListIcon as={IoFlashOutline} color="green.500" />
+                        {player?.player_name}
+                      </ListItem>
+                    </List>
+                  </Flex>
+                );
+              })}
+
+              {oppSquad?.map((player, idx) => {
+                return (
+                  <Flex key={idx} flexDir="column">
+                    <List spacing={3}>
+                      <ListItem color="#E7E9EA">
+                        <ListIcon as={IoFlashOutline} color="green.500" />
+                        {player?.player_name}
+                      </ListItem>
+                    </List>
+                  </Flex>
+                );
+              })}
+            </Flex>
             <Flex alignItems="center" justifyContent="center">
               {match?.team_id === activeTeam?.team_id && (
                 <Button colorScheme="messenger" onClick={handleJoinMySquadBtn}>

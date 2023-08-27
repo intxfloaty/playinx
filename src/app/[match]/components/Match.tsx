@@ -19,6 +19,8 @@ import {
   OrderedList,
   UnorderedList,
   useDisclosure,
+  Divider,
+  Center,
 } from "../../chakraExports";
 import {
   IoArrowBack,
@@ -260,34 +262,35 @@ const Match = ({ user }) => {
         <TabPanels>
           <TabPanel></TabPanel>
           <TabPanel>
-            <Flex flexDir="row" alignItems="center" justifyContent="center">
-              {mySquad?.map((player, idx) => {
-                return (
-                  <Flex key={idx} flexDir="column">
-                    <List spacing={3}>
-                      <ListItem color="#E7E9EA">
-                        <ListIcon as={IoFlashOutline} color="green.500" />
-                        {player?.player_name}
-                      </ListItem>
+            <Flex justifyContent="space-evenly" mt={6}>
+              <Box width="40%">
+                <Flex flexDir="column">
+                  {mySquad?.map((squad, idx) => (
+                    <List key={idx} spacing={3}>
+                      <ListItem color="#E7E9EA">{squad?.player_name}</ListItem>
                     </List>
-                  </Flex>
-                );
-              })}
+                  ))}
+                </Flex>
+              </Box>
 
-              {oppSquad?.map((player, idx) => {
-                return (
-                  <Flex key={idx} flexDir="column">
-                    <List spacing={3}>
-                      <ListItem color="#E7E9EA">
-                        <ListIcon as={IoFlashOutline} color="green.500" />
-                        {player?.player_name}
-                      </ListItem>
+              <Box>
+                <Center height="50px">
+                  <Divider orientation="vertical" />
+                </Center>
+              </Box>
+
+              <Box width="40%">
+                <Flex flexDir="column">
+                  {oppSquad?.map((squad, idx) => (
+                    <List key={idx} spacing={3}>
+                      <ListItem color="#E7E9EA">{squad?.player_name}</ListItem>
                     </List>
-                  </Flex>
-                );
-              })}
+                  ))}
+                </Flex>
+              </Box>
             </Flex>
-            <Flex alignItems="center" justifyContent="center">
+
+            <Flex alignItems="center" justifyContent="center" mt={10}>
               {match?.team_id === activeTeam?.team_id && (
                 <Button colorScheme="messenger" onClick={handleJoinMySquadBtn}>
                   Join squad

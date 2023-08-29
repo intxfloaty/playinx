@@ -34,6 +34,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useTeamStore from "../../../utils/store/teamStore";
 
 type Match = {
+  format: string;
   match_id: string;
   date: string;
   location: string;
@@ -295,6 +296,43 @@ const Match = ({ user }) => {
         <TabPanels>
           <TabPanel></TabPanel>
           <TabPanel>
+            {/* <Box> */}
+            {match?.format === "5v5" && (
+              <Text fontSize="lg" color="gray">
+               Min Squad Size: 8 ({match?.format})
+              </Text>
+            )}
+            {match?.format === "6v6" && (
+              <Text fontSize="lg" color="gray">
+               Min Squad Size: 9 ({match?.format})
+              </Text>
+            )}
+            {match?.format === "7v7" && (
+              <Text fontSize="lg" color="gray">
+                Min Squad Size: 10 ({match?.format})
+              </Text>
+            )}
+            {match?.format === "8v8" && (
+              <Text fontSize="lg" color="gray">
+                Min Squad Size: 11 ({match?.format})
+              </Text>
+            )}
+            {match?.format === "9v9" && (
+              <Text fontSize="lg" color="gray">
+                Min Squad Size: 12 ({match?.format})
+              </Text>
+            )}
+            {match?.format === "10v10" && (
+              <Text fontSize="lg" color="gray">
+                Min Squad Size: 13 ({match?.format})
+              </Text>
+            )}
+            {match?.format === "11v11" && (
+              <Text fontSize="lg" color="gray">
+                Min Squad Size: 15 ({match?.format})
+              </Text>
+            )}
+            {/* </Box> */}
             <Flex justifyContent="space-evenly" mt={6}>
               <Box width="40%">
                 <Flex flexDir="column">

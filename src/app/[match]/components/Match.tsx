@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "../../../database.types";
 import {
   Stack,
   Text,
@@ -55,10 +56,12 @@ type Squad = {
   player_name: string;
   player_rating: string;
   player_position: string;
+  player_id: string;
+  team_id: string;
 };
 
 const Match = ({ user }) => {
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
@@ -127,33 +130,39 @@ const Match = ({ user }) => {
   };
 
   const handleJoinMySquadBtn = async () => {
-    const { data, error } = await supabase.from("lineup").insert([
-      {
-        match_id: match?.match_id,
-        player_name: profile?.name,
-        player_position: profile?.position,
-        player_rating: profile?.rating,
-        team_id: match?.team_id,
-      },
-    ]);
-    // console.log(data, "lineupdata");
-    // console.log(error, "lineupERr");
-    fetchMyTeamLineup();
+    const player = mySquad?.find((player) => player.player_id === userId);
+    if (!player) {
+      const { data, error } = await supabase
+        .from("lineup")
+        .insert([
+          {
+            match_id: match?.match_id,
+            player_name: profile?.name,
+            player_position: profile?.position,
+            player_rating: profile?.rating,
+            team_id: match?.team_id,
+          },
+        ])
+      console.log(error, "MylineupERr");
+    }
   };
 
   const handleJoinOppSquadBtn = async () => {
-    const { data, error } = await supabase.from("lineup").insert([
-      {
-        match_id: match?.match_id,
-        player_name: profile?.name,
-        player_position: profile?.position,
-        player_rating: profile?.rating,
-        team_id: match?.opponent_id,
-      },
-    ]);
-    // console.log(data, "lineupdata");
-    // console.log(error, "lineupERr");
-    fetchOppTeamLineup();
+    const player = oppSquad?.find((player) => player.player_id === userId);
+    if (!player) {
+      const { data, error } = await supabase
+        .from("lineup")
+        .insert([
+          {
+            match_id: match?.match_id,
+            player_name: profile?.name,
+            player_position: profile?.position,
+            player_rating: profile?.rating,
+            team_id: match?.opponent_id,
+          },
+        ])
+      console.log(error, "OpplineupERr");
+    }
   };
 
   useEffect(() => {
@@ -173,6 +182,34 @@ const Match = ({ user }) => {
       fetchOppTeamLineup();
     }
   }, [match]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("squad")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "lineup",
+        },
+        (payload) => {
+          console.log(payload, "payload");
+          const newSquad = payload.new as Squad;
+          if (newSquad.team_id === match?.team_id) {
+            setMySquad([...mySquad, newSquad]);
+          }
+          if (newSquad.team_id === match?.opponent_id) {
+            setOppSquad([...oppSquad, newSquad]);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, mySquad, oppSquad, setMySquad, setOppSquad]);
 
   console.log(mySquad, "mySquad");
   console.log(oppSquad, "oppSquad");

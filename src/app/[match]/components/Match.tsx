@@ -69,6 +69,17 @@ const Match = ({ user }) => {
   const searchParams = useSearchParams();
   const [profile, setProfile] = useState<Profile>();
   const [match, setMatch] = useState<Match>();
+
+  const minSquadSizes = {
+    "5v5": 8,
+    "6v6": 9,
+    "7v7": 10,
+    "8v8": 11,
+    "9v9": 12,
+    "10v10": 13,
+    "11v11": 15,
+  };
+
   const [mySquad, setMySquad] = useState<Squad[]>([]);
   const [oppSquad, setOppSquad] = useState<Squad[]>([]);
   const [matchId, setMatchId] = useState("");
@@ -162,6 +173,17 @@ const Match = ({ user }) => {
     }
   };
 
+  const updateMatchStatus = async () => {
+    const { data, error } = await supabase
+      .from("matches")
+      .update({ match_status: "fixed" })
+      .eq("match_id", `${matchId}`)
+      .select();
+
+    console.log(data, "match_status");
+    console.log(error, "match_statusErr");
+  };
+
   useEffect(() => {
     setMatchId(match_Id);
   }, [match_Id]);
@@ -179,6 +201,17 @@ const Match = ({ user }) => {
       fetchOppTeamLineup();
     }
   }, [match]);
+
+  useEffect(() => {
+    const requiredSize = minSquadSizes[match?.format];
+    if (
+      requiredSize !== undefined &&
+      mySquad.length >= requiredSize &&
+      oppSquad.length >= requiredSize
+    ) {
+      updateMatchStatus();
+    }
+  }, [mySquad, oppSquad, match?.format]);
 
   useEffect(() => {
     const channel = supabase
@@ -299,12 +332,12 @@ const Match = ({ user }) => {
             {/* <Box> */}
             {match?.format === "5v5" && (
               <Text fontSize="lg" color="gray">
-               Min Squad Size: 8 ({match?.format})
+                Min Squad Size: 8 ({match?.format})
               </Text>
             )}
             {match?.format === "6v6" && (
               <Text fontSize="lg" color="gray">
-               Min Squad Size: 9 ({match?.format})
+                Min Squad Size: 9 ({match?.format})
               </Text>
             )}
             {match?.format === "7v7" && (

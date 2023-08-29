@@ -132,17 +132,15 @@ const Match = ({ user }) => {
   const handleJoinMySquadBtn = async () => {
     const player = mySquad?.find((player) => player.player_id === userId);
     if (!player) {
-      const { data, error } = await supabase
-        .from("lineup")
-        .insert([
-          {
-            match_id: match?.match_id,
-            player_name: profile?.name,
-            player_position: profile?.position,
-            player_rating: profile?.rating,
-            team_id: match?.team_id,
-          },
-        ])
+      const { data, error } = await supabase.from("lineup").insert([
+        {
+          match_id: match?.match_id,
+          player_name: profile?.name,
+          player_position: profile?.position,
+          player_rating: profile?.rating,
+          team_id: match?.team_id,
+        },
+      ]);
       console.log(error, "MylineupERr");
     }
   };
@@ -150,17 +148,15 @@ const Match = ({ user }) => {
   const handleJoinOppSquadBtn = async () => {
     const player = oppSquad?.find((player) => player.player_id === userId);
     if (!player) {
-      const { data, error } = await supabase
-        .from("lineup")
-        .insert([
-          {
-            match_id: match?.match_id,
-            player_name: profile?.name,
-            player_position: profile?.position,
-            player_rating: profile?.rating,
-            team_id: match?.opponent_id,
-          },
-        ])
+      const { data, error } = await supabase.from("lineup").insert([
+        {
+          match_id: match?.match_id,
+          player_name: profile?.name,
+          player_position: profile?.position,
+          player_rating: profile?.rating,
+          team_id: match?.opponent_id,
+        },
+      ]);
       console.log(error, "OpplineupERr");
     }
   };
@@ -328,16 +324,24 @@ const Match = ({ user }) => {
             </Flex>
 
             <Flex alignItems="center" justifyContent="center" mt={10}>
-              {match?.team_id === activeTeam?.team_id && (
-                <Button colorScheme="messenger" onClick={handleJoinMySquadBtn}>
-                  Join squad
-                </Button>
-              )}
-              {match?.opponent_id === activeTeam?.team_id && (
-                <Button colorScheme="messenger" onClick={handleJoinOppSquadBtn}>
-                  Join squad
-                </Button>
-              )}
+              {match?.team_id === activeTeam?.team_id &&
+                !mySquad?.some((player) => player?.player_id === userId) && (
+                  <Button
+                    colorScheme="messenger"
+                    onClick={handleJoinMySquadBtn}
+                  >
+                    Join squad
+                  </Button>
+                )}
+              {match?.opponent_id === activeTeam?.team_id &&
+                !oppSquad?.some((player) => player?.player_id === userId) && (
+                  <Button
+                    colorScheme="messenger"
+                    onClick={handleJoinOppSquadBtn}
+                  >
+                    Join squad
+                  </Button>
+                )}
             </Flex>
           </TabPanel>
           <TabPanel>

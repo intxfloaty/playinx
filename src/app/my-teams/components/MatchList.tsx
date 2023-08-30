@@ -77,14 +77,16 @@ const Matches = () => {
     console.log(data, "currMatch");
     console.log(error, "currError");
 
-    setMatches((prevMatches) => {
-      const updatedMatches = prevMatches.map((prevMatch) =>
-        prevMatch.match_id === match.match_id
-          ? { ...prevMatch, opponent_name: null, opponent_id: null }
-          : prevMatch
-      );
-      return updatedMatches;
-    });
+    if (!error) {
+      setMatches((prevMatches) => {
+        const updatedMatches = prevMatches.map((prevMatch) =>
+          prevMatch.match_id === match.match_id
+            ? { ...prevMatch, opponent_name: null, opponent_id: null }
+            : prevMatch
+        );
+        return updatedMatches;
+      });
+    }
   };
 
   useEffect(() => {

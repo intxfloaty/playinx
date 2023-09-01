@@ -29,6 +29,7 @@ import {
   IoFootballOutline,
   IoFootstepsOutline,
   IoArrowForwardOutline,
+  IoCloseOutline,
 } from "react-icons/io5";
 
 const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
@@ -49,54 +50,57 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalCloseButton color="#E7E9EA" />
-        <ModalHeader className="modal-header">
-          <Flex
-            flexDir="row"
-            alignItems="center"
-            justifyContent="space-around"
-            mt={10}
-          >
-            <Box w="20%">
-              <Input
-                type="number"
-                color="#E7E9EA"
-                value={teamScore}
-                onChange={(e) => {
-                  console.log(e.target.value, "targer");
-                  setTeamScore(e.target.value);
-                  const count = Number(e.target.value);
-                  const arr = Array.from(
-                    { length: count },
-                    (_, index) => index
-                  );
-                  setTeamGoalCount(arr);
-                }}
-              />
-            </Box>
-            <Box w="20%">
-              <Input type="number" color="#E7E9EA" />
-            </Box>
-          </Flex>
-        </ModalHeader>
-        <ModalBody>
-          <Tabs align="center" isFitted variant="unstyled">
-            <TabList>
-              <Tab fontSize="lg" color="#E7E9EA">
-                {match?.team_name}
-              </Tab>
-              <Tab fontSize="lg" color="#E7E9EA">
-                {match?.opponent_name}
-              </Tab>
-            </TabList>
-            <TabIndicator
-              mt="-1.5px"
-              height="2px"
-              bg="#E7E9EA"
-              borderRadius="1px"
-            />
+        <div style={{ maxHeight: "100vh", overflowY: "scroll" }}>
+          {/* header box */}
+          <ModalHeader className="modal-header">
+            <Flex justifyContent="flex-end">
+              <IoCloseOutline color="#E7E9EA" size={30} onClick={onClose} />
+            </Flex>
+            <Flex
+              flexDir="row"
+              alignItems="center"
+              justifyContent="space-around"
+              mt={4}
+            >
+              <Box w="20%">
+                <Input
+                  type="number"
+                  color="#E7E9EA"
+                  value={teamScore}
+                  onChange={(e) => {
+                    console.log(e.target.value, "targer");
+                    setTeamScore(e.target.value);
+                    const count = Number(e.target.value);
+                    const arr = Array.from(
+                      { length: count },
+                      (_, index) => index
+                    );
+                    setTeamGoalCount(arr);
+                  }}
+                />
+              </Box>
+              <Box w="20%">
+                <Input type="number" color="#E7E9EA" />
+              </Box>
+            </Flex>
+          </ModalHeader>
 
-            <div style={{ maxHeight: "500px", overflowY: "scroll" }}>
+          {/* content box */}
+          <ModalBody>
+            <Tabs
+              align="center"
+              isFitted
+              variant="enclosed"
+              colorScheme="#161616"
+            >
+              <TabList>
+                <Tab fontSize="lg" color="#E7E9EA">
+                  {match?.team_name}
+                </Tab>
+                <Tab fontSize="lg" color="#E7E9EA">
+                  {match?.opponent_name}
+                </Tab>
+              </TabList>
               <TabPanels>
                 <TabPanel>
                   {teamGoalCount?.map((count, idx) => {
@@ -106,6 +110,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                         mt={4}
                         borderBottomColor="gray"
                         borderBottomWidth="1px"
+                        borderBottomStyle="dashed"
                         pb={2}
                       >
                         {/* goals */}
@@ -147,10 +152,10 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                 </TabPanel>
                 <TabPanel></TabPanel>
               </TabPanels>
-            </div>
-          </Tabs>
-        </ModalBody>
-        <ModalFooter></ModalFooter>
+            </Tabs>
+          </ModalBody>
+          <ModalFooter></ModalFooter>
+        </div>
       </ModalContent>
     </Modal>
   );

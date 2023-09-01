@@ -40,8 +40,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   const [oppLineup, setOppLineup] = useState([]);
   const [teamScore, setTeamScore] = useState("");
   const [oppScore, setOppScore] = useState("");
-  const [teamGoalCount, setTeamGoalCount] = useState([]);
-  const [oppGoalCount, setOppGoalCount] = useState([]);
+  const [teamPlayers, setTeamPlayers] = useState([]);
+  const [oppPlayers, setOppPlayers] = useState([]);
 
   const fetchTeamLineUp = async () => {
     let { data: lineup, error } = await supabase
@@ -67,14 +67,49 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
     }
   };
 
+  const updateMatchScore = async () => {
+    const { data, error } = await supabase
+      .from("matches")
+      .update({
+        match_status: "completed",
+        team_score: teamScore,
+        opponent_score: oppScore,
+      })
+      .eq("match_id", `${match?.match_id}`);
+  };
+
+  const updateTeamLineUp = async () => {
+    const { data, error } = await supabase
+      .from("lineup")
+      .update({
+        goals: "",
+        assists: "",
+      })
+      .eq("match_id", `${match?.match_id}`)
+      .eq("team_id", `${match?.team_id}`);
+  };
+
+  const updateOppLineUp = async () => {
+    const { data, error } = await supabase
+      .from("lineup")
+      .update({
+        goals: "",
+        assists: "",
+      })
+      .eq("match_id", `${match?.match_id}`)
+      .eq("team_id", `${match?.opponent_id}`);
+  };
+
+  const handleSubmit = async () => {
+    await updateMatchScore();
+    await updateTeamLineUp();
+    await updateOppLineUp();
+  };
+
   useEffect(() => {
     fetchTeamLineUp();
     fetchOppLineUp();
   }, []);
-
-  // console.log(match, "match");
-  console.log(teamLineup, "tLine");
-  console.log(oppLineup, "oppLine");
 
   return (
     <Modal
@@ -105,12 +140,6 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                   value={teamScore}
                   onChange={(e) => {
                     setTeamScore(e.target.value);
-                    const count = Number(e.target.value);
-                    const arr = Array.from(
-                      { length: count },
-                      (_, index) => index
-                    );
-                    setTeamGoalCount(arr);
                   }}
                 />
               </Box>
@@ -121,12 +150,6 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                   value={oppScore}
                   onChange={(e) => {
                     setOppScore(e.target.value);
-                    const count = Number(e.target.value);
-                    const arr = Array.from(
-                      { length: count },
-                      (_, index) => index
-                    );
-                    setOppGoalCount(arr);
                   }}
                 />
               </Box>
@@ -151,131 +174,136 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  {teamGoalCount?.map((count, idx) => {
-                    return (
-                      <Box
-                        key={idx}
-                        mt={4}
-                        borderBottomColor="gray"
-                        borderBottomWidth="1px"
-                        borderBottomStyle="dashed"
-                        pb={2}
-                      >
-                        {/* goals */}
-                        <Flex
-                          flexDir="row"
-                          justifyContent="space-between"
-                          alignItems="center"
-                        >
-                          <IoFootballOutline color="#E7E9EA" size={20} />
-                          <Box w="60%">
-                            <Select
-                              placeholder="Select player"
-                              color="#E7E9EA"
-                              onChange={(e) => {}}
-                            >
-                              {teamLineup?.map((player, idx) => (
-                                <option key={idx} value={player?.player_name}>
-                                  {player?.player_name}
-                                </option>
-                              ))}
-                            </Select>
-                          </Box>
-                        </Flex>
-                        {/* end of goals */}
+                  <Flex flexDir="column">
+                    <Select
+                      placeholder="Select Player"
+                      color="#E7E9EA"
+                      onChange={(e) => {
+                        const newPlayer = e.target.value;
+                        setTeamPlayers(teamPlayers.concat(newPlayer));
+                      }}
+                    >
+                      {teamLineup?.map((player, idx) => (
+                        <option key={idx} value={player?.player_name}>
+                          {player?.player_name}
+                        </option>
+                      ))}
+                    </Select>
 
-                        {/* assists */}
+                    {teamPlayers?.map((player, idx) => {
+                      return (
                         <Flex
-                          flexDir="row"
-                          justifyContent="space-between"
+                          key={idx}
+                          my={6}
                           alignItems="center"
-                          mt={2}
+                          justifyContent="space-between"
                         >
-                          <IoFlash color="#E7E9EA" size={20} />
-                          <Box w="60%">
-                            <Select
-                              placeholder="Select player"
-                              color="#E7E9EA"
-                              onChange={(e) => {}}
-                            >
-                              {teamLineup?.map((player, idx) => (
-                                <option key={idx} value={player?.player_name}>
-                                  {player?.player_name}
-                                </option>
-                              ))}
-                            </Select>
-                          </Box>
+                          <Text color="#E7E9EA">{player}</Text>
+                          <Flex
+                            justifyContent="flex-end"
+                            w="35%"
+                            alignItems="center"
+                          >
+                            <Box>
+                              <Input
+                                color="#E7E9EA"
+                                type="number"
+                                value="5"
+                                onChange={(e) => {}}
+                              />
+                            </Box>
+                            <Box ml={4}>
+                              <Input
+                                color="#E7E9EA"
+                                type="number"
+                                value="5"
+                                onChange={() => {}}
+                              />
+                            </Box>
+                          </Flex>
                         </Flex>
-                        {/* end of assists */}
-                      </Box>
-                    );
-                  })}
+                      );
+                    })}
+                  </Flex>
                 </TabPanel>
                 <TabPanel>
-                  {oppGoalCount?.map((count, idx) => {
-                    return (
-                      <Box
-                        key={idx}
-                        mt={4}
-                        borderBottomColor="gray"
-                        borderBottomWidth="1px"
-                        borderBottomStyle="dashed"
-                        pb={2}
-                      >
-                        {/* goals */}
-                        <Flex
-                          flexDir="row"
-                          justifyContent="space-between"
-                          alignItems="center"
-                        >
-                          <IoFootballOutline color="#E7E9EA" size={20} />
-                          <Box w="60%">
-                            <Select
-                              placeholder="Select player"
-                              color="#E7E9EA"
-                              onChange={(e) => {}}
-                            >
-                              {oppLineup?.map((player, idx) => (
-                                <option key={idx} value={player?.player_name}>
-                                  {player?.player_name}
-                                </option>
-                              ))}
-                            </Select>
-                          </Box>
-                        </Flex>
-                        {/* end of goals */}
+                  <Flex flexDir="column">
+                    <Select
+                      placeholder="Select Player"
+                      color="#E7E9EA"
+                      onChange={(e) => {
+                        const newPlayer = e.target.value;
+                        setOppPlayers(oppPlayers.concat(newPlayer));
+                      }}
+                    >
+                      {oppLineup?.map((player, idx) => (
+                        <option key={idx} value={player?.player_name}>
+                          {player?.player_name}
+                        </option>
+                      ))}
+                    </Select>
 
-                        {/* assists */}
+                    <Flex
+                      flexDir="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      mt={6}
+                    >
+                      <Text color="gray">Player</Text>
+                      <Flex
+                        justifyContent="flex-end"
+                        w="35%"
+                        alignItems="center"
+                      >
+                        <Text color="gray">Goals</Text>
+                        <Text color="gray" ml={4}>
+                          Assists
+                        </Text>
+                      </Flex>
+                    </Flex>
+
+                    {oppPlayers?.map((player, idx) => {
+                      return (
                         <Flex
-                          flexDir="row"
-                          justifyContent="space-between"
+                          key={idx}
+                          my={6}
                           alignItems="center"
-                          mt={2}
+                          justifyContent="space-between"
                         >
-                          <IoFlash color="#E7E9EA" size={20} />
-                          <Box w="60%">
-                            <Select
-                              placeholder="Select player"
-                              color="#E7E9EA"
-                              onChange={(e) => {}}
-                            >
-                              {oppLineup?.map((player, idx) => (
-                                <option key={idx} value={player?.player_name}>
-                                  {player?.player_name}
-                                </option>
-                              ))}
-                            </Select>
-                          </Box>
+                          <Text color="#E7E9EA">{player}</Text>
+                          <Flex
+                            justifyContent="flex-end"
+                            w="35%"
+                            alignItems="center"
+                          >
+                            <Box>
+                              <Input
+                                color="#E7E9EA"
+                                type="number"
+                                value="5"
+                                onChange={(e) => {}}
+                              />
+                            </Box>
+                            <Box ml={4}>
+                              <Input
+                                color="#E7E9EA"
+                                type="number"
+                                value="5"
+                                onChange={() => {}}
+                              />
+                            </Box>
+                          </Flex>
                         </Flex>
-                        {/* end of assists */}
-                      </Box>
-                    );
-                  })}
+                      );
+                    })}
+                  </Flex>
                 </TabPanel>
               </TabPanels>
+              <Button mt={6} onClick={handleSubmit}>
+                Submit
+              </Button>
             </Tabs>
           </ModalBody>
-          <ModalFooter></ModalFooter>
         </div>
       </ModalContent>
     </Modal>

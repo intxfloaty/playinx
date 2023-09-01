@@ -9,7 +9,6 @@ import {
   Flex,
   FormLabel,
   Select,
-  FormHelperText,
   FormControl,
   Stack,
 } from "../../chakraExports";
@@ -21,6 +20,7 @@ import {
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import useTeamStore from "../../../utils/store/teamStore";
 import { useRouter } from "next/navigation";
+import UpdateMatchScoreModal from "./UpdateMatchScoreModal";
 
 type Match = {
   format: string;
@@ -41,6 +41,7 @@ const Matches = () => {
   const supabase = createClientComponentClient();
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [location, setLocation] = useState("");
   const [fixedMatches, setFixedMatches] = useState<Match[]>([]);
 
@@ -152,13 +153,15 @@ const Matches = () => {
                   {match?.date}
                 </Text>
               </Flex>
-              {!(match?.match_official === null ||
-                match?.match_official === "") && 
-                <Button variant="unstyled" onClick={() => {}} pr={6}>
+              {!(
+                match?.match_official === null || match?.match_official === ""
+              ) && (
+                <Button variant="unstyled" onClick={onOpen} pr={6}>
                   <IoArrowForwardOutline color="#E7E9EA" size={25} />
                 </Button>
-              }
+              )}
             </Flex>
+            <UpdateMatchScoreModal isOpen={isOpen} onClose={onClose} match={match} />
 
             {/* lower container */}
             <Flex paddingX={4} paddingY={4} justifyContent="space-between">

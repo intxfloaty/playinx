@@ -21,6 +21,7 @@ import {
 } from "../../chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import useTeamStore from "../../../utils/store/teamStore";
+import { format } from "date-fns";
 
 interface Errors {
   [key: string]: string;
@@ -30,7 +31,7 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
   const supabase = createClientComponentClient();
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const [opponentTeams, setOpponentTeams] = useState([]);
-  const [format, setFormat] = useState("");
+  const [matchFormat, setMatchFormat] = useState("");
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
   const [time, setTime] = useState("");
@@ -56,6 +57,14 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
     return errors;
   };
 
+  const formatSelectedDate = (selectedDate) => {
+    if (!selectedDate) {
+      return "Invalid Date"; // Handle the case where selectedDate is empty or undefined.
+    }
+    const parsedDate = new Date(selectedDate);
+    return format(parsedDate, "EEE d MMM");
+  };
+
   const getOpponentTeams = async () => {
     let { data: teams, error } = await supabase
       .from("teams")
@@ -72,13 +81,14 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
+      const formattedDate = formatSelectedDate(date);
       const { data, error } = await supabase
         .from("matches")
         .insert([
           {
-            format: format,
+            format: matchFormat,
             location: location,
-            date: date,
+            date: formattedDate,
             time: time,
             team_id: activeTeam?.team_id,
             team_name: activeTeam?.team_name,
@@ -96,7 +106,7 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
     if (Object.keys(fieldErrors).length !== 0) {
       setFieldErrors(validate());
     }
-  }, [format, date, time, location]);
+  }, [matchFormat, date, time, location]);
 
   useEffect(() => {
     const fetchOpponentTeams = async () => {
@@ -124,7 +134,7 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
               <FormLabel>Format</FormLabel>
               <Select
                 placeholder="Select format"
-                onChange={(e) => setFormat(e.target.value)}
+                onChange={(e) => setMatchFormat(e.target.value)}
               >
                 <option value="5v5">5v5</option>
                 <option value="6v6">6v6</option>

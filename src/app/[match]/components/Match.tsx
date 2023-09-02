@@ -256,7 +256,7 @@ const Match = ({ user }) => {
       >
         <Button variant="unstyled">
           <IoArrowBack
-            onClick={() => router.push("/")}
+            onClick={() => router.back()}
             color="#E7E9EA"
             size={22}
           />
@@ -299,7 +299,9 @@ const Match = ({ user }) => {
               <Text fontSize="xl" color="#E7E9EA" p={1}>
                 {match?.team_score}
               </Text>
-              <Text fontSize="xl" color="#E7E9EA">:</Text>
+              <Text fontSize="xl" color="#E7E9EA">
+                :
+              </Text>
               <Text fontSize="xl" color="#E7E9EA" p={1}>
                 {match?.opponent_score}
               </Text>

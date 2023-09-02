@@ -95,32 +95,42 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
       .eq("match_id", `${match?.match_id}`);
   };
 
-  const updateTeamLineUp = async () => {
-    const { data, error } = await supabase
-      .from("lineup")
-      .update({
-        goals: "",
-        assists: "",
-      })
-      .eq("match_id", `${match?.match_id}`)
-      .eq("team_id", `${match?.team_id}`);
+  const updateTeamLineUpStat = () => {
+    teamPlayerStat.map(async (teamPlayer) => {
+      const { data, error } = await supabase
+        .from("lineup")
+        .update({
+          goals: teamPlayer?.goals,
+          assists: teamPlayer?.assists,
+        })
+        .eq("match_id", `${match?.match_id}`)
+        .eq("team_id", `${match?.team_id}`)
+        .eq("player_id", `${teamPlayer?.playerId}`);
+
+      console.log(error, "teamStatErr");
+    });
   };
 
-  const updateOppLineUp = async () => {
-    const { data, error } = await supabase
-      .from("lineup")
-      .update({
-        goals: "",
-        assists: "",
-      })
-      .eq("match_id", `${match?.match_id}`)
-      .eq("team_id", `${match?.opponent_id}`);
+  const updateOppLineUpStat = () => {
+    oppPlayerStat.map(async (oppPlayer) => {
+      const { data, error } = await supabase
+        .from("lineup")
+        .update({
+          goals: oppPlayer?.goals,
+          assists: oppPlayer?.assists,
+        })
+        .eq("match_id", `${match?.match_id}`)
+        .eq("team_id", `${match?.opponent_id}`)
+        .eq("player_id", `${oppPlayer?.playerId}`);
+
+      console.log(error, "oppStatErr");
+    });
   };
 
   const handleSubmit = async () => {
     await updateMatchScore();
-    await updateTeamLineUp();
-    await updateOppLineUp();
+    updateTeamLineUpStat();
+    updateOppLineUpStat();
   };
 
   useEffect(() => {

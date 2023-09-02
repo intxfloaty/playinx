@@ -27,6 +27,10 @@ import {
 } from "../../chakraExports";
 import { IoCloseOutline } from "react-icons/io5";
 
+interface Errors {
+  [key: string]: string;
+}
+
 const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   const supabase = createClientComponentClient();
   const [teamLineup, setTeamLineup] = useState([]);
@@ -35,7 +39,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   const [oppScore, setOppScore] = useState("0");
   const [teamPlayers, setTeamPlayers] = useState([]);
   const [oppPlayers, setOppPlayers] = useState([]);
-  const [goalError, setGoalError] = useState("");
+  const [goalError, setGoalError] = useState<Errors>({});
 
   const [teamPlayerStat, setTeamPlayerStat] = useState([]);
   const [oppPlayerStat, setOppPlayerStat] = useState([]);
@@ -110,7 +114,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   const validateGoalCount = () => {
     let teamGoalCount = 0;
     let oppGoalCount = 0;
-    let error = "";
+    let errors: Errors = {};
 
     if (teamPlayerStat) {
       teamGoalCount = teamPlayerStat.reduce((totalGoals, player) => {
@@ -131,26 +135,34 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
         teamGoalCount === Number(teamScore) && oppGoalCount === Number(oppScore)
       )
     ) {
-      error = "Team score and no of goals scored by players should be equal!";
+      errors.playerScoreError =
+        "Team score and no of goals scored by players should be equal!";
     }
-    return error;
+
+    if (!teamScore) {
+      errors.teamScoreErr = "Please enter Team Score";
+    }
+    if (!oppScore) {
+      errors.oppScoreErr = "Please enter Team Score";
+    }
+    return errors;
   };
 
   const handleSubmit = async () => {
-    const error = validateGoalCount();
-    if (!error) {
+    const errors = validateGoalCount();
+    if (Object.keys(errors).length === 0) {
       await updateMatchScore();
       updateTeamLineUpStat();
       updateOppLineUpStat();
-    } else setGoalError(error);
+      onClose();
+    } else setGoalError(errors);
   };
 
   useEffect(() => {
-    const error = validateGoalCount();
-    if (!error) {
-      setGoalError("");
-    } else setGoalError(error);
-  }, [teamPlayerStat, oppPlayerStat, setGoalError]);
+    if (Object.keys(goalError).length !== 0) {
+      setGoalError(validateGoalCount());
+    }
+  }, [teamPlayerStat, oppPlayerStat, teamScore, oppScore]);
 
   useEffect(() => {
     fetchTeamLineUp();
@@ -159,6 +171,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
 
   console.log(oppPlayers, "players");
   console.log(oppPlayerStat, "stat");
+  console.log(goalError, "gERR");
 
   return (
     <Modal
@@ -185,6 +198,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                 <Input
                   type="number"
                   color="#E7E9EA"
+                  isInvalid={!!goalError.teamScoreErr}
+                  errorBorderColor={goalError.teamScoreErr ? "#FFB400" : ""}
                   value={teamScore}
                   onChange={(e) => {
                     setTeamScore(e.target.value);
@@ -195,6 +210,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                 <Input
                   type="number"
                   color="#E7E9EA"
+                  isInvalid={!!goalError.oppScoreErr}
+                  errorBorderColor={goalError.oppScoreErr ? "#FFB400" : ""}
                   value={oppScore}
                   onChange={(e) => {
                     setOppScore(e.target.value);
@@ -492,13 +509,18 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                   </Flex>
                 </TabPanel>
               </TabPanels>
-              {goalError === "" ? (
+              {(goalError.teamScoreErr || goalError.oppScoreErr) && (
+                <Text fontSize="md" color="#FFB400">
+                  {goalError.teamScoreErr || goalError.oppScoreErr}
+                </Text>
+              )}
+              {!goalError.playerScoreError ? (
                 <Button mt={6} onClick={handleSubmit}>
                   Submit
                 </Button>
               ) : (
                 <Text fontSize="md" color="#FFB400">
-                  {goalError}
+                  {goalError.playerScoreError}
                 </Text>
               )}
             </Tabs>

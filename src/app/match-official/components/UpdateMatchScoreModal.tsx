@@ -190,6 +190,25 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                       ))}
                     </Select>
 
+                    <Flex
+                      flexDir="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      mt={6}
+                    >
+                      <Text color="gray">Player</Text>
+                      <Flex
+                        justifyContent="flex-end"
+                        w="35%"
+                        alignItems="center"
+                      >
+                        <Text color="gray">Goals</Text>
+                        <Text color="gray" ml={4}>
+                          Assists
+                        </Text>
+                      </Flex>
+                    </Flex>
+
                     {teamPlayers?.map((player, idx) => {
                       return (
                         <Flex

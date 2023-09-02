@@ -43,6 +43,23 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   const [teamPlayers, setTeamPlayers] = useState([]);
   const [oppPlayers, setOppPlayers] = useState([]);
 
+  const [teamPlayerStat, setTeamPlayerStat] = useState([
+    {
+      playerName: "",
+      playerId: "",
+      goals: "",
+      assists: "",
+    },
+  ]);
+  const [oppPlayerStat, setOppPlayerStat] = useState([
+    {
+      playerName: "",
+      playerId: "",
+      goals: "",
+      assists: "",
+    },
+  ]);
+
   const fetchTeamLineUp = async () => {
     let { data: lineup, error } = await supabase
       .from("lineup")
@@ -111,7 +128,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
     fetchOppLineUp();
   }, []);
 
-  console.log(teamPlayers, "players");
+  console.log(oppPlayers, "players");
+  console.log(oppPlayerStat, "stat");
 
   return (
     <Modal
@@ -179,18 +197,31 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                       color="#E7E9EA"
                       onChange={(e) => {
                         const newPlayer = e.target.value;
+                        const playerId =
+                          e.target.selectedOptions[0].getAttribute(
+                            "data-player-id"
+                          );
                         if (
                           newPlayer !== "" &&
                           !teamPlayers?.some(
-                            (playerName) => playerName === newPlayer
+                            (player) => player?.playerId === playerId
                           )
                         ) {
-                          setTeamPlayers(teamPlayers.concat(newPlayer));
+                          const updatedTeamPlayers = [...teamPlayers];
+                          updatedTeamPlayers.push({
+                            playerId,
+                            playerName: newPlayer,
+                          });
+                          setTeamPlayers(updatedTeamPlayers);
                         }
                       }}
                     >
                       {teamLineup?.map((player, idx) => (
-                        <option key={idx} value={player?.player_name}>
+                        <option
+                          key={idx}
+                          value={player?.player_name}
+                          data-player-id={player?.player_id}
+                        >
                           {player?.player_name}
                         </option>
                       ))}
@@ -223,7 +254,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                           alignItems="center"
                           justifyContent="space-between"
                         >
-                          <Text color="#E7E9EA">{player}</Text>
+                          <Text color="#E7E9EA">{player?.playerName}</Text>
                           <Flex
                             justifyContent="flex-end"
                             w="35%"
@@ -233,16 +264,41 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                               <Input
                                 color="#E7E9EA"
                                 type="number"
-                                value="5"
-                                onChange={(e) => {}}
+                                value={teamPlayerStat[idx]?.goals || ""}
+                                onChange={(e) => {
+                                  const goals = e.target.value;
+                                  const playerName = player?.playerName;
+                                  const playerId = player?.playerId;
+
+                                  const updatedTeamPlayerStat = [
+                                    ...teamPlayerStat,
+                                  ];
+                                  updatedTeamPlayerStat[idx] = {
+                                    ...updatedTeamPlayerStat[idx],
+                                    goals,
+                                    playerName,
+                                    playerId,
+                                  };
+                                  setTeamPlayerStat(updatedTeamPlayerStat);
+                                }}
                               />
                             </Box>
                             <Box ml={4}>
                               <Input
                                 color="#E7E9EA"
                                 type="number"
-                                value="5"
-                                onChange={() => {}}
+                                value={teamPlayerStat[idx]?.assists || ""}
+                                onChange={(e) => {
+                                  const assists = e.target.value;
+                                  const updatedTeamPlayerStat = [
+                                    ...teamPlayerStat,
+                                  ];
+                                  updatedTeamPlayerStat[idx] = {
+                                    ...updatedTeamPlayerStat[idx],
+                                    assists,
+                                  };
+                                  setTeamPlayerStat(updatedTeamPlayerStat);
+                                }}
                               />
                             </Box>
                           </Flex>
@@ -258,11 +314,31 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                       color="#E7E9EA"
                       onChange={(e) => {
                         const newPlayer = e.target.value;
-                        setOppPlayers(oppPlayers.concat(newPlayer));
+                        const playerId =
+                          e.target.selectedOptions[0].getAttribute(
+                            "data-player-id"
+                          );
+                        if (
+                          newPlayer !== "" &&
+                          !oppPlayers?.some(
+                            (player) => player?.playerId === playerId
+                          )
+                        ) {
+                          const updatedOppPlayers = [...oppPlayers];
+                          updatedOppPlayers.push({
+                            playerId,
+                            playerName: newPlayer,
+                          });
+                          setOppPlayers(updatedOppPlayers);
+                        }
                       }}
                     >
                       {oppLineup?.map((player, idx) => (
-                        <option key={idx} value={player?.player_name}>
+                        <option
+                          key={idx}
+                          value={player?.player_name}
+                          data-player-id={player?.player_id}
+                        >
                           {player?.player_name}
                         </option>
                       ))}
@@ -295,7 +371,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                           alignItems="center"
                           justifyContent="space-between"
                         >
-                          <Text color="#E7E9EA">{player}</Text>
+                          <Text color="#E7E9EA">{player?.playerName}</Text>
                           <Flex
                             justifyContent="flex-end"
                             w="35%"
@@ -305,16 +381,41 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                               <Input
                                 color="#E7E9EA"
                                 type="number"
-                                value="5"
-                                onChange={(e) => {}}
+                                value={oppPlayerStat[idx]?.goals || ""}
+                                onChange={(e) => {
+                                  const goals = e.target.value;
+                                  const playerName = player?.playerName;
+                                  const playerId = player?.playerId;
+
+                                  const updatedOppPlayerStat = [
+                                    ...oppPlayerStat,
+                                  ];
+                                  updatedOppPlayerStat[idx] = {
+                                    ...updatedOppPlayerStat[idx],
+                                    goals,
+                                    playerName,
+                                    playerId,
+                                  };
+                                  setOppPlayerStat(updatedOppPlayerStat);
+                                }}
                               />
                             </Box>
                             <Box ml={4}>
                               <Input
                                 color="#E7E9EA"
                                 type="number"
-                                value="5"
-                                onChange={() => {}}
+                                value={oppPlayerStat[idx]?.assists || ""}
+                                onChange={(e) => {
+                                  const assists = e.target.value;
+                                  const updatedOppPlayerStat = [
+                                    ...oppPlayerStat,
+                                  ];
+                                  updatedOppPlayerStat[idx] = {
+                                    ...updatedOppPlayerStat[idx],
+                                    assists,
+                                  };
+                                  setOppPlayerStat(updatedOppPlayerStat);
+                                }}
                               />
                             </Box>
                           </Flex>

@@ -31,8 +31,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   const supabase = createClientComponentClient();
   const [teamLineup, setTeamLineup] = useState([]);
   const [oppLineup, setOppLineup] = useState([]);
-  const [teamScore, setTeamScore] = useState("");
-  const [oppScore, setOppScore] = useState("");
+  const [teamScore, setTeamScore] = useState("0");
+  const [oppScore, setOppScore] = useState("0");
   const [teamPlayers, setTeamPlayers] = useState([]);
   const [oppPlayers, setOppPlayers] = useState([]);
   const [goalError, setGoalError] = useState("");

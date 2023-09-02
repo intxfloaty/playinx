@@ -300,12 +300,16 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                                 value={teamPlayerStat[idx]?.assists || ""}
                                 onChange={(e) => {
                                   const assists = e.target.value;
+                                  const playerName = player?.playerName;
+                                  const playerId = player?.playerId;
                                   const updatedTeamPlayerStat = [
                                     ...teamPlayerStat,
                                   ];
                                   updatedTeamPlayerStat[idx] = {
                                     ...updatedTeamPlayerStat[idx],
                                     assists,
+                                    playerName,
+                                    playerId,
                                   };
                                   setTeamPlayerStat(updatedTeamPlayerStat);
                                 }}
@@ -319,6 +323,9 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                                   const updatedTeamPlayers = teamPlayers.filter(
                                     (_, i) => i !== idx
                                   );
+                                  const updatedTeamPlayerStat =
+                                    teamPlayerStat.filter((_, i) => i !== idx);
+                                  setTeamPlayerStat(updatedTeamPlayerStat);
                                   setTeamPlayers(updatedTeamPlayers);
                                 }}
                               />
@@ -429,12 +436,16 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                                 value={oppPlayerStat[idx]?.assists || ""}
                                 onChange={(e) => {
                                   const assists = e.target.value;
+                                  const playerName = player?.playerName;
+                                  const playerId = player?.playerId;
                                   const updatedOppPlayerStat = [
                                     ...oppPlayerStat,
                                   ];
                                   updatedOppPlayerStat[idx] = {
                                     ...updatedOppPlayerStat[idx],
                                     assists,
+                                    playerName,
+                                    playerId,
                                   };
                                   setOppPlayerStat(updatedOppPlayerStat);
                                 }}
@@ -448,6 +459,9 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                                   const updatedOppPlayers = oppPlayers.filter(
                                     (_, i) => i !== idx
                                   );
+                                  const updatedOppPlayerStat =
+                                    oppPlayerStat.filter((_, i) => i !== idx);
+                                  setOppPlayerStat(updatedOppPlayerStat);
                                   setOppPlayers(updatedOppPlayers);
                                 }}
                               />

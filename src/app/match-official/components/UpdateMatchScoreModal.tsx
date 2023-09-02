@@ -246,7 +246,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                       <Text color="gray">Player</Text>
                       <Flex
                         justifyContent="flex-end"
-                        w="35%"
+                        w="38%"
                         alignItems="center"
                       >
                         <Text color="gray">Goals</Text>
@@ -267,7 +267,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                           <Text color="#E7E9EA">{player?.playerName}</Text>
                           <Flex
                             justifyContent="flex-end"
-                            w="35%"
+                            w="38%"
                             alignItems="center"
                           >
                             <Box>
@@ -308,6 +308,18 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                                     assists,
                                   };
                                   setTeamPlayerStat(updatedTeamPlayerStat);
+                                }}
+                              />
+                            </Box>
+                            <Box position="absolute" right={2}>
+                              <IoCloseOutline
+                                color="#E7E9EA"
+                                size={24}
+                                onClick={() => {
+                                  const updatedTeamPlayers = teamPlayers.filter(
+                                    (_, i) => i !== idx
+                                  );
+                                  setTeamPlayers(updatedTeamPlayers);
                                 }}
                               />
                             </Box>
@@ -363,7 +375,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                       <Text color="gray">Player</Text>
                       <Flex
                         justifyContent="flex-end"
-                        w="35%"
+                        w="38%"
                         alignItems="center"
                       >
                         <Text color="gray">Goals</Text>
@@ -384,7 +396,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                           <Text color="#E7E9EA">{player?.playerName}</Text>
                           <Flex
                             justifyContent="flex-end"
-                            w="35%"
+                            w="38%"
                             alignItems="center"
                           >
                             <Box>
@@ -425,6 +437,18 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                                     assists,
                                   };
                                   setOppPlayerStat(updatedOppPlayerStat);
+                                }}
+                              />
+                            </Box>
+                            <Box position="absolute" right={2}>
+                              <IoCloseOutline
+                                color="#E7E9EA"
+                                size={24}
+                                onClick={() => {
+                                  const updatedOppPlayers = oppPlayers.filter(
+                                    (_, i) => i !== idx
+                                  );
+                                  setOppPlayers(updatedOppPlayers);
                                 }}
                               />
                             </Box>

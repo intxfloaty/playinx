@@ -111,6 +111,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
     fetchOppLineUp();
   }, []);
 
+  console.log(teamPlayers, "players");
+
   return (
     <Modal
       isOpen={isOpen}
@@ -122,7 +124,6 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
       <ModalOverlay />
       <ModalContent>
         <div style={{ maxHeight: "100vh", overflowY: "scroll" }}>
-          {/* header box */}
           <ModalHeader className="modal-header">
             <Flex justifyContent="flex-end">
               <IoCloseOutline color="#E7E9EA" size={30} onClick={onClose} />
@@ -155,8 +156,6 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
               </Box>
             </Flex>
           </ModalHeader>
-
-          {/* content box */}
           <ModalBody>
             <Tabs
               align="center"
@@ -180,7 +179,14 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                       color="#E7E9EA"
                       onChange={(e) => {
                         const newPlayer = e.target.value;
-                        setTeamPlayers(teamPlayers.concat(newPlayer));
+                        if (
+                          newPlayer !== "" &&
+                          !teamPlayers?.some(
+                            (playerName) => playerName === newPlayer
+                          )
+                        ) {
+                          setTeamPlayers(teamPlayers.concat(newPlayer));
+                        }
                       }}
                     >
                       {teamLineup?.map((player, idx) => (

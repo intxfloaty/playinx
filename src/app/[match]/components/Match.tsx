@@ -45,6 +45,8 @@ type Match = {
   opponent_id: string;
   match_status: string;
   opponent_status: string;
+  team_score: string;
+  opponent_score: string;
 };
 
 type Profile = {
@@ -288,12 +290,34 @@ const Match = ({ user }) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Text fontSize="xl" color="#E7E9EA" p={1}>
-            {match?.date}
-          </Text>
-          <Text fontSize="md" color="gray">
-            {match?.time}
-          </Text>
+          {match?.match_status === "completed" ? (
+            <Flex
+              flexDir="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Text fontSize="xl" color="#E7E9EA" p={1}>
+                {match?.team_score}
+              </Text>
+              <Text fontSize="xl" color="#E7E9EA">:</Text>
+              <Text fontSize="xl" color="#E7E9EA" p={1}>
+                {match?.opponent_score}
+              </Text>
+            </Flex>
+          ) : (
+            <Text fontSize="xl" color="#E7E9EA" p={1}>
+              {match?.date}
+            </Text>
+          )}
+          {match?.match_status === "completed" ? (
+            <Text fontSize="md" color="gray">
+              Full-Time
+            </Text>
+          ) : (
+            <Text fontSize="md" color="gray">
+              {match?.time}
+            </Text>
+          )}
         </Flex>
         <Flex
           flexDir="column"

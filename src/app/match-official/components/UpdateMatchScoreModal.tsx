@@ -25,14 +25,7 @@ import {
   TabPanels,
   Tabs,
 } from "../../chakraExports";
-import {
-  IoAddOutline,
-  IoFootballOutline,
-  IoFootstepsOutline,
-  IoArrowForwardOutline,
-  IoCloseOutline,
-  IoFlash,
-} from "react-icons/io5";
+import { IoCloseOutline } from "react-icons/io5";
 
 const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   const supabase = createClientComponentClient();
@@ -42,23 +35,10 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   const [oppScore, setOppScore] = useState("");
   const [teamPlayers, setTeamPlayers] = useState([]);
   const [oppPlayers, setOppPlayers] = useState([]);
+  const [goalError, setGoalError] = useState("");
 
-  const [teamPlayerStat, setTeamPlayerStat] = useState([
-    {
-      playerName: "",
-      playerId: "",
-      goals: "",
-      assists: "",
-    },
-  ]);
-  const [oppPlayerStat, setOppPlayerStat] = useState([
-    {
-      playerName: "",
-      playerId: "",
-      goals: "",
-      assists: "",
-    },
-  ]);
+  const [teamPlayerStat, setTeamPlayerStat] = useState([]);
+  const [oppPlayerStat, setOppPlayerStat] = useState([]);
 
   const fetchTeamLineUp = async () => {
     let { data: lineup, error } = await supabase
@@ -96,7 +76,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   };
 
   const updateTeamLineUpStat = () => {
-    teamPlayerStat.map(async (teamPlayer) => {
+    teamPlayerStat?.map(async (teamPlayer) => {
       const { data, error } = await supabase
         .from("lineup")
         .update({
@@ -112,7 +92,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   };
 
   const updateOppLineUpStat = () => {
-    oppPlayerStat.map(async (oppPlayer) => {
+    oppPlayerStat?.map(async (oppPlayer) => {
       const { data, error } = await supabase
         .from("lineup")
         .update({
@@ -127,11 +107,50 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
     });
   };
 
-  const handleSubmit = async () => {
-    await updateMatchScore();
-    updateTeamLineUpStat();
-    updateOppLineUpStat();
+  const validateGoalCount = () => {
+    let teamGoalCount = 0;
+    let oppGoalCount = 0;
+    let error = "";
+
+    if (teamPlayerStat) {
+      teamGoalCount = teamPlayerStat.reduce((totalGoals, player) => {
+        const goals = Number(player?.goals);
+        return totalGoals + goals;
+      }, 0);
+    }
+
+    if (oppPlayerStat) {
+      oppGoalCount = oppPlayerStat.reduce((totalGoals, player) => {
+        const goals = Number(player?.goals);
+        return totalGoals + goals;
+      }, 0);
+    }
+
+    if (
+      !(
+        teamGoalCount === Number(teamScore) && oppGoalCount === Number(oppScore)
+      )
+    ) {
+      error = "Team score and no of goals scored by players should be equal!";
+    }
+    return error;
   };
+
+  const handleSubmit = async () => {
+    const error = validateGoalCount();
+    if (!error) {
+      await updateMatchScore();
+      updateTeamLineUpStat();
+      updateOppLineUpStat();
+    } else setGoalError(error);
+  };
+
+  useEffect(() => {
+    const error = validateGoalCount();
+    if (!error) {
+      setGoalError("");
+    } else setGoalError(error);
+  }, [teamPlayerStat, oppPlayerStat, setGoalError]);
 
   useEffect(() => {
     fetchTeamLineUp();
@@ -473,9 +492,15 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                   </Flex>
                 </TabPanel>
               </TabPanels>
-              <Button mt={6} onClick={handleSubmit}>
-                Submit
-              </Button>
+              {goalError === "" ? (
+                <Button mt={6} onClick={handleSubmit}>
+                  Submit
+                </Button>
+              ) : (
+                <Text fontSize="md" color="#FFB400">
+                  {goalError}
+                </Text>
+              )}
             </Tabs>
           </ModalBody>
         </div>

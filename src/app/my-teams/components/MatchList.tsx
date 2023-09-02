@@ -268,9 +268,6 @@ const Matches = () => {
                       <Text fontSize="lg" color="#E7E9EA">
                         {match?.team_name}
                       </Text>
-                      <Text fontSize="md" color="#E7E9EA">
-                        1
-                      </Text>
                     </Flex>
                     <Flex justifyContent="space-between">
                       {match?.opponent_name === null && (
@@ -280,9 +277,6 @@ const Matches = () => {
                       )}
                       <Text fontSize="lg" color="#E7E9EA">
                         {match?.opponent_name}
-                      </Text>
-                      <Text fontSize="md" color="#E7E9EA">
-                        3
                       </Text>
                     </Flex>
                   </Flex>
@@ -370,9 +364,11 @@ const Matches = () => {
                       <Text fontSize="lg" color="#E7E9EA">
                         {match?.team_name}
                       </Text>
-                      <Text fontSize="md" color="#E7E9EA">
-                        1
-                      </Text>
+                      {match?.team_score && (
+                        <Text fontSize="md" color="#E7E9EA">
+                          {match?.team_score}
+                        </Text>
+                      )}
                     </Flex>
                     <Flex justifyContent="space-between">
                       {match?.opponent_name === null && (
@@ -383,9 +379,11 @@ const Matches = () => {
                       <Text fontSize="lg" color="#E7E9EA">
                         {match?.opponent_name}
                       </Text>
-                      <Text fontSize="md" color="#E7E9EA">
-                        3
-                      </Text>
+                      {match?.opponent_score && (
+                        <Text fontSize="md" color="#E7E9EA">
+                          {match?.opponent_score}
+                        </Text>
+                      )}
                     </Flex>
                   </Flex>
                 </Box>

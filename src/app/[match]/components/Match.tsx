@@ -17,6 +17,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useTeamStore from "../../../utils/store/teamStore";
 import JoinSquad from "./JoinSquad";
 import MatchHeader from "./MatchHeader";
+import Overview from "./Overview";
 
 type Match = {
   format: string;
@@ -113,7 +114,12 @@ const Match = ({ user }) => {
         />
 
         <TabPanels>
-          <TabPanel></TabPanel>
+          {/* overview panel */}
+          <TabPanel>
+            <Overview match={match} />
+          </TabPanel>
+
+          {/* lineup/squad panel */}
           <TabPanel>
             <JoinSquad
               matchId={matchId}
@@ -122,9 +128,12 @@ const Match = ({ user }) => {
               match={match}
             />
           </TabPanel>
+
+          {/* stats panel */}
           <TabPanel>
             <p>three!</p>
           </TabPanel>
+
         </TabPanels>
       </Tabs>
     </Box>

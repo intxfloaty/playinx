@@ -3,10 +3,7 @@ import React, { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "../../../database.types";
 import {
-  Stack,
-  Text,
   Box,
-  Flex,
   Tabs,
   TabList,
   TabPanels,
@@ -14,24 +11,12 @@ import {
   TabPanel,
   Button,
   TabIndicator,
-  List,
-  ListItem,
-  ListIcon,
-  OrderedList,
-  UnorderedList,
   useDisclosure,
-  Divider,
-  Center,
 } from "../../chakraExports";
-import {
-  IoArrowBack,
-  IoSettingsOutline,
-  IoFootballOutline,
-  IoFootball,
-  IoFlashOutline,
-} from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
 import useTeamStore from "../../../utils/store/teamStore";
+import JoinSquad from "./JoinSquad";
+import MatchHeader from "./MatchHeader";
 
 type Match = {
   format: string;
@@ -55,14 +40,6 @@ type Profile = {
   rating: string;
 };
 
-type Squad = {
-  player_name: string;
-  player_rating: string;
-  player_position: string;
-  player_id: string;
-  team_id: string;
-};
-
 const Match = ({ user }) => {
   const supabase = createClientComponentClient<Database>();
   const activeTeam = useTeamStore((state) => state.activeTeam);
@@ -71,19 +48,6 @@ const Match = ({ user }) => {
   const searchParams = useSearchParams();
   const [profile, setProfile] = useState<Profile>();
   const [match, setMatch] = useState<Match>();
-
-  const minSquadSizes = {
-    "5v5": 8,
-    "6v6": 9,
-    "7v7": 10,
-    "8v8": 11,
-    "9v9": 12,
-    "10v10": 13,
-    "11v11": 15,
-  };
-
-  const [mySquad, setMySquad] = useState<Squad[]>([]);
-  const [oppSquad, setOppSquad] = useState<Squad[]>([]);
   const [matchId, setMatchId] = useState("");
 
   const match_Id = searchParams.get("matchId");
@@ -115,77 +79,6 @@ const Match = ({ user }) => {
     }
   };
 
-  const fetchMyTeamLineup = async () => {
-    let { data: lineup, error } = await supabase
-      .from("lineup")
-      .select("*")
-      .eq("match_id", matchId)
-      .eq("team_id", match?.team_id);
-
-    // console.log(lineup, "lineup");
-    console.log(error, "Myerr");
-    if (!error) {
-      setMySquad(lineup);
-    }
-  };
-
-  const fetchOppTeamLineup = async () => {
-    let { data: lineup, error } = await supabase
-      .from("lineup")
-      .select("*")
-      .eq("match_id", matchId)
-      .eq("team_id", match?.opponent_id);
-
-    // console.log(lineup, "lineup");
-    console.log(error, "Opperr");
-    if (!error) {
-      setOppSquad(lineup);
-    }
-  };
-
-  const handleJoinMySquadBtn = async () => {
-    const player = mySquad?.find((player) => player.player_id === userId);
-    if (!player) {
-      const { data, error } = await supabase.from("lineup").insert([
-        {
-          match_id: match?.match_id,
-          player_name: profile?.name,
-          player_position: profile?.position,
-          player_rating: profile?.rating,
-          team_id: match?.team_id,
-        },
-      ]);
-      console.log(error, "MylineupERr");
-    }
-  };
-
-  const handleJoinOppSquadBtn = async () => {
-    const player = oppSquad?.find((player) => player.player_id === userId);
-    if (!player) {
-      const { data, error } = await supabase.from("lineup").insert([
-        {
-          match_id: match?.match_id,
-          player_name: profile?.name,
-          player_position: profile?.position,
-          player_rating: profile?.rating,
-          team_id: match?.opponent_id,
-        },
-      ]);
-      console.log(error, "OpplineupERr");
-    }
-  };
-
-  const updateMatchStatus = async () => {
-    const { data, error } = await supabase
-      .from("matches")
-      .update({ match_status: "fixed" })
-      .eq("match_id", `${matchId}`)
-      .select();
-
-    console.log(data, "match_status");
-    console.log(error, "match_statusErr");
-  };
-
   useEffect(() => {
     setMatchId(match_Id);
   }, [match_Id]);
@@ -197,142 +90,9 @@ const Match = ({ user }) => {
     fetchPlayerDetails();
   }, [matchId]);
 
-  useEffect(() => {
-    if (match) {
-      fetchMyTeamLineup();
-      fetchOppTeamLineup();
-    }
-  }, [match]);
-
-  useEffect(() => {
-    const requiredSize = minSquadSizes[match?.format];
-    if (
-      requiredSize !== undefined &&
-      mySquad.length >= requiredSize &&
-      oppSquad.length >= requiredSize
-    ) {
-      updateMatchStatus();
-    }
-  }, [mySquad, oppSquad, match?.format]);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel("squad")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "lineup",
-        },
-        (payload) => {
-          console.log(payload, "payload");
-          const newSquad = payload.new as Squad;
-          if (newSquad.team_id === match?.team_id) {
-            setMySquad([...mySquad, newSquad]);
-          }
-          if (newSquad.team_id === match?.opponent_id) {
-            setOppSquad([...oppSquad, newSquad]);
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase, mySquad, oppSquad, setMySquad, setOppSquad]);
-
-  console.log(mySquad, "mySquad");
-  console.log(oppSquad, "oppSquad");
-
   return (
     <Box>
-      <Flex
-        alignItems="center"
-        justifyContent="space-between"
-        paddingX={4}
-        paddingY={2}
-      >
-        <Button variant="unstyled">
-          <IoArrowBack
-            onClick={() => router.back()}
-            color="#E7E9EA"
-            size={22}
-          />
-        </Button>
-        <Button variant="unstyled">
-          <IoSettingsOutline
-            onClick={() => onOpen()}
-            color="#E7E9EA"
-            size={22}
-          />
-        </Button>
-      </Flex>
-      <Flex
-        alignItems="center"
-        justifyContent="space-between"
-        paddingX={8}
-        paddingY={4}
-      >
-        <Flex
-          flexDir="column"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <IoFootball color="green" size={36} />
-          <Text fontSize="md" color="#E7E9EA" mt={2}>
-            {match?.team_name}
-          </Text>
-        </Flex>
-        <Flex
-          flexDir="column"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          {match?.match_status === "completed" ? (
-            <Flex
-              flexDir="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Text fontSize="xl" color="#E7E9EA" p={1}>
-                {match?.team_score}
-              </Text>
-              <Text fontSize="xl" color="#E7E9EA">
-                :
-              </Text>
-              <Text fontSize="xl" color="#E7E9EA" p={1}>
-                {match?.opponent_score}
-              </Text>
-            </Flex>
-          ) : (
-            <Text fontSize="xl" color="#E7E9EA" p={1}>
-              {match?.date}
-            </Text>
-          )}
-          {match?.match_status === "completed" ? (
-            <Text fontSize="md" color="gray">
-              Full-Time
-            </Text>
-          ) : (
-            <Text fontSize="md" color="gray">
-              {match?.time}
-            </Text>
-          )}
-        </Flex>
-        <Flex
-          flexDir="column"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <IoFootball color="green" size={36} />
-          <Text fontSize="md" color="#E7E9EA" mt={2}>
-            {match?.opponent_name}
-          </Text>
-        </Flex>
-      </Flex>
-      {/* <Settings isSettingsOpen={isOpen} onSettingsClose={onClose} /> */}
+      <MatchHeader match={match} />
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">
@@ -355,91 +115,12 @@ const Match = ({ user }) => {
         <TabPanels>
           <TabPanel></TabPanel>
           <TabPanel>
-            {/* <Box> */}
-            {match?.format === "5v5" && (
-              <Text fontSize="lg" color="gray">
-                Min Squad Size: 8 ({match?.format})
-              </Text>
-            )}
-            {match?.format === "6v6" && (
-              <Text fontSize="lg" color="gray">
-                Min Squad Size: 9 ({match?.format})
-              </Text>
-            )}
-            {match?.format === "7v7" && (
-              <Text fontSize="lg" color="gray">
-                Min Squad Size: 10 ({match?.format})
-              </Text>
-            )}
-            {match?.format === "8v8" && (
-              <Text fontSize="lg" color="gray">
-                Min Squad Size: 11 ({match?.format})
-              </Text>
-            )}
-            {match?.format === "9v9" && (
-              <Text fontSize="lg" color="gray">
-                Min Squad Size: 12 ({match?.format})
-              </Text>
-            )}
-            {match?.format === "10v10" && (
-              <Text fontSize="lg" color="gray">
-                Min Squad Size: 13 ({match?.format})
-              </Text>
-            )}
-            {match?.format === "11v11" && (
-              <Text fontSize="lg" color="gray">
-                Min Squad Size: 15 ({match?.format})
-              </Text>
-            )}
-            {/* </Box> */}
-            <Flex justifyContent="space-evenly" mt={6}>
-              <Box width="40%">
-                <Flex flexDir="column">
-                  {mySquad?.map((squad, idx) => (
-                    <List key={idx} spacing={3}>
-                      <ListItem color="#E7E9EA">{squad?.player_name}</ListItem>
-                    </List>
-                  ))}
-                </Flex>
-              </Box>
-
-              <Box>
-                <Center height="50px">
-                  <Divider orientation="vertical" />
-                </Center>
-              </Box>
-
-              <Box width="40%">
-                <Flex flexDir="column">
-                  {oppSquad?.map((squad, idx) => (
-                    <List key={idx} spacing={3}>
-                      <ListItem color="#E7E9EA">{squad?.player_name}</ListItem>
-                    </List>
-                  ))}
-                </Flex>
-              </Box>
-            </Flex>
-
-            <Flex alignItems="center" justifyContent="center" mt={10}>
-              {match?.team_id === activeTeam?.team_id &&
-                !mySquad?.some((player) => player?.player_id === userId) && (
-                  <Button
-                    colorScheme="messenger"
-                    onClick={handleJoinMySquadBtn}
-                  >
-                    Join squad
-                  </Button>
-                )}
-              {match?.opponent_id === activeTeam?.team_id &&
-                !oppSquad?.some((player) => player?.player_id === userId) && (
-                  <Button
-                    colorScheme="messenger"
-                    onClick={handleJoinOppSquadBtn}
-                  >
-                    Join squad
-                  </Button>
-                )}
-            </Flex>
+            <JoinSquad
+              matchId={matchId}
+              userId={userId}
+              profile={profile}
+              match={match}
+            />
           </TabPanel>
           <TabPanel>
             <p>three!</p>

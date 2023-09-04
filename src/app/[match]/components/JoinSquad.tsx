@@ -26,7 +26,7 @@ const JoinSquad = ({ matchId, userId, profile, match }) => {
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const minSquadSizes = {
     "5v5": 8,
-    "6v6": 9,
+    "6v6": 1,
     "7v7": 10,
     "8v8": 11,
     "9v9": 12,

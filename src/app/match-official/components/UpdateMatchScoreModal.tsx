@@ -186,7 +186,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
         <div style={{ maxHeight: "100vh", overflowY: "scroll" }}>
           <ModalHeader className="modal-header">
             <Flex justifyContent="flex-end">
-              <IoCloseOutline color="#E7E9EA" size={30} onClick={onClose} />
+              <IoCloseOutline color="black" size={30} onClick={onClose} />
             </Flex>
             <Flex
               flexDir="row"
@@ -197,7 +197,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
               <Box w="20%">
                 <Input
                   type="number"
-                  color="#E7E9EA"
+                  color="black"
+                  borderColor="#161616"
                   isInvalid={!!goalError.teamScoreErr}
                   errorBorderColor={goalError.teamScoreErr ? "#FFB400" : ""}
                   value={teamScore}
@@ -209,7 +210,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
               <Box w="20%">
                 <Input
                   type="number"
-                  color="#E7E9EA"
+                  color="black"
+                  borderColor="#161616"
                   isInvalid={!!goalError.oppScoreErr}
                   errorBorderColor={goalError.oppScoreErr ? "#FFB400" : ""}
                   value={oppScore}
@@ -221,17 +223,12 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
             </Flex>
           </ModalHeader>
           <ModalBody>
-            <Tabs
-              align="center"
-              isFitted
-              variant="enclosed"
-              colorScheme="#161616"
-            >
+            <Tabs align="center" isFitted variant="soft-rounded" colorScheme="yellow">
               <TabList>
-                <Tab fontSize="lg" color="#E7E9EA">
+                <Tab fontSize="lg" color="black">
                   {match?.team_name}
                 </Tab>
-                <Tab fontSize="lg" color="#E7E9EA">
+                <Tab fontSize="lg" color="black">
                   {match?.opponent_name}
                 </Tab>
               </TabList>
@@ -240,7 +237,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                   <Flex flexDir="column">
                     <Select
                       placeholder="Select Player"
-                      color="#E7E9EA"
+                      color="black"
+                      borderColor="#161616"
                       onChange={(e) => {
                         const newPlayer = e.target.value;
                         const playerId =
@@ -300,7 +298,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                           alignItems="center"
                           justifyContent="space-between"
                         >
-                          <Text color="#E7E9EA">{player?.playerName}</Text>
+                          <Text color="black">{player?.playerName}</Text>
                           <Flex
                             justifyContent="flex-end"
                             w="38%"
@@ -308,7 +306,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                           >
                             <Box>
                               <Input
-                                color="#E7E9EA"
+                                color="black"
+                                borderColor="#161616"
                                 type="number"
                                 value={teamPlayerStat[idx]?.goals || ""}
                                 onChange={(e) => {
@@ -331,7 +330,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                             </Box>
                             <Box ml={4}>
                               <Input
-                                color="#E7E9EA"
+                                color="black"
+                                borderColor="#161616"
                                 type="number"
                                 value={teamPlayerStat[idx]?.assists || ""}
                                 onChange={(e) => {
@@ -353,7 +353,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                             </Box>
                             <Box position="absolute" right={2}>
                               <IoCloseOutline
-                                color="#E7E9EA"
+                                color="black"
                                 size={24}
                                 onClick={() => {
                                   const updatedTeamPlayers = teamPlayers.filter(
@@ -376,7 +376,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                   <Flex flexDir="column">
                     <Select
                       placeholder="Select Player"
-                      color="#E7E9EA"
+                      color="black"
+                      borderColor="#161616"
                       onChange={(e) => {
                         const newPlayer = e.target.value;
                         const playerId =
@@ -436,7 +437,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                           alignItems="center"
                           justifyContent="space-between"
                         >
-                          <Text color="#E7E9EA">{player?.playerName}</Text>
+                          <Text color="black">{player?.playerName}</Text>
                           <Flex
                             justifyContent="flex-end"
                             w="38%"
@@ -444,7 +445,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                           >
                             <Box>
                               <Input
-                                color="#E7E9EA"
+                               color="black"
+                               borderColor="#161616"
                                 type="number"
                                 value={oppPlayerStat[idx]?.goals || ""}
                                 onChange={(e) => {
@@ -467,7 +469,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                             </Box>
                             <Box ml={4}>
                               <Input
-                                color="#E7E9EA"
+                                color="black"
+                                borderColor="#161616"
                                 type="number"
                                 value={oppPlayerStat[idx]?.assists || ""}
                                 onChange={(e) => {
@@ -489,7 +492,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                             </Box>
                             <Box position="absolute" right={2}>
                               <IoCloseOutline
-                                color="#E7E9EA"
+                                color="black"
                                 size={24}
                                 onClick={() => {
                                   const updatedOppPlayers = oppPlayers.filter(
@@ -510,16 +513,16 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
                 </TabPanel>
               </TabPanels>
               {(goalError.teamScoreErr || goalError.oppScoreErr) && (
-                <Text fontSize="md" color="#FFB400">
+                <Text fontSize="md" color="red">
                   {goalError.teamScoreErr || goalError.oppScoreErr}
                 </Text>
               )}
               {!goalError.playerScoreError ? (
-                <Button mt={6} onClick={handleSubmit}>
+                <Button colorScheme="messenger" mt={6} onClick={handleSubmit}>
                   Submit
                 </Button>
               ) : (
-                <Text fontSize="md" color="#FFB400">
+                <Text fontSize="md" color="red">
                   {goalError.playerScoreError}
                 </Text>
               )}

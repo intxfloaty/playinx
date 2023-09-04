@@ -68,7 +68,7 @@ const Overview = ({ match }) => {
                 Refree
               </Text>
               <Text fontSize="md" color="gray">
-                TBD
+                {match?.match_official || "TBD"}
               </Text>
             </Flex>
           </Flex>

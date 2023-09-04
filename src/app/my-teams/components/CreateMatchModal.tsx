@@ -37,6 +37,7 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
   const [time, setTime] = useState("");
   const [opponentName, setOpponentName] = useState("");
   const [opponentId, setOpponentId] = useState("");
+  const [opponentRating, setOpponentRating] = useState("");
 
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
 
@@ -92,8 +93,10 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
             time: time,
             team_id: activeTeam?.team_id,
             team_name: activeTeam?.team_name,
+            team_rating: activeTeam?.rating,
             opponent_id: opponentId,
             opponent_name: opponentName,
+            opponent_rating: opponentRating,
             match_status: "pending",
           },
         ])
@@ -227,6 +230,7 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
                   if (selectedOpponent) {
                     setOpponentName(selectedOpponent.team_name);
                     setOpponentId(selectedOpponent.team_id); // Assuming there's an 'id' property in your opponent's data structure
+                    setOpponentRating(selectedOpponent.rating);
                   }
                 }}
               >

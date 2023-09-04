@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Flex,
   Text,
@@ -13,7 +14,113 @@ import {
 } from "../../chakraExports";
 import { IoFootballOutline } from "react-icons/io5";
 
-const MatchStats = ({ match }) => {
+type Squad = {
+  goalKeeper: [];
+  midField: [];
+  defence: [];
+  attack: [];
+};
+
+type Player = {
+  player_name: string;
+  player_rating: string;
+  player_position: string;
+  player_id: string;
+  team_id: string;
+};
+
+const MatchStats = ({ matchId, match }) => {
+  const supabase = createClientComponentClient();
+  const [mySquad, setMySquad] = useState<Squad>();
+  const [oppSquad, setOppSquad] = useState<Squad>();
+
+  const fetchMyTeamLineup = async () => {
+    let { data: lineup, error } = await supabase
+      .from("lineup")
+      .select("*")
+      .eq("match_id", matchId)
+      .eq("team_id", match?.team_id);
+
+    if (!error) {
+      const initialSquad = {
+        goalKeeper: [],
+        defence: [],
+        midField: [],
+        attack: [],
+      };
+
+      const updatedSquad = lineup.reduce((acc, player) => {
+        switch (player.player_position) {
+          case "Goalkeeper":
+            acc.goalKeeper.push(player);
+            break;
+          case "Defence":
+            acc.defence.push(player);
+            break;
+          case "Midfield":
+            acc.midField.push(player);
+            break;
+          case "Attack":
+            acc.attack.push(player);
+            break;
+          default:
+            // Handle any other positions as needed
+            break;
+        }
+        return acc;
+      }, initialSquad);
+
+      setMySquad(updatedSquad);
+    }
+  };
+
+  const fetchOppTeamLineup = async () => {
+    let { data: lineup, error } = await supabase
+      .from("lineup")
+      .select("*")
+      .eq("match_id", matchId)
+      .eq("team_id", match?.opponent_id);
+
+    if (!error) {
+      const initialSquad = {
+        goalKeeper: [],
+        defence: [],
+        midField: [],
+        attack: [],
+      };
+
+      const updatedSquad = lineup.reduce((acc, player) => {
+        switch (player.player_position) {
+          case "Goal-Keeper":
+            acc.goalKeeper.push(player);
+            break;
+          case "Defence":
+            acc.defence.push(player);
+            break;
+          case "Mid-Field":
+            acc.midField.push(player);
+            break;
+          case "Attack":
+            acc.attack.push(player);
+            break;
+          default:
+            // Handle any other positions as needed
+            break;
+        }
+        return acc;
+      }, initialSquad);
+
+      setOppSquad(updatedSquad);
+    }
+  };
+
+  useEffect(() => {
+    if (match) {
+      fetchMyTeamLineup();
+      fetchOppTeamLineup();
+    }
+  }, [match]);
+
   return (
     <>
       {/* Team stat */}
@@ -164,136 +271,296 @@ const MatchStats = ({ match }) => {
 
         <TabPanels>
           <TabPanel p={0}>
-            {/* GK */}
             <Box backgroundColor="#161616" borderRadius={7} mt={6}>
               <Flex
                 justifyContent="flex-start"
                 p={3}
                 borderBottom="1px solid gray"
               >
-                <Text fontSize="md" color="#E7E9EA">
+                <Text fontSize="md" color="gray">
                   GOAL KEEPER
                 </Text>
               </Flex>
-              <Flex
-                flexDir="row"
-                alignItems="center"
-                justifyContent="space-between"
-                p={4}
-                borderBottom="1px solid gray"
-              >
-                <Flex flexDir="column">
-                  <Text fontSize="md" color="#E7E9EA" my={1}>
-                    Iker Casiilas
-                  </Text>
-                  <IoFootballOutline color="#E7E9EA" size={16} />
-                </Flex>
-                <Flex>
-                  <Text fontSize="md" color="#E7E9EA">
-                    +30
-                  </Text>
-                </Flex>
-              </Flex>
+              {mySquad?.goalKeeper?.map((squad: Player, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    flexDir="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    p={3}
+                    borderBottom="1px solid gray"
+                  >
+                    <Flex flexDir="column">
+                      <Text fontSize="md" color="#E7E9EA" my={1}>
+                        {squad?.player_name}
+                      </Text>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Flex>
+                    <Flex>
+                      <Text fontSize="md" color="#E7E9EA">
+                        +30
+                      </Text>
+                    </Flex>
+                  </Flex>
+                );
+              })}
             </Box>
 
-            {/* DEFENCE */}
             <Box backgroundColor="#161616" borderRadius={7} mt={6}>
               <Flex
                 justifyContent="flex-start"
                 p={3}
                 borderBottom="1px solid gray"
               >
-                <Text fontSize="md" color="#E7E9EA">
+                <Text fontSize="md" color="gray">
                   DEFENCE
                 </Text>
               </Flex>
-              <Flex
-                flexDir="row"
-                alignItems="center"
-                justifyContent="space-between"
-                p={4}
-                borderBottom="1px solid gray"
-              >
-                <Flex flexDir="column">
-                  <Text fontSize="md" color="#E7E9EA" my={1}>
-                    Iker Casiilas
-                  </Text>
-                  <IoFootballOutline color="#E7E9EA" size={16} />
-                </Flex>
-                <Flex>
-                  <Text fontSize="md" color="#E7E9EA">
-                    +30
-                  </Text>
-                </Flex>
-              </Flex>
+              {mySquad?.defence?.map((squad: Player, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    flexDir="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    p={3}
+                    borderBottom="1px solid gray"
+                  >
+                    <Flex flexDir="column">
+                      <Text fontSize="md" color="#E7E9EA" my={1}>
+                        {squad?.player_name}
+                      </Text>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Flex>
+                    <Flex>
+                      <Text fontSize="md" color="#E7E9EA">
+                        +30
+                      </Text>
+                    </Flex>
+                  </Flex>
+                );
+              })}
             </Box>
 
-            {/* MID */}
             <Box backgroundColor="#161616" borderRadius={7} mt={6}>
               <Flex
                 justifyContent="flex-start"
                 p={3}
                 borderBottom="1px solid gray"
               >
-                <Text fontSize="md" color="#E7E9EA">
+                <Text fontSize="md" color="gray">
                   MID-FIELD
                 </Text>
               </Flex>
-              <Flex
-                flexDir="row"
-                alignItems="center"
-                justifyContent="space-between"
-                p={4}
-                borderBottom="1px solid gray"
-              >
-                <Flex flexDir="column">
-                  <Text fontSize="md" color="#E7E9EA" my={1}>
-                    Iker Casiilas
-                  </Text>
-                  <IoFootballOutline color="#E7E9EA" size={16} />
-                </Flex>
-                <Flex>
-                  <Text fontSize="md" color="#E7E9EA">
-                    +30
-                  </Text>
-                </Flex>
-              </Flex>
+              {mySquad?.midField?.map((squad: Player, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    flexDir="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    p={3}
+                    borderBottom="1px solid gray"
+                  >
+                    <Flex flexDir="column">
+                      <Text fontSize="md" color="#E7E9EA" my={1}>
+                        {squad?.player_name}
+                      </Text>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Flex>
+                    <Flex>
+                      <Text fontSize="md" color="#E7E9EA">
+                        +30
+                      </Text>
+                    </Flex>
+                  </Flex>
+                );
+              })}
             </Box>
 
-            {/* ATTACK */}
-            <Box backgroundColor="#161616" borderRadius={7} my={6}>
+            <Box backgroundColor="#161616" borderRadius={7} mt={6}>
               <Flex
                 justifyContent="flex-start"
                 p={3}
                 borderBottom="1px solid gray"
               >
-                <Text fontSize="md" color="#E7E9EA">
+                <Text fontSize="md" color="gray">
                   ATTACK
                 </Text>
               </Flex>
-              <Flex
-                flexDir="row"
-                alignItems="center"
-                justifyContent="space-between"
-                p={4}
-                borderBottom="1px solid gray"
-              >
-                <Flex flexDir="column">
-                  <Text fontSize="md" color="#E7E9EA" my={1}>
-                    Iker Casiilas
-                  </Text>
-                  <IoFootballOutline color="#E7E9EA" size={16} />
-                </Flex>
-                <Flex>
-                  <Text fontSize="md" color="#E7E9EA">
-                    +30
-                  </Text>
-                </Flex>
-              </Flex>
+              {mySquad?.attack?.map((squad: Player, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    flexDir="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    p={3}
+                    borderBottom="1px solid gray"
+                  >
+                    <Flex flexDir="column">
+                      <Text fontSize="md" color="#E7E9EA" my={1}>
+                        {squad?.player_name}
+                      </Text>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Flex>
+                    <Flex>
+                      <Text fontSize="md" color="#E7E9EA">
+                        +30
+                      </Text>
+                    </Flex>
+                  </Flex>
+                );
+              })}
             </Box>
           </TabPanel>
 
-          <TabPanel></TabPanel>
+          <TabPanel p={0}>
+            <Box backgroundColor="#161616" borderRadius={7} mt={6}>
+              <Flex
+                justifyContent="flex-start"
+                p={3}
+                borderBottom="1px solid gray"
+              >
+                <Text fontSize="md" color="gray">
+                  GOAL KEEPER
+                </Text>
+              </Flex>
+              {oppSquad?.goalKeeper?.map((squad: Player, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    flexDir="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    p={3}
+                    borderBottom="1px solid gray"
+                  >
+                    <Flex flexDir="column">
+                      <Text fontSize="md" color="#E7E9EA" my={1}>
+                        {squad?.player_name}
+                      </Text>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Flex>
+                    <Flex>
+                      <Text fontSize="md" color="#E7E9EA">
+                        +30
+                      </Text>
+                    </Flex>
+                  </Flex>
+                );
+              })}
+            </Box>
+
+            <Box backgroundColor="#161616" borderRadius={7} mt={6}>
+              <Flex
+                justifyContent="flex-start"
+                p={3}
+                borderBottom="1px solid gray"
+              >
+                <Text fontSize="md" color="gray">
+                  DEFENCE
+                </Text>
+              </Flex>
+              {oppSquad?.defence?.map((squad: Player, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    flexDir="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    p={3}
+                    borderBottom="1px solid gray"
+                  >
+                    <Flex flexDir="column">
+                      <Text fontSize="md" color="#E7E9EA" my={1}>
+                        {squad?.player_name}
+                      </Text>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Flex>
+                    <Flex>
+                      <Text fontSize="md" color="#E7E9EA">
+                        +30
+                      </Text>
+                    </Flex>
+                  </Flex>
+                );
+              })}
+            </Box>
+
+            <Box backgroundColor="#161616" borderRadius={7} mt={6}>
+              <Flex
+                justifyContent="flex-start"
+                p={3}
+                borderBottom="1px solid gray"
+              >
+                <Text fontSize="md" color="gray">
+                  MID-FIELD
+                </Text>
+              </Flex>
+              {oppSquad?.midField?.map((squad: Player, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    flexDir="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    p={3}
+                    borderBottom="1px solid gray"
+                  >
+                    <Flex flexDir="column">
+                      <Text fontSize="md" color="#E7E9EA" my={1}>
+                        {squad?.player_name}
+                      </Text>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Flex>
+                    <Flex>
+                      <Text fontSize="md" color="#E7E9EA">
+                        +30
+                      </Text>
+                    </Flex>
+                  </Flex>
+                );
+              })}
+            </Box>
+
+            <Box backgroundColor="#161616" borderRadius={7} mt={6}>
+              <Flex
+                justifyContent="flex-start"
+                p={3}
+                borderBottom="1px solid gray"
+              >
+                <Text fontSize="md" color="gray">
+                  ATTACK
+                </Text>
+              </Flex>
+              {oppSquad?.attack?.map((squad: Player, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    flexDir="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    p={3}
+                    borderBottom="1px solid gray"
+                  >
+                    <Flex flexDir="column">
+                      <Text fontSize="md" color="#E7E9EA" my={1}>
+                        {squad?.player_name}
+                      </Text>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Flex>
+                    <Flex>
+                      <Text fontSize="md" color="#E7E9EA">
+                        +30
+                      </Text>
+                    </Flex>
+                  </Flex>
+                );
+              })}
+            </Box>
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </>

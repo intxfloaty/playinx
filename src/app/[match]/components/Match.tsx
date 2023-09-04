@@ -132,7 +132,7 @@ const Match = ({ user }) => {
 
           {/* Matcgstats panel */}
           <TabPanel>
-            <MatchStats match={match}/>
+            <MatchStats matchId={matchId} match={match}/>
           </TabPanel>
 
         </TabPanels>

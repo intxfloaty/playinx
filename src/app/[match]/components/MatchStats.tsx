@@ -11,13 +11,14 @@ import {
   TabPanels,
   Box,
 } from "../../chakraExports";
+import { IoFootballOutline } from "react-icons/io5";
 
 const MatchStats = ({ match }) => {
   return (
     <>
       {/* Team stat */}
-      <Box backgroundColor="#161616" borderRadius={7} my={6}>
-        <Flex justifyContent="center" p={3}>
+      <Box backgroundColor="#161616" borderRadius={7} mb={30}>
+        <Flex bg="black" justifyContent="center" p={3}>
           <Text fontSize="lg" color="#E7E9EA">
             TEAM STAT
           </Text>
@@ -142,38 +143,159 @@ const MatchStats = ({ match }) => {
           </Flex>
         </Flex>
       </Box>
+      {/* <Text fontSize="xs" color="#E7E9EA" >*More stats will be included in the future</Text> */}
 
       {/* Player stat */}
-      <Box backgroundColor="#161616" borderRadius={7} my={6}>
-        <Flex flexDir="column" justifyContent="center" p={3}>
-          <Text fontSize="lg" color="#E7E9EA" mb={3}>
-            PLAYER STAT
-          </Text>
+      <Flex bg="black" flexDir="column" justifyContent="center">
+        <Text fontSize="lg" color="#E7E9EA" mb={5}>
+          PLAYER STAT
+        </Text>
+      </Flex>
 
-          <Tabs align="center" isFitted variant="enclosed">
-            <TabList>
-              <Tab fontSize="lg" color="#E7E9EA">
-                Mohan Bagan
-              </Tab>
-              <Tab fontSize="lg" color="#E7E9EA">
-                Kerala Blasters
-              </Tab>
-            </TabList>
-            {/* <TabIndicator
-              mt="-1.5px"
-              height="2px"
-              bg="#E7E9EA"
-              borderRadius="1px"
-            /> */}
+      <Tabs align="center" isFitted variant="enclosed">
+        <TabList bg="black">
+          <Tab fontSize="lg" color="#E7E9EA">
+            {match?.team_name}
+          </Tab>
+          <Tab fontSize="lg" color="#E7E9EA">
+            {match?.opponent_name}
+          </Tab>
+        </TabList>
 
-            <TabPanels>
-              <TabPanel></TabPanel>
+        <TabPanels>
+          <TabPanel p={0}>
+            {/* GK */}
+            <Box backgroundColor="#161616" borderRadius={7} mt={6}>
+              <Flex
+                justifyContent="flex-start"
+                p={3}
+                borderBottom="1px solid gray"
+              >
+                <Text fontSize="md" color="#E7E9EA">
+                  GOAL KEEPER
+                </Text>
+              </Flex>
+              <Flex
+                flexDir="row"
+                alignItems="center"
+                justifyContent="space-between"
+                p={4}
+                borderBottom="1px solid gray"
+              >
+                <Flex flexDir="column">
+                  <Text fontSize="md" color="#E7E9EA" my={1}>
+                    Iker Casiilas
+                  </Text>
+                  <IoFootballOutline color="#E7E9EA" size={16} />
+                </Flex>
+                <Flex>
+                  <Text fontSize="md" color="#E7E9EA">
+                    +30
+                  </Text>
+                </Flex>
+              </Flex>
+            </Box>
 
-              <TabPanel></TabPanel>
-            </TabPanels>
-          </Tabs>
-        </Flex>
-      </Box>
+            {/* DEFENCE */}
+            <Box backgroundColor="#161616" borderRadius={7} mt={6}>
+              <Flex
+                justifyContent="flex-start"
+                p={3}
+                borderBottom="1px solid gray"
+              >
+                <Text fontSize="md" color="#E7E9EA">
+                  DEFENCE
+                </Text>
+              </Flex>
+              <Flex
+                flexDir="row"
+                alignItems="center"
+                justifyContent="space-between"
+                p={4}
+                borderBottom="1px solid gray"
+              >
+                <Flex flexDir="column">
+                  <Text fontSize="md" color="#E7E9EA" my={1}>
+                    Iker Casiilas
+                  </Text>
+                  <IoFootballOutline color="#E7E9EA" size={16} />
+                </Flex>
+                <Flex>
+                  <Text fontSize="md" color="#E7E9EA">
+                    +30
+                  </Text>
+                </Flex>
+              </Flex>
+            </Box>
+
+            {/* MID */}
+            <Box backgroundColor="#161616" borderRadius={7} mt={6}>
+              <Flex
+                justifyContent="flex-start"
+                p={3}
+                borderBottom="1px solid gray"
+              >
+                <Text fontSize="md" color="#E7E9EA">
+                  MID-FIELD
+                </Text>
+              </Flex>
+              <Flex
+                flexDir="row"
+                alignItems="center"
+                justifyContent="space-between"
+                p={4}
+                borderBottom="1px solid gray"
+              >
+                <Flex flexDir="column">
+                  <Text fontSize="md" color="#E7E9EA" my={1}>
+                    Iker Casiilas
+                  </Text>
+                  <IoFootballOutline color="#E7E9EA" size={16} />
+                </Flex>
+                <Flex>
+                  <Text fontSize="md" color="#E7E9EA">
+                    +30
+                  </Text>
+                </Flex>
+              </Flex>
+            </Box>
+
+            {/* ATTACK */}
+            <Box backgroundColor="#161616" borderRadius={7} my={6}>
+              <Flex
+                justifyContent="flex-start"
+                p={3}
+                borderBottom="1px solid gray"
+              >
+                <Text fontSize="md" color="#E7E9EA">
+                  ATTACK
+                </Text>
+              </Flex>
+              <Flex
+                flexDir="row"
+                alignItems="center"
+                justifyContent="space-between"
+                p={4}
+                borderBottom="1px solid gray"
+              >
+                <Flex flexDir="column">
+                  <Text fontSize="md" color="#E7E9EA" my={1}>
+                    Iker Casiilas
+                  </Text>
+                  <IoFootballOutline color="#E7E9EA" size={16} />
+                </Flex>
+                <Flex>
+                  <Text fontSize="md" color="#E7E9EA">
+                    +30
+                  </Text>
+                </Flex>
+              </Flex>
+            </Box>
+          </TabPanel>
+
+          <TabPanel></TabPanel>
+        </TabPanels>
+      </Tabs>
     </>
   );
 };

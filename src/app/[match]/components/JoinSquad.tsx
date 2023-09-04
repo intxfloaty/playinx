@@ -115,16 +115,16 @@ const JoinSquad = ({ matchId, userId, profile, match }) => {
     }
   }, [match]);
 
-  useEffect(() => {
-    const requiredSize = minSquadSizes[match?.format];
-    if (
-      requiredSize !== undefined &&
-      mySquad.length >= requiredSize &&
-      oppSquad.length >= requiredSize
-    ) {
-      updateMatchStatus();
-    }
-  }, [mySquad, oppSquad, match?.format]);
+  // useEffect(() => {
+  //   const requiredSize = minSquadSizes[match?.format];
+  //   if (
+  //     requiredSize !== undefined &&
+  //     mySquad.length >= requiredSize &&
+  //     oppSquad.length >= requiredSize
+  //   ) {
+  //     updateMatchStatus();
+  //   }
+  // }, [mySquad, oppSquad, match?.format]);
 
   useEffect(() => {
     const channel = supabase

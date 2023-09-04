@@ -18,6 +18,7 @@ import useTeamStore from "../../../utils/store/teamStore";
 import JoinSquad from "./JoinSquad";
 import MatchHeader from "./MatchHeader";
 import Overview from "./Overview";
+import MatchStats from "./MatchStats";
 
 type Match = {
   format: string;
@@ -129,9 +130,9 @@ const Match = ({ user }) => {
             />
           </TabPanel>
 
-          {/* stats panel */}
+          {/* Matcgstats panel */}
           <TabPanel>
-            <p>three!</p>
+            <MatchStats match={match}/>
           </TabPanel>
 
         </TabPanels>

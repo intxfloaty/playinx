@@ -70,6 +70,7 @@ export {
   ListIcon,
   OrderedList,
   UnorderedList,
+  Progress,
 } from "@chakra-ui/react";
 
 export { Link } from "@chakra-ui/next-js";

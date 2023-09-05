@@ -87,9 +87,19 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
       .update({
         match_status: "completed",
         team_score: teamScore,
+        team_corner: teamCorner,
+        team_yellow_card: teamYellowCard,
+        team_red_card: teamRedCard,
+        team_discipline: teamDiscipline,
         opponent_score: oppScore,
+        opponent_corner: oppCorner,
+        opponent_yellow_card: oppYellowCard,
+        opponent_red_card: oppRedCard,
+        opponent_discipline: oppDiscipline,
       })
       .eq("match_id", `${match?.match_id}`);
+
+    console.log(error, "updateMatchErr");
   };
 
   const updateTeamLineUpStat = () => {

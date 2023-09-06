@@ -26,29 +26,47 @@ import {
   Tabs,
 } from "../../chakraExports";
 import { IoCloseOutline } from "react-icons/io5";
+import TeamStat from "./TeamStat";
 
 interface Errors {
   [key: string]: string;
 }
+
+type TeamStat = {
+  teamScore: string;
+  teamCorner: string;
+  teamYellowCard: string;
+  teamRedCard: string;
+  teamDiscipline: string;
+};
+
+type OppStat = {
+  oppScore: string;
+  oppCorner: string;
+  oppYellowCard: string;
+  oppRedCard: string;
+  oppDiscipline: string;
+};
 
 const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   const supabase = createClientComponentClient();
   const [teamLineup, setTeamLineup] = useState([]);
   const [oppLineup, setOppLineup] = useState([]);
 
-  // team
-  const [teamScore, setTeamScore] = useState("0");
-  const [teamCorner, setTeamCorner] = useState("0");
-  const [teamYellowCard, setTeamYellowCard] = useState("0");
-  const [teamRedCard, setTeamRedCard] = useState("0");
-  const [teamDiscipline, setTeamDiscipline] = useState("");
-
-  // opp
-  const [oppScore, setOppScore] = useState("0");
-  const [oppCorner, setOppCorner] = useState("0");
-  const [oppYellowCard, setOppYellowCard] = useState("0");
-  const [oppRedCard, setOppRedCard] = useState("0");
-  const [oppDiscipline, setOppDiscipline] = useState("");
+  const [teamStat, setTeamStat] = useState<TeamStat>({
+    teamScore: "0",
+    teamCorner: "0",
+    teamYellowCard: "0",
+    teamRedCard: "0",
+    teamDiscipline: "",
+  });
+  const [oppStat, setOppStat] = useState<OppStat>({
+    oppScore: "0",
+    oppCorner: "0",
+    oppYellowCard: "0",
+    oppRedCard: "0",
+    oppDiscipline: "",
+  });
 
   const [teamPlayers, setTeamPlayers] = useState([]);
   const [oppPlayers, setOppPlayers] = useState([]);
@@ -86,16 +104,16 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
       .from("matches")
       .update({
         match_status: "completed",
-        team_score: teamScore,
-        team_corner: teamCorner,
-        team_yellow_card: teamYellowCard,
-        team_red_card: teamRedCard,
-        team_discipline: teamDiscipline,
-        opponent_score: oppScore,
-        opponent_corner: oppCorner,
-        opponent_yellow_card: oppYellowCard,
-        opponent_red_card: oppRedCard,
-        opponent_discipline: oppDiscipline,
+        team_score: teamStat?.teamScore,
+        team_corner: teamStat?.teamCorner,
+        team_yellow_card: teamStat?.teamYellowCard,
+        team_red_card: teamStat?.teamRedCard,
+        team_discipline: teamStat?.teamDiscipline,
+        opponent_score: oppStat?.oppScore,
+        opponent_corner: oppStat?.oppCorner,
+        opponent_yellow_card: oppStat?.oppYellowCard,
+        opponent_red_card: oppStat?.oppRedCard,
+        opponent_discipline: oppStat?.oppDiscipline,
       })
       .eq("match_id", `${match?.match_id}`);
 
@@ -156,41 +174,42 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
 
     if (
       !(
-        teamGoalCount === Number(teamScore) && oppGoalCount === Number(oppScore)
+        teamGoalCount === Number(teamStat?.teamScore) &&
+        oppGoalCount === Number(oppStat?.oppScore)
       )
     ) {
       errors.playerScoreError =
         "Team score and no of goals scored by players should be equal!";
     }
 
-    if (!teamScore) {
+    if (!teamStat?.teamScore) {
       errors.teamScoreErr = "Please enter team score";
     }
-    if (!teamCorner) {
+    if (!teamStat?.teamCorner) {
       errors.teamCorner = "Please enter team corners";
     }
-    if (!teamYellowCard) {
+    if (!teamStat?.teamYellowCard) {
       errors.teamYellowCard = "Please enter team yellow cards";
     }
-    if (!teamRedCard) {
+    if (!teamStat?.teamRedCard) {
       errors.teamRedCard = "Please enter team red cards ";
     }
-    if (!teamDiscipline) {
+    if (!teamStat?.teamDiscipline) {
       errors.teamDiscipline = "Please select team discipline";
     }
-    if (!oppScore) {
+    if (!oppStat?.oppScore) {
       errors.oppScoreErr = "Please enter team score";
     }
-    if (!oppCorner) {
+    if (!oppStat?.oppCorner) {
       errors.oppCorner = "Please enter team corners";
     }
-    if (!oppYellowCard) {
+    if (!oppStat?.oppYellowCard) {
       errors.oppYellowCard = "Please enter team yellow cards";
     }
-    if (!oppRedCard) {
+    if (!oppStat?.oppRedCard) {
       errors.oppRedCard = "Please enter team red cards ";
     }
-    if (!oppDiscipline) {
+    if (!oppStat?.oppDiscipline) {
       errors.oppDiscipline = "Please select team discipline";
     }
 
@@ -211,7 +230,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
     if (Object.keys(goalError).length !== 0) {
       setGoalError(validateGoalCount());
     }
-  }, [teamPlayerStat, oppPlayerStat, teamScore, oppScore]);
+  }, [teamPlayerStat, oppPlayerStat, teamStat?.teamScore, oppStat?.oppScore]);
 
   useEffect(() => {
     fetchTeamLineUp();
@@ -239,202 +258,13 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
           </Flex>
         </ModalHeader>
         <ModalBody>
-          {/* Goals */}
-          <Flex
-            flexDir="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={4}
-          >
-            <Box w="20%">
-              <Input
-                type="number"
-                color="black"
-                borderColor="#161616"
-                textAlign="center"
-                isInvalid={!!goalError.teamScoreErr}
-                errorBorderColor={goalError.teamScoreErr ? "#FFB400" : ""}
-                value={teamScore}
-                onChange={(e) => {
-                  setTeamScore(e.target.value);
-                }}
-              />
-            </Box>
-            <Box>Goals</Box>
-            <Box w="20%">
-              <Input
-                type="number"
-                color="black"
-                borderColor="#161616"
-                textAlign="center"
-                isInvalid={!!goalError.oppScoreErr}
-                errorBorderColor={goalError.oppScoreErr ? "#FFB400" : ""}
-                value={oppScore}
-                onChange={(e) => {
-                  setOppScore(e.target.value);
-                }}
-              />
-            </Box>
-          </Flex>
-
-          {/* Corners */}
-          <Flex
-            flexDir="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={4}
-          >
-            <Box w="20%">
-              <Input
-                type="number"
-                color="black"
-                borderColor="#161616"
-                textAlign="center"
-                isInvalid={!!goalError.teamCorner}
-                errorBorderColor={goalError.teamCorner ? "#FFB400" : ""}
-                value={teamCorner}
-                onChange={(e) => {
-                  setTeamCorner(e.target.value);
-                }}
-              />
-            </Box>
-            <Box>Corners</Box>
-            <Box w="20%">
-              <Input
-                type="number"
-                color="black"
-                borderColor="#161616"
-                textAlign="center"
-                isInvalid={!!goalError.oppCorner}
-                errorBorderColor={goalError.oppCorner ? "#FFB400" : ""}
-                value={oppCorner}
-                onChange={(e) => {
-                  setOppCorner(e.target.value);
-                }}
-              />
-            </Box>
-          </Flex>
-
-          {/* Yellow card */}
-          <Flex
-            flexDir="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={4}
-          >
-            <Box w="20%">
-              <Input
-                type="number"
-                color="black"
-                borderColor="#161616"
-                textAlign="center"
-                isInvalid={!!goalError.teamYellowCard}
-                errorBorderColor={goalError.teamYellowCard ? "#FFB400" : ""}
-                value={teamYellowCard}
-                onChange={(e) => {
-                  setTeamYellowCard(e.target.value);
-                }}
-              />
-            </Box>
-            <Box>Yellow card</Box>
-            <Box w="20%">
-              <Input
-                type="number"
-                color="black"
-                borderColor="#161616"
-                textAlign="center"
-                isInvalid={!!goalError.oppYellowCard}
-                errorBorderColor={goalError.oppYellowCard ? "#FFB400" : ""}
-                value={oppYellowCard}
-                onChange={(e) => {
-                  setOppYellowCard(e.target.value);
-                }}
-              />
-            </Box>
-          </Flex>
-
-          {/* Red card */}
-          <Flex
-            flexDir="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={4}
-          >
-            <Box w="20%">
-              <Input
-                type="number"
-                color="black"
-                borderColor="#161616"
-                textAlign="center"
-                isInvalid={!!goalError.teamRedCard}
-                errorBorderColor={goalError.teamRedCard ? "#FFB400" : ""}
-                value={teamRedCard}
-                onChange={(e) => {
-                  setTeamRedCard(e.target.value);
-                }}
-              />
-            </Box>
-            <Box>Red card</Box>
-            <Box w="20%">
-              <Input
-                type="number"
-                color="black"
-                borderColor="#161616"
-                textAlign="center"
-                isInvalid={!!goalError.oppRedCard}
-                errorBorderColor={goalError.oppRedCard ? "#FFB400" : ""}
-                value={oppRedCard}
-                onChange={(e) => {
-                  setOppRedCard(e.target.value);
-                }}
-              />
-            </Box>
-          </Flex>
-
-          {/* Discipline */}
-          <Flex
-            flexDir="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mt={4}
-          >
-            <Box w="30%">
-              <Select
-                placeholder="Select"
-                color="black"
-                borderColor="#161616"
-                isInvalid={!!goalError.teamDiscipline}
-                errorBorderColor={goalError.teamDiscipline ? "#FFB400" : ""}
-                value={teamDiscipline}
-                onChange={(e) => {
-                  setTeamDiscipline(e.target.value);
-                }}
-              >
-                <option value="On Time">On Time</option>
-                <option value="Late">Late</option>
-                <option value="No Show">No Show</option>
-              </Select>
-            </Box>
-            <Box>Discipline</Box>
-            <Box w="30%">
-              <Select
-                placeholder="Select"
-                color="black"
-                borderColor="#161616"
-                isInvalid={!!goalError.oppDiscipline}
-                errorBorderColor={goalError.oppDiscipline ? "#FFB400" : ""}
-                value={oppDiscipline}
-                onChange={(e) => {
-                  setOppDiscipline(e.target.value);
-                }}
-              >
-                <option value="On Time">On Time</option>
-                <option value="Late">Late</option>
-                <option value="No Show">No Show</option>
-              </Select>
-            </Box>
-          </Flex>
-
+          <TeamStat
+            teamStat={teamStat}
+            setTeamStat={setTeamStat}
+            oppStat={oppStat}
+            setOppStat={setOppStat}
+            goalError={goalError}
+          />
           <Tabs align="center" isFitted variant="unstyled" mt={10}>
             <TabList>
               <Tab fontSize="lg" color="black">

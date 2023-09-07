@@ -134,7 +134,7 @@ const MatchStats = ({ matchId, match }) => {
           flexDir="row"
           alignItems="center"
           justifyContent="space-between"
-          p={6}
+          p={3}
           borderY="1px solid gray"
         >
           <Flex justifyContent="flex-start">
@@ -143,7 +143,7 @@ const MatchStats = ({ matchId, match }) => {
             </Text>
           </Flex>
           <Flex>
-            <Text fontSize="md" color="#E7E9EA">
+            <Text fontSize="md" color="gray">
               GOALS SCORED
             </Text>
           </Flex>
@@ -158,7 +158,7 @@ const MatchStats = ({ matchId, match }) => {
           flexDir="row"
           alignItems="center"
           justifyContent="space-between"
-          p={6}
+          p={3}
           borderY="1px solid gray"
         >
           <Flex>
@@ -167,7 +167,7 @@ const MatchStats = ({ matchId, match }) => {
             </Text>
           </Flex>
           <Flex>
-            <Text fontSize="md" color="#E7E9EA">
+            <Text fontSize="md" color="gray">
               GOALS CONCEDED
             </Text>
           </Flex>
@@ -182,7 +182,7 @@ const MatchStats = ({ matchId, match }) => {
           flexDir="row"
           alignItems="center"
           justifyContent="space-between"
-          p={6}
+          p={3}
           borderY="1px solid gray"
         >
           <Flex>
@@ -191,7 +191,7 @@ const MatchStats = ({ matchId, match }) => {
             </Text>
           </Flex>
           <Flex>
-            <Text fontSize="md" color="#E7E9EA">
+            <Text fontSize="md" color="gray">
               CORNERS
             </Text>
           </Flex>
@@ -206,7 +206,7 @@ const MatchStats = ({ matchId, match }) => {
           flexDir="row"
           alignItems="center"
           justifyContent="space-between"
-          p={6}
+          p={3}
           borderY="1px solid gray"
         >
           <Flex>
@@ -215,7 +215,7 @@ const MatchStats = ({ matchId, match }) => {
             </Text>
           </Flex>
           <Flex>
-            <Text fontSize="md" color="#E7E9EA">
+            <Text fontSize="md" color="gray">
               YELLOW CARD
             </Text>
           </Flex>
@@ -230,7 +230,7 @@ const MatchStats = ({ matchId, match }) => {
           flexDir="row"
           alignItems="center"
           justifyContent="space-between"
-          p={6}
+          p={3}
           borderY="1px solid gray"
         >
           <Flex>
@@ -239,7 +239,7 @@ const MatchStats = ({ matchId, match }) => {
             </Text>
           </Flex>
           <Flex>
-            <Text fontSize="md" color="#E7E9EA">
+            <Text fontSize="md" color="gray">
               RED CARD
             </Text>
           </Flex>

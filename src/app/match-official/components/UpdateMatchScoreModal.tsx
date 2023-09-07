@@ -113,20 +113,100 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
     console.log(error, "updateMatchErr");
   };
 
-  const updateTeamLineUpStat = () => {
-    teamPlayerStat?.map(async (teamPlayer) => {
-      const { data, error } = await supabase
-        .from("lineup")
-        .update({
-          goals: teamPlayer?.goals,
-          assists: teamPlayer?.assists,
-          card: teamPlayer?.card,
-        })
-        .eq("match_id", `${match?.match_id}`)
-        .eq("team_id", `${match?.team_id}`)
-        .eq("player_id", `${teamPlayer?.playerId}`);
+  const updateTeamLineUpStat = async () => {
+    teamLineup?.map(async (teamPlayer) => {
+      // Find the corresponding player in teamPlayerStat
+      const playerStat = teamPlayerStat?.find(
+        (player) => player.playerId === teamPlayer.player_id
+      );
+      const GS = Number(teamStat?.teamScore) * 2;
+      const GC = Number(oppStat?.oppScore);
 
-      console.log(error, "teamStatErr");
+      if (playerStat) {
+        let matchRating;
+        const foul =
+          playerStat?.card === "" ? 0 : playerStat?.card === "Y" ? 1 : 3;
+
+        if (teamPlayer?.player_position === "Goal-Keeper") {
+          const minRawRating = 0;
+          const maxRawRating = Number(teamStat?.teamScore) * 8 + GS - GC;
+          const maxMinDiff = maxRawRating - minRawRating;
+          const goals = Number(playerStat?.goals) * 8;
+          const assists = Number(playerStat?.assists) * 4;
+          const rating = goals + assists + GS - foul - GC;
+          matchRating = (rating / maxMinDiff) * 10;
+
+          console.log(matchRating, "nor");
+        }
+
+        if (teamPlayer?.player_position === "Defence") {
+          const minRawRating = 0;
+          const maxRawRating = Number(teamStat?.teamScore) * 6 + GS - GC;
+          const maxMinDiff = maxRawRating - minRawRating;
+          const goals = Number(playerStat?.goals) * 6;
+          const assists = Number(playerStat?.assists) * 4;
+          const rating = goals + assists + GS - foul - GC;
+          matchRating = (rating / maxMinDiff) * 10;
+
+          console.log(matchRating, "nor");
+        }
+
+        if (teamPlayer?.player_position === "Mid-Field") {
+          const minRawRating = 0;
+          const maxRawRating = Number(teamStat?.teamScore) * 5 + GS - GC;
+          const maxMinDiff = maxRawRating - minRawRating;
+          const goals = Number(playerStat?.goals) * 5;
+          const assists = Number(playerStat?.assists) * 2;
+          const rating = goals + assists + GS - foul - GC;
+          matchRating = (rating / maxMinDiff) * 10;
+
+          console.log(matchRating, "nor");
+        }
+
+        if (teamPlayer?.player_position === "Attack") {
+          const minRawRating = 0;
+          const maxRawRating = Number(teamStat?.teamScore) * 4 + GS - GC;
+          const maxMinDiff = maxRawRating - minRawRating;
+          const goals = Number(playerStat?.goals) * 4;
+          const assists = Number(playerStat?.assists) * 2;
+          const rating = goals + assists + GS - foul - GC;
+          matchRating = (rating / maxMinDiff) * 10;
+
+          console.log(matchRating, "nor");
+        }
+
+        const { data, error } = await supabase
+          .from("lineup")
+          .update({
+            goals: playerStat?.goals,
+            assists: playerStat?.assists,
+            card: playerStat?.card,
+            match_rating: `${matchRating}`,
+          })
+          .eq("match_id", `${match?.match_id}`)
+          .eq("team_id", `${match?.team_id}`)
+          .eq("player_id", `${teamPlayer?.player_id}`);
+
+        console.log(error, "teamStatErr");
+      } else {
+        const minRawRating = 0;
+        const maxRawRating = Number(teamStat?.teamScore) * 4;
+        const maxMinDiff = maxRawRating - minRawRating;
+        const rating = GS - GC;
+        const matchRating = (rating / maxMinDiff) * 10;
+        console.log(matchRating, "nor");
+
+        const { data, error } = await supabase
+          .from("lineup")
+          .update({
+            match_rating: matchRating,
+          })
+          .eq("match_id", `${match?.match_id}`)
+          .eq("team_id", `${match?.team_id}`)
+          .eq("player_id", `${teamPlayer?.player_id}`);
+
+        console.log(error, "teamStatErr");
+      }
     });
   };
 
@@ -137,6 +217,7 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
         .update({
           goals: oppPlayer?.goals,
           assists: oppPlayer?.assists,
+          card: oppPlayer?.card,
         })
         .eq("match_id", `${match?.match_id}`)
         .eq("team_id", `${match?.opponent_id}`)
@@ -210,29 +291,29 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
   };
 
   const handleSubmit = async () => {
-    const errors = validateGoalCount();
-    if (Object.keys(errors).length === 0) {
-      await updateMatchScore();
-      updateTeamLineUpStat();
-      updateOppLineUpStat();
-      onClose();
-    } else setGoalError(errors);
+    // const errors = validateGoalCount();
+    // if (Object.keys(errors).length === 0) {
+    // await updateMatchScore();
+    updateTeamLineUpStat();
+    // updateOppLineUpStat();
+    // onClose();
+    // } else setGoalError(errors);
   };
 
-  useEffect(() => {
-    if (Object.keys(goalError).length !== 0) {
-      setGoalError(validateGoalCount());
-    }
-  }, [teamPlayerStat, oppPlayerStat, teamStat?.teamScore, oppStat?.oppScore]);
+  // useEffect(() => {
+  //   if (Object.keys(goalError).length !== 0) {
+  //     setGoalError(validateGoalCount());
+  //   }
+  // }, [teamPlayerStat, oppPlayerStat, teamStat?.teamScore, oppStat?.oppScore]);
 
   useEffect(() => {
     fetchTeamLineUp();
     fetchOppLineUp();
   }, []);
 
-  // console.log(oppPlayers, "players");
-  // console.log(oppPlayerStat, "stat");
-  // console.log(goalError, "gERR");
+  console.log(teamPlayers, "players");
+  console.log(teamPlayerStat, "stat");
+  console.log(goalError, "gERR");
 
   return (
     <Modal

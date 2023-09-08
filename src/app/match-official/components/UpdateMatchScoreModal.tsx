@@ -117,9 +117,8 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
     const GS = Number(teamStat?.teamScore);
     const GC = Number(oppStat?.oppScore);
     let matchRating;
-    const foul =
-      playerStat?.card === "" ? 0 : playerStat?.card === "Y" ? 1 : 3;
-  
+    const foul = playerStat?.card === "" ? 0 : playerStat?.card === "Y" ? 1 : 3;
+
     const getPositionMultiplier = (position) => {
       switch (position) {
         case "Goal-Keeper":
@@ -154,28 +153,23 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
           return null;
       }
     };
-  
+
     const positionMultiplier = getPositionMultiplier(teamPlayer?.player_position);
-  
+
     if (positionMultiplier) {
       const maxMinDiff = positionMultiplier.maxRawRating - positionMultiplier.minRawRating;
-      const goals = Number(playerStat?.goals) * positionMultiplier.goalsMultiplier;
-      const assists = Number(playerStat?.assists) * positionMultiplier.assistsMultiplier;
+      const goals = playerStat?.goals ? Number(playerStat?.goals) * positionMultiplier.goalsMultiplier : 0
+
+      const assists = playerStat?.assists ? Number(playerStat?.assists) * positionMultiplier.assistsMultiplier : 0
       const rating = goals + assists + GS - foul - GC;
       matchRating = (rating / maxMinDiff) * 10;
     }
-  
-    return matchRating || 0;
+
+    return matchRating
   };
-  
-  const calculateScaledRating = (matchRating, average, minValue, maxValue) => {
-    const scaleFactor = (10 - 5) / (maxValue - minValue);
-    const normalizedRating = matchRating * (average / 10);
-    const finalRating = (normalizedRating - minValue) * scaleFactor + 5;
-    return finalRating;
-  };
-  
-  const avgTeamRating = () => {
+
+
+  const avgOverallRating = () => {
     const arr = [];
     teamLineup?.forEach((teamPlayer) => {
       const playerStat = teamPlayerStat?.find(
@@ -184,73 +178,82 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
       const matchRating = calculateMatchRating(playerStat, teamPlayer, teamStat, oppStat);
       arr.push(matchRating);
     });
-  
+
+    // oppLineup?.forEach((player) => {
+    //   const playerStat = oppPlayerStat?.find(
+    //     (player) => player.playerId === player.player_id
+    //   );
+    //   const matchRating = calculateOppMatchRating(playerStat, player, teamStat, oppStat);
+    //   arr.push(matchRating);
+    // });
+
     const sum = arr.reduce((total, currentValue) => total + currentValue, 0);
     const average = arr.length > 0 ? sum / arr.length : 0;
     console.log(arr, average, "--------avg>>>");
-  
+
     return average;
   };
-  
-  const scalingFactor = () => {
-    const average = avgTeamRating();
-    const ScalingArr = [];
-  
+
+
+
+  const calculateMinMax = () => {
+    const relativeArr = [];
+    const average = avgOverallRating();
     teamLineup?.forEach((teamPlayer) => {
       const playerStat = teamPlayerStat?.find(
         (player) => player.playerId === teamPlayer.player_id
       );
       const matchRating = calculateMatchRating(playerStat, teamPlayer, teamStat, oppStat);
-      ScalingArr.push(matchRating);
+      const relativeRating = matchRating * (average / 10);
+      relativeArr.push(relativeRating);
     });
-  
-    // Calculate the minimum and maximum values in ScalingArr
-    const minValue = Math.min(...ScalingArr);
-    const maxValue = Math.max(...ScalingArr);
-  
-    const normalizedRatings = ScalingArr.map((matchRating) => {
-      return calculateScaledRating(matchRating, average, minValue, maxValue);
-    });
-  
-    console.log(normalizedRatings, "---ScaleARR>>>");
-    return normalizedRatings;
+
+    const minValue = Math.min(...relativeArr);
+    const maxValue = Math.max(...relativeArr);
+
+    return { minValue, maxValue };
   };
-  
-  
+
+
+  const calculateScaledRating = (matchRating, average, minValue, maxValue) => {
+    const scaleFactor = (10 - 5) / (maxValue - minValue);
+    const normalizedRating = matchRating * (average / 10);
+    const finalRating = (normalizedRating - minValue) * scaleFactor + 5;
+    return finalRating;
+  };
+
+
+
+
   const updateTeamLineUpStat = async () => {
-    const average = avgTeamRating();
-    const ScalingArr = scalingFactor();
-    
-    // Calculate the minimum and maximum values in ScalingArr
-    const minValue = Math.min(...ScalingArr);
-    const maxValue = Math.max(...ScalingArr);
-  
+    const average = avgOverallRating();
+    const { minValue, maxValue } = calculateMinMax();
+
     teamLineup?.forEach((teamPlayer) => {
       const playerStat = teamPlayerStat?.find(
         (player) => player.playerId === teamPlayer.player_id
       );
       const matchRating = calculateMatchRating(playerStat, teamPlayer, teamStat, oppStat);
       const scaledRating = calculateScaledRating(matchRating, average, minValue, maxValue);
-      console.log(scaledRating, teamPlayer?.player_position);
+      console.log(scaledRating.toFixed(2), teamPlayer?.player_name, teamPlayer?.player_position);
     });
   };
-  
 
   const updateOppLineUpStat = () => {
-    oppPlayerStat?.map(async (oppPlayer) => {
-      const { data, error } = await supabase
-        .from("lineup")
-        .update({
-          goals: oppPlayer?.goals,
-          assists: oppPlayer?.assists,
-          card: oppPlayer?.card,
-        })
-        .eq("match_id", `${match?.match_id}`)
-        .eq("team_id", `${match?.opponent_id}`)
-        .eq("player_id", `${oppPlayer?.playerId}`);
+    // oppPlayerStat?.map(async (oppPlayer) => {
+    //   const { data, error } = await supabase
+    //     .from("lineup")
+    //     .update({
+    //       goals: oppPlayer?.goals,
+    //       assists: oppPlayer?.assists,
+    //       card: oppPlayer?.card,
+    //     })
+    //     .eq("match_id", `${match?.match_id}`)
+    //     .eq("team_id", `${match?.opponent_id}`)
+    //     .eq("player_id", `${oppPlayer?.playerId}`);
 
-      console.log(error, "oppStatErr");
-    });
+    //   console.log(error, "oppStatErr");
+    // });
   };
 
   const validateGoalCount = () => {

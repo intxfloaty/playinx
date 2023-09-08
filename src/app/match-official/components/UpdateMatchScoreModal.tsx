@@ -113,102 +113,120 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
     console.log(error, "updateMatchErr");
   };
 
-  const updateTeamLineUpStat = async () => {
-    teamLineup?.map(async (teamPlayer) => {
-      // Find the corresponding player in teamPlayerStat
+  const calculateMatchRating = (playerStat, teamPlayer, teamStat, oppStat) => {
+    const GS = Number(teamStat?.teamScore);
+    const GC = Number(oppStat?.oppScore);
+    let matchRating;
+    const foul =
+      playerStat?.card === "" ? 0 : playerStat?.card === "Y" ? 1 : 3;
+  
+    const getPositionMultiplier = (position) => {
+      switch (position) {
+        case "Goal-Keeper":
+          return {
+            minRawRating: 0,
+            maxRawRating: GS * 8 + (GS - GC) * 2,
+            goalsMultiplier: 8,
+            assistsMultiplier: 4,
+          };
+        case "Defence":
+          return {
+            minRawRating: 0,
+            maxRawRating: GS * 6 + (GS - GC) * 2,
+            goalsMultiplier: 6,
+            assistsMultiplier: 4,
+          };
+        case "Mid-Field":
+          return {
+            minRawRating: 0,
+            maxRawRating: GS * 5 + (GS - GC) * 2,
+            goalsMultiplier: 5,
+            assistsMultiplier: 3,
+          };
+        case "Attack":
+          return {
+            minRawRating: 0,
+            maxRawRating: GS * 4 + (GS - GC) * 2,
+            goalsMultiplier: 4,
+            assistsMultiplier: 2,
+          };
+        default:
+          return null;
+      }
+    };
+  
+    const positionMultiplier = getPositionMultiplier(teamPlayer?.player_position);
+  
+    if (positionMultiplier) {
+      const maxMinDiff = positionMultiplier.maxRawRating - positionMultiplier.minRawRating;
+      const goals = Number(playerStat?.goals) * positionMultiplier.goalsMultiplier;
+      const assists = Number(playerStat?.assists) * positionMultiplier.assistsMultiplier;
+      const rating = goals + assists + GS - foul - GC;
+      matchRating = (rating / maxMinDiff) * 10;
+    }
+  
+    return matchRating || 0;
+  };
+  
+  const calculateScaledRating = (matchRating, average, minValue, maxValue) => {
+    const scaleFactor = (10 - 5) / (maxValue - minValue);
+    const normalizedRating = matchRating * (average / 10);
+    const finalRating = (normalizedRating - minValue) * scaleFactor + 5;
+    return finalRating;
+  };
+  
+  const avgTeamRating = () => {
+    const arr = [];
+    teamLineup?.forEach((teamPlayer) => {
       const playerStat = teamPlayerStat?.find(
         (player) => player.playerId === teamPlayer.player_id
       );
-      const GS = Number(teamStat?.teamScore) * 2;
-      const GC = Number(oppStat?.oppScore);
-
-      if (playerStat) {
-        let matchRating;
-        const foul =
-          playerStat?.card === "" ? 0 : playerStat?.card === "Y" ? 1 : 3;
-
-        if (teamPlayer?.player_position === "Goal-Keeper") {
-          const minRawRating = 0;
-          const maxRawRating = Number(teamStat?.teamScore) * 8 + GS - GC;
-          const maxMinDiff = maxRawRating - minRawRating;
-          const goals = Number(playerStat?.goals) * 8;
-          const assists = Number(playerStat?.assists) * 4;
-          const rating = goals + assists + GS - foul - GC;
-          matchRating = (rating / maxMinDiff) * 10;
-
-          console.log(matchRating, "nor");
-        }
-
-        if (teamPlayer?.player_position === "Defence") {
-          const minRawRating = 0;
-          const maxRawRating = Number(teamStat?.teamScore) * 6 + GS - GC;
-          const maxMinDiff = maxRawRating - minRawRating;
-          const goals = Number(playerStat?.goals) * 6;
-          const assists = Number(playerStat?.assists) * 4;
-          const rating = goals + assists + GS - foul - GC;
-          matchRating = (rating / maxMinDiff) * 10;
-
-          console.log(matchRating, "nor");
-        }
-
-        if (teamPlayer?.player_position === "Mid-Field") {
-          const minRawRating = 0;
-          const maxRawRating = Number(teamStat?.teamScore) * 5 + GS - GC;
-          const maxMinDiff = maxRawRating - minRawRating;
-          const goals = Number(playerStat?.goals) * 5;
-          const assists = Number(playerStat?.assists) * 2;
-          const rating = goals + assists + GS - foul - GC;
-          matchRating = (rating / maxMinDiff) * 10;
-
-          console.log(matchRating, "nor");
-        }
-
-        if (teamPlayer?.player_position === "Attack") {
-          const minRawRating = 0;
-          const maxRawRating = Number(teamStat?.teamScore) * 4 + GS - GC;
-          const maxMinDiff = maxRawRating - minRawRating;
-          const goals = Number(playerStat?.goals) * 4;
-          const assists = Number(playerStat?.assists) * 2;
-          const rating = goals + assists + GS - foul - GC;
-          matchRating = (rating / maxMinDiff) * 10;
-
-          console.log(matchRating, "nor");
-        }
-
-        const { data, error } = await supabase
-          .from("lineup")
-          .update({
-            goals: playerStat?.goals,
-            assists: playerStat?.assists,
-            card: playerStat?.card,
-            match_rating: `${matchRating}`,
-          })
-          .eq("match_id", `${match?.match_id}`)
-          .eq("team_id", `${match?.team_id}`)
-          .eq("player_id", `${teamPlayer?.player_id}`);
-
-        console.log(error, "teamStatErr");
-      } else {
-        const minRawRating = 0;
-        const maxRawRating = Number(teamStat?.teamScore) * 4;
-        const maxMinDiff = maxRawRating - minRawRating;
-        const rating = GS - GC;
-        const matchRating = (rating / maxMinDiff) * 10;
-        console.log(matchRating, "nor");
-
-        const { data, error } = await supabase
-          .from("lineup")
-          .update({
-            match_rating: matchRating,
-          })
-          .eq("match_id", `${match?.match_id}`)
-          .eq("team_id", `${match?.team_id}`)
-          .eq("player_id", `${teamPlayer?.player_id}`);
-
-        console.log(error, "teamStatErr");
-      }
+      const matchRating = calculateMatchRating(playerStat, teamPlayer, teamStat, oppStat);
+      arr.push(matchRating);
+    });
+  
+    const sum = arr.reduce((total, currentValue) => total + currentValue, 0);
+    const average = arr.length > 0 ? sum / arr.length : 0;
+    console.log(arr, average, "--------avg>>>");
+  
+    return average;
+  };
+  
+  const scalingFactor = () => {
+    const average = avgTeamRating();
+    const ScalingArr = [];
+  
+    teamLineup?.forEach((teamPlayer) => {
+      const playerStat = teamPlayerStat?.find(
+        (player) => player.playerId === teamPlayer.player_id
+      );
+      const matchRating = calculateMatchRating(playerStat, teamPlayer, teamStat, oppStat);
+      const normalizedRating = calculateScaledRating(matchRating, average, minValue, maxValue);
+      ScalingArr.push(normalizedRating);
+    });
+  
+    console.log(ScalingArr, "---ScaleARR>>>");
+    return ScalingArr;
+  };
+  
+  const updateTeamLineUpStat = async () => {
+    const average = avgTeamRating();
+    const ScalingArr = scalingFactor();
+    
+    // Calculate the minimum and maximum values in ScalingArr
+    const minValue = Math.min(...ScalingArr);
+    const maxValue = Math.max(...ScalingArr);
+  
+    teamLineup?.forEach((teamPlayer) => {
+      const playerStat = teamPlayerStat?.find(
+        (player) => player.playerId === teamPlayer.player_id
+      );
+      const matchRating = calculateMatchRating(playerStat, teamPlayer, teamStat, oppStat);
+      const scaledRating = calculateScaledRating(matchRating, average, minValue, maxValue);
+      console.log(scaledRating, teamPlayer?.player_position);
     });
   };
+  
 
   const updateOppLineUpStat = () => {
     oppPlayerStat?.map(async (oppPlayer) => {

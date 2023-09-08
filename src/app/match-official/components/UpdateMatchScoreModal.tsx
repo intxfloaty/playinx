@@ -201,13 +201,21 @@ const UpdateMatchScoreModal = ({ isOpen, onClose, match }) => {
         (player) => player.playerId === teamPlayer.player_id
       );
       const matchRating = calculateMatchRating(playerStat, teamPlayer, teamStat, oppStat);
-      const normalizedRating = calculateScaledRating(matchRating, average, minValue, maxValue);
-      ScalingArr.push(normalizedRating);
+      ScalingArr.push(matchRating);
     });
   
-    console.log(ScalingArr, "---ScaleARR>>>");
-    return ScalingArr;
+    // Calculate the minimum and maximum values in ScalingArr
+    const minValue = Math.min(...ScalingArr);
+    const maxValue = Math.max(...ScalingArr);
+  
+    const normalizedRatings = ScalingArr.map((matchRating) => {
+      return calculateScaledRating(matchRating, average, minValue, maxValue);
+    });
+  
+    console.log(normalizedRatings, "---ScaleARR>>>");
+    return normalizedRatings;
   };
+  
   
   const updateTeamLineUpStat = async () => {
     const average = avgTeamRating();

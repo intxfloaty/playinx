@@ -3,9 +3,10 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Match from "./components/Match";
+import { createServerSupabaseClient } from "../../serverSupabaseClient";
 
 const page = async ({ params }: { params: { match: string } }) => {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerSupabaseClient()
 
   const {
     data: { user },

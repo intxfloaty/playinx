@@ -4,13 +4,14 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 import AuthProvider from "../components/AuthProvider";
+import { createServerSupabaseClient } from "../serverSupabaseClient";
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerSupabaseClient()
 
   const {
     data: { session },

@@ -4,9 +4,10 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Drawer from "../../components/Drawer";
 import MyProfile from "./components/MyProfile";
+import { createServerSupabaseClient } from "../../serverSupabaseClient";
 
 async function page() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerSupabaseClient()
 
   const {
     data: { user },

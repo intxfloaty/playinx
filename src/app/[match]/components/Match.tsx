@@ -32,8 +32,8 @@ type Match = {
   opponent_id: string;
   match_status: string;
   opponent_status: string;
-  team_score: string;
-  opponent_score: string;
+  team_score?: string;
+  opponent_score?: string;
 };
 
 type Profile = {

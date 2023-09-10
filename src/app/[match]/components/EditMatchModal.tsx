@@ -21,19 +21,18 @@ import {
 } from "../../chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import useTeamStore from "../../../utils/store/teamStore";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 
 interface Errors {
   [key: string]: string;
 }
-
-const CreateMatchModal = ({ isOpen, onClose }) => {
+const EditMatchModal = ({ isOpen, onClose, match }) => {
   const supabase = createClientComponentClient();
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const [opponentTeams, setOpponentTeams] = useState([]);
   const [matchFormat, setMatchFormat] = useState("");
-  const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
+  const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [opponentName, setOpponentName] = useState("");
   const [opponentId, setOpponentId] = useState("");
@@ -43,7 +42,7 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
 
   const validate = () => {
     let errors: Errors = {};
-    if (!matchFormat) {
+    if (!format) {
       errors.format = "Please select a format";
     }
     if (!date) {
@@ -78,50 +77,43 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const onCreateClicked = async () => {
+  const onSaveClicked = async () => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
       const formattedDate = formatSelectedDate(date);
-      if (!opponentId) {
+      if (match?.opponent_status === "accepted") {
         const { data, error } = await supabase
           .from("matches")
-          .insert([
+          .update([
             {
               format: matchFormat,
               location: location,
               date: formattedDate,
               time: time,
-              team_id: activeTeam?.team_id,
-              team_name: activeTeam?.team_name,
-              team_rating: activeTeam?.rating,
-              match_status: "pending",
-
             },
           ])
-          .select();
-        console.log(error, "Err")
+          .eq("match_id", `${match?.match_id}`)
+        console.log(error, "UpdateErr")
         onClose();
-      } else {
+      }
+      else {
         const { data, error } = await supabase
           .from("matches")
-          .insert([
+          .update([
             {
               format: matchFormat,
               location: location,
               date: formattedDate,
               time: time,
-              team_id: activeTeam?.team_id,
-              team_name: activeTeam?.team_name,
-              team_rating: activeTeam?.rating,
               opponent_id: opponentId,
               opponent_name: opponentName,
               opponent_rating: opponentRating,
-              match_status: "pending",
+              opponent_status: "pending"
             },
           ])
-          .select();
-        console.log(error, "Err")
+          .eq("match_id", `${match?.match_id}`)
+        console.log(error, "UpdateErr")
         onClose();
       }
 
@@ -142,6 +134,21 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
     fetchOpponentTeams();
   }, [location]);
 
+  useEffect(() => {
+
+    const initialDate = (selectedDate) => {
+      if (!selectedDate) {
+        return 'Invalid Date'; // Handle the case where selectedDate is empty or undefined.
+      }
+      const parsedDate = parse(selectedDate, "EEE d MMM", new Date()); // Parse the date with the expected format
+      return format(parsedDate, 'yyyy-MM-dd'); // Format it as 'yyyy-MM-dd
+    };
+
+    setMatchFormat(match?.format)
+    setLocation(match?.location)
+    setDate(initialDate(match?.date))
+    setTime(match?.time)
+  }, [match])
   return (
     <Modal
       isOpen={isOpen}
@@ -152,21 +159,21 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create Match</ModalHeader>
+        <ModalHeader>Edit Match</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl isRequired>
             <Box mb={5}>
               <FormLabel>Format</FormLabel>
               <Select
-                placeholder="Select format"
+                value={matchFormat}
                 onChange={(e) => setMatchFormat(e.target.value)}
               >
                 <option value="5v5">5v5</option>
                 <option value="6v6">6v6</option>
                 <option value="7v7">7v7</option>
                 <option value="8v8">8v8</option>
-                <option value="6v6">11v11</option>
+                <option value="11v11">11v11</option>
               </Select>
               {!fieldErrors.format ? (
                 <FormHelperText>Select most played format</FormHelperText>
@@ -180,7 +187,7 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
             <Box mb={5}>
               <FormLabel>Location</FormLabel>
               <Select
-                placeholder="Select your home ground"
+                value={location}
                 onChange={(e) => setLocation(e.target.value)}
               >
                 <option value="MRIS, Charmwood">MRIS, Charmwood</option>
@@ -241,42 +248,43 @@ const CreateMatchModal = ({ isOpen, onClose }) => {
               )}
             </Box>
 
-            <Box mb={5}>
-              <FormLabel>Opponent</FormLabel>
-              <Select
-                placeholder="Select opponent"
-                onChange={(e) => {
-                  const selectedOpponentId = e.target.value;
-                  const selectedOpponent = opponentTeams.find(
-                    (team) => team.team_id === selectedOpponentId
-                  );
-                  if (selectedOpponent) {
-                    setOpponentName(selectedOpponent.team_name);
-                    setOpponentId(selectedOpponent.team_id); // Assuming there's an 'id' property in your opponent's data structure
-                    setOpponentRating(selectedOpponent.rating);
-                  }
-                }}
-              >
-                {opponentTeams?.map((team, idx) => (
-                  <option key={idx} value={team.team_id}>
-                    {team.team_name} - {team.location}
-                  </option>
-                ))}
-              </Select>
-              <FormHelperText>
-                Please select your opponent based on the location
-              </FormHelperText>
-            </Box>
+            {!(match?.opponent_status === "accepted") &&
+              <Box mb={5}>
+                <FormLabel>Opponent</FormLabel>
+                <Select
+                  placeholder="Select opponent"
+                  onChange={(e) => {
+                    const selectedOpponentId = e.target.value;
+                    const selectedOpponent = opponentTeams.find(
+                      (team) => team.team_id === selectedOpponentId
+                    );
+                    if (selectedOpponent) {
+                      setOpponentName(selectedOpponent.team_name);
+                      setOpponentId(selectedOpponent.team_id); // Assuming there's an 'id' property in your opponent's data structure
+                      setOpponentRating(selectedOpponent.rating);
+                    }
+                  }}
+                >
+                  {opponentTeams?.map((team, idx) => (
+                    <option key={idx} value={team.team_id}>
+                      {team.team_name} - {team.location}
+                    </option>
+                  ))}
+                </Select>
+                <FormHelperText>
+                  Please select your opponent based on the location
+                </FormHelperText>
+              </Box>}
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="messenger" onClick={onCreateClicked}>
-            Create
+          <Button colorScheme="messenger" onClick={onSaveClicked}>
+            Save
           </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
-  );
-};
+  )
+}
 
-export default CreateMatchModal;
+export default EditMatchModal

@@ -6,6 +6,7 @@ import {
   IoArrowForwardOutline,
   IoTimeOutline,
   IoLocationOutline,
+  IoPeopleOutline,
 } from "react-icons/io5";
 import { GiWhistle } from "react-icons/gi";
 
@@ -33,6 +34,18 @@ const Overview = ({ match }) => {
               </Text>
               <Text fontSize="md" color="gray">
                 Rated
+              </Text>
+            </Flex>
+          </Flex>
+
+          <Flex flexDir="row" alignItems="center" mb={3}>
+            <IoPeopleOutline size={24} color="#E7E9EA" />
+            <Flex flexDir="column" alignItems="flex-start" pl={5}>
+              <Text fontSize="md" color="#E7E9EA">
+                Format
+              </Text>
+              <Text fontSize="md" color="gray">
+                {match?.format}
               </Text>
             </Flex>
           </Flex>

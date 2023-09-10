@@ -92,9 +92,32 @@ const Match = ({ user }) => {
     fetchPlayerDetails();
   }, [matchId]);
 
+  useEffect(() => {
+    const channel = supabase
+      .channel("match updated")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "matches",
+        },
+        (payload) => {
+          console.log(payload.new, "payload");
+          const updatedMatch = payload.new as Match
+          setMatch(updatedMatch)
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, router]);
+
   return (
     <Box>
-      <MatchHeader match={match} />
+      <MatchHeader activeTeam={activeTeam} match={match} userId={userId} />
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">

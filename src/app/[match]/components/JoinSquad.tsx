@@ -213,7 +213,7 @@ const JoinSquad = ({ matchId, userId, profile, match }) => {
           </Center>
         </Box>
 
-        <Box width="40%"  backgroundColor="#161616" borderRadius={7}>
+        <Box width="40%" backgroundColor="#161616" borderRadius={7}>
           <Flex flexDir="column" alignItems="flex-end" pr={4}>
             {oppSquad?.map((squad, idx) => (
               <List key={idx} spacing={3}>

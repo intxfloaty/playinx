@@ -46,13 +46,13 @@ const Settings = ({ isSettingsOpen, onSettingsClose, userId, activeTeam }) => {
             {activeTeam?.team_admin === userId &&
               <>
                 <Stack spacing={6}>
-                  <Flex flexDir="row" alignItems="center" justifyContent="space-between">
+                  {/* <Flex flexDir="row" alignItems="center" justifyContent="space-between">
                     <Text fontSize="lg" colorScheme="black" fontWeight="bold">Edit Team Name</Text>
                     <Button variant="unstyled" onClick={editTeamNameDisclosure.onOpen}>
                       <IoPencilOutline size={30} color="#111111" />
                     </Button>
                     <EditTeamNameModal isTeamNameOpen={editTeamNameDisclosure.isOpen} onTeamNameClose={editTeamNameDisclosure.onClose} activeTeam={activeTeam} supabase={supabase}/>
-                  </Flex>
+                  </Flex> */}
                   <Flex flexDir="row" alignItems="center" justifyContent="space-between">
                     <Text fontSize="lg" colorScheme="black" fontWeight="bold">Add Players</Text>
                     <Button variant="unstyled" onClick={addPlayersDisclosure.onOpen}>

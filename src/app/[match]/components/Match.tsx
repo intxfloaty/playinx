@@ -42,18 +42,57 @@ type Profile = {
   rating: string;
 };
 
+type Squad = {
+  player_name: string;
+  player_rating: string;
+  player_position: string;
+  player_id: string;
+  team_id: string;
+};
+
+
 const Match = ({ user }) => {
+  const searchParams = useSearchParams();
+  const match_Id = searchParams.get("matchId");
+  const userId = user?.id;
   const supabase = createClientComponentClient<Database>();
+
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [profile, setProfile] = useState<Profile>();
   const [match, setMatch] = useState<Match>();
-  const [matchId, setMatchId] = useState("");
+  const [mySquad, setMySquad] = useState<Squad[]>([]);
+  const [oppSquad, setOppSquad] = useState<Squad[]>([]);
 
-  const match_Id = searchParams.get("matchId");
-  const userId = user?.id;
+  const fetchMyTeamLineup = async () => {
+    let { data: lineup, error } = await supabase
+      .from("lineup")
+      .select("*")
+      .eq("match_id", match_Id)
+      .eq("team_id", match?.team_id);
+
+    // console.log(lineup, "lineup");
+    console.log(error, "Myerr");
+    if (!error) {
+      setMySquad(lineup);
+    }
+  };
+
+  const fetchOppTeamLineup = async () => {
+    let { data: lineup, error } = await supabase
+      .from("lineup")
+      .select("*")
+      .eq("match_id", match_Id)
+      .eq("team_id", match?.opponent_id);
+
+    // console.log(lineup, "lineup");
+    console.log(error, "Opperr");
+    if (!error) {
+      setOppSquad(lineup);
+    }
+  };
+
 
   const fetchPlayerDetails = async () => {
     let { data: profile, error } = await supabase
@@ -61,7 +100,6 @@ const Match = ({ user }) => {
       .select("*")
       .eq("user_id", `${userId}`);
 
-    // console.log(profile, "profiles");
     console.log(error, "profileErr");
     if (!error) {
       setProfile(profile[0]);
@@ -72,7 +110,7 @@ const Match = ({ user }) => {
     let { data: matches, error } = await supabase
       .from("matches")
       .select("*")
-      .eq("match_id", `${matchId}`);
+      .eq("match_id", `${match_Id}`);
 
     console.log(matches, "matches");
     console.log(error, "err");
@@ -81,16 +119,21 @@ const Match = ({ user }) => {
     }
   };
 
-  useEffect(() => {
-    setMatchId(match_Id);
-  }, [match_Id]);
+
 
   useEffect(() => {
-    if (matchId) {
-      fetchMatchDetails();
-    }
+    fetchMatchDetails();
     fetchPlayerDetails();
-  }, [matchId]);
+  }, []);
+
+  useEffect(() => {
+    if (match) {
+      fetchMyTeamLineup();
+      if (match?.opponent_id) {
+        fetchOppTeamLineup();
+      }
+    }
+  }, [match]);
 
   useEffect(() => {
     const channel = supabase
@@ -146,16 +189,20 @@ const Match = ({ user }) => {
           {/* lineup/squad panel */}
           <TabPanel>
             <JoinSquad
-              matchId={matchId}
+              matchId={match_Id}
               userId={userId}
               profile={profile}
               match={match}
+              mySquad={mySquad}
+              setMySquad={setMySquad}
+              oppSquad={oppSquad}
+              setOppSquad={setOppSquad}
             />
           </TabPanel>
 
           {/* Matcgstats panel */}
           <TabPanel>
-            <MatchStats matchId={matchId} match={match} />
+            <MatchStats matchId={match_Id} match={match} />
           </TabPanel>
 
         </TabPanels>

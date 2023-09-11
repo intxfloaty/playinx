@@ -21,7 +21,7 @@ type Squad = {
   team_id: string;
 };
 
-const JoinSquad = ({ matchId, userId, profile, match }) => {
+const JoinSquad = ({ matchId, userId, profile, match, mySquad, setMySquad, oppSquad, setOppSquad }) => {
   const supabase = createClientComponentClient<Database>();
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const minSquadSizes = {
@@ -34,47 +34,18 @@ const JoinSquad = ({ matchId, userId, profile, match }) => {
     "11v11": 15,
   };
 
-  const [mySquad, setMySquad] = useState<Squad[]>([]);
-  const [oppSquad, setOppSquad] = useState<Squad[]>([]);
 
-  const fetchMyTeamLineup = async () => {
-    let { data: lineup, error } = await supabase
-      .from("lineup")
-      .select("*")
-      .eq("match_id", matchId)
-      .eq("team_id", match?.team_id);
 
-    // console.log(lineup, "lineup");
-    console.log(error, "Myerr");
-    if (!error) {
-      setMySquad(lineup);
-    }
-  };
+  // const updateMatchStatus = async () => {
+  //   const { data, error } = await supabase
+  //     .from("matches")
+  //     .update({ match_status: "fixed" })
+  //     .eq("match_id", `${matchId}`)
+  //     .select();
 
-  const fetchOppTeamLineup = async () => {
-    let { data: lineup, error } = await supabase
-      .from("lineup")
-      .select("*")
-      .eq("match_id", matchId)
-      .eq("team_id", match?.opponent_id);
-
-    // console.log(lineup, "lineup");
-    console.log(error, "Opperr");
-    if (!error) {
-      setOppSquad(lineup);
-    }
-  };
-
-  const updateMatchStatus = async () => {
-    const { data, error } = await supabase
-      .from("matches")
-      .update({ match_status: "fixed" })
-      .eq("match_id", `${matchId}`)
-      .select();
-
-    console.log(data, "match_status");
-    console.log(error, "match_statusErr");
-  };
+  //   console.log(data, "match_status");
+  //   console.log(error, "match_statusErr");
+  // };
 
   const handleJoinMySquadBtn = async () => {
     const player = mySquad?.find((player) => player.player_id === userId);
@@ -108,12 +79,7 @@ const JoinSquad = ({ matchId, userId, profile, match }) => {
     }
   };
 
-  useEffect(() => {
-    if (match) {
-      fetchMyTeamLineup();
-      fetchOppTeamLineup();
-    }
-  }, [match]);
+
 
   // useEffect(() => {
   //   const requiredSize = minSquadSizes[match?.format];

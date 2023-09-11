@@ -50,6 +50,10 @@ type Squad = {
   team_id: string;
 };
 
+type Team = {
+  team_name: string
+}
+
 
 const Match = ({ user }) => {
   const searchParams = useSearchParams();
@@ -57,11 +61,11 @@ const Match = ({ user }) => {
   const userId = user?.id;
   const supabase = createClientComponentClient<Database>();
 
-  const activeTeam = useTeamStore((state) => state.activeTeam);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>();
   const [match, setMatch] = useState<Match>();
+  const [team, setTeam] = useState<Team>()
   const [mySquad, setMySquad] = useState<Squad[]>([]);
   const [oppSquad, setOppSquad] = useState<Squad[]>([]);
 
@@ -119,6 +123,28 @@ const Match = ({ user }) => {
     }
   };
 
+  // Function to retrieve team_id from localStorage
+  const getActiveTeamFromLocalStorage = () => {
+    const storedTeam = localStorage.getItem("activeTeam");
+    if (storedTeam) {
+      return JSON.parse(storedTeam);
+    }
+    return null; // Return null if no activeTeam is stored in localStorage
+  };
+
+  const fetchTeamInfo = async () => {
+    const team_id = getActiveTeamFromLocalStorage()
+    let { data: teams, error } = await supabase
+      .from('teams')
+      .select('*')
+      .eq("team_id", `${team_id}`)
+
+    console.log(error, "TeamErr")
+
+    if (!error) {
+      setTeam(teams[0])
+    }
+  }
 
 
   useEffect(() => {
@@ -126,8 +152,10 @@ const Match = ({ user }) => {
     fetchPlayerDetails();
   }, []);
 
+
   useEffect(() => {
     if (match) {
+      fetchTeamInfo();
       fetchMyTeamLineup();
       if (match?.opponent_id) {
         fetchOppTeamLineup();
@@ -160,7 +188,7 @@ const Match = ({ user }) => {
 
   return (
     <Box>
-      <MatchHeader activeTeam={activeTeam} match={match} userId={userId} />
+      <MatchHeader activeTeam={team} match={match} userId={userId} />
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">
@@ -189,7 +217,7 @@ const Match = ({ user }) => {
           {/* lineup/squad panel */}
           <TabPanel>
             <JoinSquad
-              matchId={match_Id}
+              activeTeam={team}
               userId={userId}
               profile={profile}
               match={match}

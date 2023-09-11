@@ -82,6 +82,11 @@ const Drawer = ({ children }) => {
     }
   };
 
+  // Function to save activeTeam to localStorage
+  const saveActiveTeamToLocalStorage = (team) => {
+    localStorage.setItem("activeTeam", JSON.stringify(team));
+  };
+
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
 
@@ -175,6 +180,7 @@ const Drawer = ({ children }) => {
                             gap={5}
                             onClick={() => {
                               setActiveTeam(myTeam);
+                              saveActiveTeamToLocalStorage(myTeam?.team_id);
                               const team_id = myTeam?.team_id;
                               router.push(
                                 `/my-teams/${team_id}?team_id=${team_id}`

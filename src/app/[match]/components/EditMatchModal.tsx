@@ -26,9 +26,8 @@ import { format, parse } from "date-fns";
 interface Errors {
   [key: string]: string;
 }
-const EditMatchModal = ({ isOpen, onClose, match }) => {
+const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
   const supabase = createClientComponentClient();
-  const activeTeam = useTeamStore((state) => state.activeTeam);
   const [opponentTeams, setOpponentTeams] = useState([]);
   const [matchFormat, setMatchFormat] = useState("");
   const [location, setLocation] = useState("");

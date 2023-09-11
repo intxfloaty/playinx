@@ -1,11 +1,9 @@
 import { Stack, Flex, Wrap, WrapItem, Avatar, Text } from "../../chakraExports";
 import React, { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import useTeamStore from "../../../utils/store/teamStore";
 
-const PlayersList = () => {
+const PlayersList = ({ activeTeam }) => {
   const supabase = createClientComponentClient();
-  const activeTeam = useTeamStore((state) => state.activeTeam);
   const [players, setPlayers] = useState([]);
 
   const getPlayers = async () => {
@@ -14,16 +12,17 @@ const PlayersList = () => {
       .select("*")
       .eq("team_id", `${activeTeam?.team_id}`);
 
-    if (players && error === null) {
+    console.log(error, "PlayersListErr")
+
+    if (!error) {
       setPlayers(players);
     }
   };
 
   useEffect(() => {
-    getPlayers();
-  }, []);
+    if (activeTeam) getPlayers();
+  }, [activeTeam]);
 
-  // console.log(players, "players");
 
   return (
     <Stack spacing={5}>

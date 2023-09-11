@@ -15,7 +15,7 @@ const page = async ({ params }: { params: { team: string } }) => {
   if (!user) {
     redirect("/auth/sign-in");
   }
-  return <Team />;
+  return <Team user = {user} />;
 };
 
 export default page;

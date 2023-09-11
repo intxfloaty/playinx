@@ -1,10 +1,12 @@
 import React from "react";
-import { Button, Flex, Text } from "../../chakraExports";
+import { Box, Button, Flex, Text, useDisclosure } from "../../chakraExports";
 import { useRouter } from "next/navigation";
-import { IoArrowBack, IoFootball } from "react-icons/io5";
+import { IoArrowBack, IoFootball, IoSettingsOutline, } from "react-icons/io5";
+import EditMatchModal from "./EditMatchModal";
 
-const MatchHeader = ({ match }) => {
+const MatchHeader = ({ activeTeam, match, userId }) => {
   const router = useRouter();
+  const { isOpen, onClose, onOpen } = useDisclosure()
 
   return (
     <>
@@ -12,7 +14,7 @@ const MatchHeader = ({ match }) => {
         alignItems="center"
         justifyContent="space-between"
         paddingX={4}
-        paddingY={2}
+        paddingTop={2}
       >
         <Button variant="unstyled">
           <IoArrowBack
@@ -21,13 +23,20 @@ const MatchHeader = ({ match }) => {
             size={22}
           />
         </Button>
-        <Button variant="unstyled">
-          {/* <IoSettingsOutline
-            onClick={() => onOpen()}
-            color="#E7E9EA"
-            size={22}
-          /> */}
-        </Button>
+        {activeTeam?.team_admin === userId &&
+          <>
+            <Button variant="unstyled">
+              <IoSettingsOutline
+                onClick={onOpen}
+                color="#E7E9EA"
+                size={22}
+              />
+            </Button>
+            <EditMatchModal
+              isOpen={isOpen}
+              onClose={onClose}
+              match={match} />
+          </>}
       </Flex>
       <Flex
         alignItems="center"
@@ -88,7 +97,7 @@ const MatchHeader = ({ match }) => {
         >
           <IoFootball color="green" size={36} />
           <Text fontSize="md" color="#E7E9EA" mt={2}>
-            {match?.opponent_name}
+            {match?.opponent_name ? match?.opponent_name : "TBD"}
           </Text>
         </Flex>
       </Flex>

@@ -19,15 +19,68 @@ import { IoArrowBack, IoSettingsOutline } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
 import Settings from "./SettingsModal";
 import useTeamStore from "../../../utils/store/teamStore";
-import Matches from "./MatchList";
+import MatchList from "./MatchList";
 import PlayersList from "./PlayersList";
 
-const Team = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+type Match = {
+  match_id: string;
+  date: string;
+  location: string;
+  time: string;
+  team_name: string;
+  team_id: string;
+  opponent_name: string;
+  opponent_id: string;
+  match_status: string;
+  opponent_status: string;
+  team_score: string;
+  opponent_score: string;
+};
 
-  const team_name = searchParams.get("team_name");
+type Team = {
+  team_name: string
+}
+
+const Team = ({ user }) => {
+  const searchParams = useSearchParams();
+  const userId = user?.id;
+  const supabase = createClientComponentClient();
+  const team_id = searchParams.get("team_id");
+  const [team, setTeam] = useState<Team>()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [matches, setMatches] = useState<Match[]>([]);
+  const router = useRouter();
+
+  const getMatches = async () => {
+    let { data: matches, error } = await supabase
+      .from("matches")
+      .select("*")
+      .or(
+        `team_id.eq.${team_id},opponent_id.eq.${team_id}`
+      );
+    if (matches && matches.length > 0 && error === null) {
+      setMatches(matches);
+    }
+    console.log(error, "matchError");
+  };
+
+  useEffect(() => {
+    const fetchTeamInfo = async () => {
+      let { data: teams, error } = await supabase
+        .from('teams')
+        .select('*')
+        .eq("team_id", `${team_id}`)
+
+      console.log(error, "TeamErr")
+
+      if (!error) {
+        setTeam(teams[0])
+      }
+    }
+    fetchTeamInfo();
+    getMatches()
+  }, [])
+
 
   return (
     <Box>
@@ -40,7 +93,7 @@ const Team = () => {
           />
         </Button>
         <Text fontSize="xl" color="#E7E9EA">
-          {team_name}
+          {team?.team_name}
         </Text>
         <Button variant="unstyled">
           <IoSettingsOutline
@@ -50,7 +103,7 @@ const Team = () => {
           />
         </Button>
       </Flex>
-      <Settings isSettingsOpen={isOpen} onSettingsClose={onClose} />
+      <Settings isSettingsOpen={isOpen} onSettingsClose={onClose} userId={userId} activeTeam={team} />
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">
@@ -72,11 +125,11 @@ const Team = () => {
 
         <TabPanels>
           <TabPanel>
-            <Matches />
-           
+            <MatchList team={team} userId={userId} matches={matches} setMatches={setMatches} getMatches={getMatches} />
+
           </TabPanel>
           <TabPanel>
-            <PlayersList />
+            <PlayersList activeTeam={team} />
           </TabPanel>
           <TabPanel>
             <p>three!</p>

@@ -11,14 +11,20 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
+  useDisclosure as EditTeamNameDisclosure,
+  useDisclosure as AddPlayersDisclosure,
   Text,
+  Flex,
 } from "../../chakraExports";
-import { IoPersonAddOutline } from "react-icons/io5";
+import { IoPencilOutline, IoPersonAddOutline } from "react-icons/io5";
 import AddPlayers from "./AddPlayersModal";
+import EditTeamNameModal from "./EditTeamNameModal";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const Settings = ({ isSettingsOpen, onSettingsClose }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const Settings = ({ isSettingsOpen, onSettingsClose, userId, activeTeam }) => {
+  const supabase = createClientComponentClient();
+  const editTeamNameDisclosure = EditTeamNameDisclosure();
+  const addPlayersDisclosure = AddPlayersDisclosure();
 
   return (
     <>
@@ -33,10 +39,31 @@ const Settings = ({ isSettingsOpen, onSettingsClose }) => {
           <ModalHeader>Team settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Button variant="unstyled" onClick={() => onOpen()}>
-              <IoPersonAddOutline size={30} color="#111111" />
-            </Button>
-            <AddPlayers isAddPlayerOpen={isOpen} onAddPlayerClose={onClose} />
+
+
+
+
+            {activeTeam?.team_admin === userId &&
+              <>
+                <Stack spacing={6}>
+                  {/* <Flex flexDir="row" alignItems="center" justifyContent="space-between">
+                    <Text fontSize="lg" colorScheme="black" fontWeight="bold">Edit Team Name</Text>
+                    <Button variant="unstyled" onClick={editTeamNameDisclosure.onOpen}>
+                      <IoPencilOutline size={30} color="#111111" />
+                    </Button>
+                    <EditTeamNameModal isTeamNameOpen={editTeamNameDisclosure.isOpen} onTeamNameClose={editTeamNameDisclosure.onClose} activeTeam={activeTeam} supabase={supabase}/>
+                  </Flex> */}
+                  <Flex flexDir="row" alignItems="center" justifyContent="space-between">
+                    <Text fontSize="lg" colorScheme="black" fontWeight="bold">Add Players</Text>
+                    <Button variant="unstyled" onClick={addPlayersDisclosure.onOpen}>
+                      <IoPersonAddOutline size={30} color="#111111" />
+                    </Button>
+                    <AddPlayers isAddPlayerOpen={addPlayersDisclosure.isOpen} onAddPlayerClose={addPlayersDisclosure.onClose} />
+                  </Flex>
+                </Stack>
+              </>
+            }
+
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onSettingsClose}>

@@ -139,6 +139,29 @@ const MatchStats = ({ matchId, match }) => {
         >
           <Flex justifyContent="flex-start">
             <Text fontSize="md" color="#E7E9EA">
+              {match?.team_rating}
+            </Text>
+          </Flex>
+          <Flex>
+            <Text fontSize="md" color="gray">
+              RATING
+            </Text>
+          </Flex>
+          <Flex>
+            <Text fontSize="md" color="#E7E9EA">
+              {match?.opponent_rating}
+            </Text>
+          </Flex>
+        </Flex>
+        <Flex
+          flexDir="row"
+          alignItems="center"
+          justifyContent="space-between"
+          p={3}
+          borderY="1px solid gray"
+        >
+          <Flex justifyContent="flex-start">
+            <Text fontSize="md" color="#E7E9EA">
               {match?.team_score}
             </Text>
           </Flex>
@@ -249,7 +272,7 @@ const MatchStats = ({ matchId, match }) => {
             </Text>
           </Flex>
         </Flex>
-      </Box>
+      </Box >
       {/* <Text fontSize="xs" color="#E7E9EA" >*More stats will be included in the future</Text> */}
 
       {/* Player stat */}

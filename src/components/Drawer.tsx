@@ -175,9 +175,9 @@ const Drawer = ({ children }) => {
                             gap={5}
                             onClick={() => {
                               setActiveTeam(myTeam);
-                              const team_name = myTeam?.team_name;
+                              const team_id = myTeam?.team_id;
                               router.push(
-                                `/my-teams/${team_name}?team_name=${team_name}`
+                                `/my-teams/${team_id}?team_id=${team_id}`
                               );
                             }}
                           >

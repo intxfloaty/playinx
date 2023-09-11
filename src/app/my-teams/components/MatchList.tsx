@@ -7,52 +7,19 @@ import {
 } from "react-icons/io5";
 import CreateMatchModal from "./CreateMatchModal";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import useTeamStore from "../../../utils/store/teamStore";
 import { useRouter } from "next/navigation";
 
-type Match = {
-  match_id: string;
-  date: string;
-  location: string;
-  time: string;
-  team_name: string;
-  team_id: string;
-  opponent_name: string;
-  opponent_id: string;
-  match_status: string;
-  opponent_status: string;
-  team_score: string;
-  opponent_score: string;
-};
+type Team = {
+  [key: string]: string;
+}
 
-const Matches = () => {
+const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
   const supabase = createClientComponentClient();
-  const activeTeam = useTeamStore((state) => state.activeTeam);
+  const [activeTeam, setActiveTeam] = useState<Team>()
+
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [matches, setMatches] = useState<Match[]>([]);
-  const [userId, setUserId] = useState("");
 
-  const getUserId = async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (data && error === null) {
-      setUserId(data.user.id);
-    }
-  };
-
-  const getMatches = async () => {
-    let { data: matches, error } = await supabase
-      .from("matches")
-      .select("*")
-      .or(
-        `team_id.eq.${activeTeam?.team_id},opponent_id.eq.${activeTeam?.team_id}`
-      );
-    if (matches && matches.length > 0 && error === null) {
-      setMatches(matches);
-    }
-    // console.log(matches, "matchData");
-    console.log(error, "matchError");
-  };
 
   const handleAcceptBtn = async (match) => {
     const { data, error } = await supabase
@@ -92,9 +59,11 @@ const Matches = () => {
   };
 
   useEffect(() => {
-    getUserId();
-    getMatches();
-  }, []);
+    if (team) {
+      setActiveTeam(team)
+    }
+  }, [team]);
+
 
   useEffect(() => {
     const channel = supabase
@@ -108,7 +77,7 @@ const Matches = () => {
         },
         (payload) => {
           console.log(payload, "payload");
-          getMatches();
+          getMatches()
         }
       )
       .subscribe();
@@ -116,9 +85,9 @@ const Matches = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase, router]);
+  }, [supabase]);
 
-  console.log(matches, "updatedMatch");
+  console.log(matches, "matches");
 
   return (
     <>
@@ -425,11 +394,11 @@ const Matches = () => {
           <Button variant="unstyled" onClick={onOpen}>
             <IoAddOutline color="#E7E9EA" size={40} />
           </Button>
-          <CreateMatchModal isOpen={isOpen} onClose={onClose} />
+          <CreateMatchModal isOpen={isOpen} onClose={onClose} activeTeam={activeTeam} />
         </Box>
       )}
     </>
   );
 };
 
-export default Matches;
+export default MatchList;

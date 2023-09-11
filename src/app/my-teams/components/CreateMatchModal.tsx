@@ -27,9 +27,9 @@ interface Errors {
   [key: string]: string;
 }
 
-const CreateMatchModal = ({ isOpen, onClose }) => {
+const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
   const supabase = createClientComponentClient();
-  const activeTeam = useTeamStore((state) => state.activeTeam);
+  // const activeTeam = useTeamStore((state) => state.activeTeam);
   const [opponentTeams, setOpponentTeams] = useState([]);
   const [matchFormat, setMatchFormat] = useState("");
   const [date, setDate] = useState("");

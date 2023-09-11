@@ -15,6 +15,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Text,
+  Center,
 } from "../../chakraExports";
 import useTeamStore from "../../../utils/store/teamStore";
 
@@ -30,6 +31,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
   const supabase = createClientComponentClient();
   const activeTeam = useTeamStore((state) => state.activeTeam);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [successMsg, setSuccessMsg] = useState("")
   const [phoneError, setPhoneError] = useState("");
 
   const validate = () => {
@@ -99,12 +101,14 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
           ])
           .select();
         console.log(error, "errdupl");
-        if (
-          error?.message ===
-          'null value in column "player_name" of relation "players" violates not-null constraint'
-        ) {
+        if (error?.message === 'null value in column "player_name" of relation "players" violates not-null constraint') {
           setPhoneError("Player does not exist");
         }
+
+        if(!error) {
+            setSuccessMsg("Player added successfully!")
+        }
+
       }
     }
   };
@@ -113,6 +117,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
     if (phoneError !== "") {
       setPhoneError(validate());
     }
+    setSuccessMsg("")
   }, [phoneNumber]);
 
   return (
@@ -133,7 +138,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
                 type="number"
                 isInvalid={!!phoneError}
                 errorBorderColor={phoneError ? "#FFB400" : ""}
-                placeholder="phone number"
+                placeholder="Phone number"
                 textColor="black"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
@@ -144,6 +149,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
                 {phoneError}
               </Text>
             )}
+            {successMsg && <Center my={4}><Text fontSize="lg" colorScheme="blue">{successMsg}</Text></Center>}
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={handleAddClicked}>

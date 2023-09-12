@@ -119,8 +119,8 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
     };
   }, [supabase, mySquad, oppSquad, setMySquad, setOppSquad]);
 
-  console.log(mySquad, "mySquad");
-  console.log(oppSquad, "oppSquad");
+  // console.log(mySquad, "mySquad");
+  // console.log(oppSquad, "oppSquad");
 
   return (
     <>

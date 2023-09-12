@@ -148,6 +148,9 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
     setDate(initialDate(match?.date))
     setTime(match?.time)
   }, [match])
+
+  console.log(!(match?.opponent_status == "accepted"), "matchStatus")
+
   return (
     <Modal
       isOpen={isOpen}
@@ -247,7 +250,8 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
               )}
             </Box>
 
-            {!(match?.opponent_status === "accepted") &&
+            {(match?.opponent_status === "declined" || match?.opponent_status === "no opponent")
+              &&
               <Box mb={5}>
                 <FormLabel>Opponent</FormLabel>
                 <Select
@@ -273,7 +277,8 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
                 <FormHelperText>
                   Please select your opponent based on the location
                 </FormHelperText>
-              </Box>}
+              </Box>
+            }
           </FormControl>
         </ModalBody>
         <ModalFooter>

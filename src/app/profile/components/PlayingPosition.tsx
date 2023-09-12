@@ -51,7 +51,7 @@ function PlayingPosition({ onNext, goBack, onPositionChange }) {
         }}
       >
         <option value="Goal-Keeper">Goal-Keeper</option>
-        <option value="Defence">Defend</option>
+        <option value="Defence">Defence</option>
         <option value="Mid-Field">Mid-Field</option>
         <option value="Attack">Attack</option>
       </Select>

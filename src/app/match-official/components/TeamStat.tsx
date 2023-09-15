@@ -8,6 +8,8 @@ const TeamStat = ({
   oppStat,
   setOppStat,
 }) => {
+
+
   return (
     <>
       {/* Goals */}
@@ -42,7 +44,7 @@ const TeamStat = ({
             errorBorderColor={goalError.oppScoreErr ? "#FFB400" : ""}
             value={oppStat?.oppScore}
             onChange={(e) => {
-              setOppStat({ ...teamStat, oppScore: e.target.value });
+              setOppStat({ ...oppStat, oppScore: e.target.value });
             }}
           />
         </Box>
@@ -80,7 +82,7 @@ const TeamStat = ({
             errorBorderColor={goalError.oppCorner ? "#FFB400" : ""}
             value={oppStat?.oppCorner}
             onChange={(e) => {
-              setOppStat({ ...teamStat, oppCorner: e.target.value });
+              setOppStat({ ...oppStat, oppCorner: e.target.value });
             }}
           />
         </Box>
@@ -118,7 +120,7 @@ const TeamStat = ({
             errorBorderColor={goalError.oppYellowCard ? "#FFB400" : ""}
             value={oppStat?.oppYellowCard}
             onChange={(e) => {
-              setOppStat({ ...teamStat, oppYellowCard: e.target.value });
+              setOppStat({ ...oppStat, oppYellowCard: e.target.value });
             }}
           />
         </Box>
@@ -156,7 +158,7 @@ const TeamStat = ({
             errorBorderColor={goalError.oppRedCard ? "#FFB400" : ""}
             value={oppStat?.oppRedCard}
             onChange={(e) => {
-              setOppStat({ ...teamStat, oppRedCard: e.target.value });
+              setOppStat({ ...oppStat, oppRedCard: e.target.value });
             }}
           />
         </Box>
@@ -196,7 +198,7 @@ const TeamStat = ({
             errorBorderColor={goalError.oppDiscipline ? "#FFB400" : ""}
             value={oppStat?.oppDiscipline}
             onChange={(e) => {
-              setOppStat({ ...teamStat, oppDiscipline: e.target.value });
+              setOppStat({ ...oppStat, oppDiscipline: e.target.value });
             }}
           >
             <option value="On Time">On Time</option>

@@ -91,17 +91,23 @@ const MyProfile = ({ user }) => {
         <Wrap>
           <WrapItem>
             <Avatar
-              size="2xl"
+              size="xl"
               name="Pravesh Jha"
               src="https://bit.ly/dan-abramov"
             />
           </WrapItem>
         </Wrap>
-        <Text fontSize="3xl" color="#E7E9EA">
+        <Text fontSize="2xl" color="#E7E9EA">
           {myProfile?.name}
         </Text>
         <Text fontSize="md" color="#E7E9EA">
           {myProfile?.phone}
+        </Text>
+        <Text fontSize="md" color="#E7E9EA">
+          {myProfile?.position}
+        </Text>
+        <Text fontSize="md" color="#E7E9EA">
+          {myProfile?.rating}
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mt={5}>

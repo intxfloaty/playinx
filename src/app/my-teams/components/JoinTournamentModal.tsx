@@ -27,7 +27,7 @@ interface Errors {
   [key: string]: string;
 }
 
-const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
+const JoinTournamentModal = ({ isOpen, onClose, activeTeam }) => {
   const supabase = createClientComponentClient();
   // const activeTeam = useTeamStore((state) => state.activeTeam);
   const [opponentTeams, setOpponentTeams] = useState([]);
@@ -153,7 +153,7 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create Match</ModalHeader>
+        <ModalHeader>Join Tournament</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl isRequired>
@@ -222,7 +222,7 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
               )}
             </Box>
 
-            <Box mb={5}>
+            {/* <Box mb={5}>
               <FormLabel>Time</FormLabel>
               <Input
                 type="time"
@@ -240,9 +240,9 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
                   {fieldErrors.time}
                 </Text>
               )}
-            </Box>
+            </Box> */}
 
-            <Box mb={5}>
+            {/* <Box mb={5}>
               <FormLabel>Opponent</FormLabel>
               <Select
                 placeholder="Select opponent"
@@ -267,12 +267,12 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
               <FormHelperText>
                 Please select your opponent based on the location
               </FormHelperText>
-            </Box>
+            </Box> */}
           </FormControl>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="messenger" onClick={onCreateClicked}>
-            Create
+            Join
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -280,4 +280,4 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
   );
 };
 
-export default CreateMatchModal;
+export default JoinTournamentModal;

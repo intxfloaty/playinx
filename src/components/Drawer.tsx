@@ -33,6 +33,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useTeamStore from "../utils/store/teamStore";
+import { FaAward } from "react-icons/fa";
+import { GiSoccerKick } from "react-icons/gi";
 
 const Drawer = ({ children }) => {
   const supabase = createClientComponentClient();
@@ -183,7 +185,7 @@ const Drawer = ({ children }) => {
                               saveActiveTeamToLocalStorage(myTeam?.team_id);
                               const team_id = myTeam?.team_id;
                               router.push(
-                                `/my-teams/${team_id}?team_id=${team_id}`
+                                `/my-teams/${myTeam?.team_name}?team_id=${team_id}`
                               );
                             }}
                           >
@@ -199,7 +201,7 @@ const Drawer = ({ children }) => {
                 </AccordionItem>
               </Accordion>
 
-              <Link href={"/"}>
+              {/* <Link href={"/tournaments"}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}
@@ -212,7 +214,22 @@ const Drawer = ({ children }) => {
                     </Text>
                   </Flex>
                 </Box>
-              </Link>
+              </Link> */}
+{/* 
+              <Link href={"/"}>
+                <Box
+                  padding={2}
+                  _hover={{ backgroundColor: "#161616" }}
+                  borderRadius={5}
+                >
+                  <Flex align="center" flexDir="row" gap={5}>
+                    <GiSoccerKick color="#E7E9EA" size={20} />
+                    <Text color="#E7E9EA" fontSize="md">
+                      Pick-up games
+                    </Text>
+                  </Flex>
+                </Box>
+              </Link> */}
 
               <Link href={"/"}>
                 <Box
@@ -224,6 +241,21 @@ const Drawer = ({ children }) => {
                     <IoPodiumOutline color="#E7E9EA" size={20} />
                     <Text color="#E7E9EA" fontSize="md">
                       Leaderboard
+                    </Text>
+                  </Flex>
+                </Box>
+              </Link>
+
+              <Link href={"/"}>
+                <Box
+                  padding={2}
+                  _hover={{ backgroundColor: "#161616" }}
+                  borderRadius={5}
+                >
+                  <Flex align="center" flexDir="row" gap={5}>
+                    <FaAward color="#E7E9EA" size={20} />
+                    <Text color="#E7E9EA" fontSize="md">
+                      Rewards
                     </Text>
                   </Flex>
                 </Box>

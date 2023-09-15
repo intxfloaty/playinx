@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Text, Button, useDisclosure, Flex } from "../../chakraExports";
+import { Box, Text, Button, useDisclosure, useDisclosure as CreateMatchDisclosure, useDisclosure as JoinTournamentDisclosure, Flex, Menu, IconButton, MenuButton, MenuItem, MenuList } from "../../chakraExports";
 import {
   IoAddOutline,
   IoFootballOutline,
@@ -8,6 +8,7 @@ import {
 import CreateMatchModal from "./CreateMatchModal";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import JoinTournamentModal from "./JoinTournamentModal";
 
 type Team = {
   [key: string]: string;
@@ -16,10 +17,11 @@ type Team = {
 const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
   const supabase = createClientComponentClient();
   const [activeTeam, setActiveTeam] = useState<Team>()
+  const { onOpen, isOpen, onClose } = useDisclosure()
 
   const router = useRouter();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const createMatch = CreateMatchDisclosure()
+  const joinTournament = JoinTournamentDisclosure()
 
   const handleAcceptBtn = async (match) => {
     const { data, error } = await supabase
@@ -389,6 +391,25 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
           );
         }
       })}
+      {/* {activeTeam?.team_admin === userId && (
+        <Box position="fixed" bottom={0} right={0} padding={8}>
+          <Menu>
+            <MenuButton>
+              <IoAddOutline color="#E7E9EA" size={40} />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={createMatch.onOpen}>
+                Create Match
+              </MenuItem>
+              <MenuItem onClick={joinTournament.onOpen}>
+                Join Tournament
+              </MenuItem>
+            </MenuList>
+          </Menu>
+          <CreateMatchModal isOpen={createMatch.isOpen} onClose={createMatch.onClose} activeTeam={activeTeam} />
+          <JoinTournamentModal isOpen={joinTournament.isOpen} onClose={joinTournament.onClose} activeTeam={activeTeam} />
+        </Box>
+      )} */}
       {activeTeam?.team_admin === userId && (
         <Box position="fixed" bottom={0} right={0} padding={8}>
           <Button variant="unstyled" onClick={onOpen}>

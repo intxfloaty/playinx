@@ -71,6 +71,14 @@ export {
   OrderedList,
   UnorderedList,
   Progress,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
 } from "@chakra-ui/react";
 
 export { Link } from "@chakra-ui/next-js";

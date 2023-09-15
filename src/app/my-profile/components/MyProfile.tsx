@@ -9,6 +9,7 @@ import {
   Avatar,
   AvatarBadge,
   AvatarGroup,
+  useDisclosure,
   Wrap,
   WrapItem,
 } from "../../chakraExports";
@@ -17,30 +18,29 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import MyTeam from "../../../components/MyTeam";
 import { useRouter } from "next/navigation";
 import CreateTeam from "../../../components/CreateTeam";
+import EditProfileModal from "./EditProfileModal";
 
-const MyProfile = () => {
+type Profile = {
+  [key: string]: string
+}
+
+const MyProfile = ({ user }) => {
   const supabase = createClientComponentClient();
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const myUserId = user?.id
+  const [myProfile, setMyProfile] = useState<Profile>({})
   const router = useRouter();
+  const { onOpen, isOpen, onClose } = useDisclosure()
 
-  const getUserId = async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (data && error === null) {
-      return data.user.id;
-    }
-  };
+
 
   const getNameAndPhone = async () => {
     try {
-      const myUserId = await getUserId();
       let { data: profiles, error } = await supabase
         .from("profiles")
-        .select("name,phone")
+        .select("*")
         .eq("user_id", `${myUserId}`);
       if (profiles && error === null) {
-        setName(profiles[0].name);
-        setPhone(profiles[0].phone);
+        setMyProfile(profiles[0])
       }
     } catch (e) {
       console.log(e);
@@ -50,6 +50,30 @@ const MyProfile = () => {
   useEffect(() => {
     getNameAndPhone();
   }, []);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("Profile updated")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "profiles",
+        },
+        (payload) => {
+          console.log(payload, "payload");
+          const updatedProfile = payload.new as Profile
+          setMyProfile(updatedProfile)
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
+
   return (
     <>
       <Flex alignItems="center" justifyContent="space-between" padding={4}>
@@ -60,23 +84,30 @@ const MyProfile = () => {
             size={30}
           />
         </Button>
-        <Button size="sm">Edit Profile</Button>
+        <Button size="sm" onClick={onOpen}>Edit Profile</Button>
+        <EditProfileModal isOpen={isOpen} onClose={onClose} myProfile={myProfile} myUserId={myUserId} />
       </Flex>
       <Flex mt={2} alignItems="center" justifyContent="center" flexDir="column">
         <Wrap>
           <WrapItem>
             <Avatar
-              size="2xl"
+              size="xl"
               name="Pravesh Jha"
               src="https://bit.ly/dan-abramov"
             />
           </WrapItem>
         </Wrap>
-        <Text fontSize="3xl" color="#E7E9EA">
-          {name}
+        <Text fontSize="2xl" color="#E7E9EA">
+          {myProfile?.name}
         </Text>
         <Text fontSize="md" color="#E7E9EA">
-          {phone}
+          {myProfile?.phone}
+        </Text>
+        <Text fontSize="md" color="#E7E9EA">
+          {myProfile?.position}
+        </Text>
+        <Text fontSize="md" color="#E7E9EA">
+          {myProfile?.rating}
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mt={5}>

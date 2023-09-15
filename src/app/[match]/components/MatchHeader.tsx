@@ -35,6 +35,7 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
             <EditMatchModal
               isOpen={isOpen}
               onClose={onClose}
+              activeTeam={activeTeam}
               match={match} />
           </>}
       </Flex>

@@ -14,6 +14,7 @@ import {
   Button,
   TabIndicator,
   useDisclosure,
+  Center,
 } from "../../chakraExports";
 import { IoArrowBack, IoSettingsOutline } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -39,6 +40,7 @@ type Match = {
 
 type Team = {
   team_name: string
+  team_admin: string
 }
 
 const Team = ({ user }) => {
@@ -96,11 +98,13 @@ const Team = ({ user }) => {
           {team?.team_name}
         </Text>
         <Button variant="unstyled">
-          <IoSettingsOutline
-            onClick={() => onOpen()}
-            color="#E7E9EA"
-            size={26}
-          />
+          {team?.team_admin === userId &&
+            <IoSettingsOutline
+              onClick={() => onOpen()}
+              color="#E7E9EA"
+              size={26}
+            />
+          }
         </Button>
       </Flex>
       <Settings isSettingsOpen={isOpen} onSettingsClose={onClose} userId={userId} activeTeam={team} />
@@ -110,11 +114,11 @@ const Team = ({ user }) => {
             Matches
           </Tab>
           <Tab fontSize="lg" color="#E7E9EA">
-            Players
+            Squad
           </Tab>
-          <Tab fontSize="lg" color="#E7E9EA">
+          {/* <Tab fontSize="lg" color="#E7E9EA">
             Stats
-          </Tab>
+          </Tab> */}
         </TabList>
         <TabIndicator
           mt="-1.5px"
@@ -131,9 +135,9 @@ const Team = ({ user }) => {
           <TabPanel>
             <PlayersList activeTeam={team} />
           </TabPanel>
-          <TabPanel>
-            <p>three!</p>
-          </TabPanel>
+          {/* <TabPanel>
+            <Flex alignItems="center" justifyContent="center"><Text fontSize="lg" color="#E7E9EA">COMING SOON</Text></Flex>
+          </TabPanel> */}
         </TabPanels>
       </Tabs>
     </Box>

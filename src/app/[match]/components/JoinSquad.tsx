@@ -21,9 +21,8 @@ type Squad = {
   team_id: string;
 };
 
-const JoinSquad = ({ matchId, userId, profile, match, mySquad, setMySquad, oppSquad, setOppSquad }) => {
+const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, oppSquad, setOppSquad }) => {
   const supabase = createClientComponentClient<Database>();
-  const activeTeam = useTeamStore((state) => state.activeTeam);
   const minSquadSizes = {
     "5v5": 8,
     "6v6": 1,
@@ -120,8 +119,8 @@ const JoinSquad = ({ matchId, userId, profile, match, mySquad, setMySquad, oppSq
     };
   }, [supabase, mySquad, oppSquad, setMySquad, setOppSquad]);
 
-  console.log(mySquad, "mySquad");
-  console.log(oppSquad, "oppSquad");
+  // console.log(mySquad, "mySquad");
+  // console.log(oppSquad, "oppSquad");
 
   return (
     <>

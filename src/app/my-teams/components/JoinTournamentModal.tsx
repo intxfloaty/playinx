@@ -21,17 +21,19 @@ import {
 } from "../../chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import useTeamStore from "../../../utils/store/teamStore";
-import { format, parse } from "date-fns";
+import { format } from "date-fns";
 
 interface Errors {
   [key: string]: string;
 }
-const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
+
+const JoinTournamentModal = ({ isOpen, onClose, activeTeam }) => {
   const supabase = createClientComponentClient();
+  // const activeTeam = useTeamStore((state) => state.activeTeam);
   const [opponentTeams, setOpponentTeams] = useState([]);
   const [matchFormat, setMatchFormat] = useState("");
-  const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
   const [time, setTime] = useState("");
   const [opponentName, setOpponentName] = useState("");
   const [opponentId, setOpponentId] = useState("");
@@ -41,7 +43,7 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
 
   const validate = () => {
     let errors: Errors = {};
-    if (!format) {
+    if (!matchFormat) {
       errors.format = "Please select a format";
     }
     if (!date) {
@@ -76,43 +78,51 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
     }
   };
 
-  const onSaveClicked = async () => {
+  const onCreateClicked = async () => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
       const formattedDate = formatSelectedDate(date);
-      if (match?.opponent_status === "accepted") {
+      if (!opponentId) {
         const { data, error } = await supabase
           .from("matches")
-          .update([
+          .insert([
             {
               format: matchFormat,
               location: location,
               date: formattedDate,
               time: time,
+              team_id: activeTeam?.team_id,
+              team_name: activeTeam?.team_name,
+              team_rating: activeTeam?.rating,
+              match_status: "pending",
+              opponent_status: "no opponent"
+
             },
           ])
-          .eq("match_id", `${match?.match_id}`)
-        console.log(error, "UpdateErr")
+          .select();
+        console.log(error, "Err")
         onClose();
-      }
-      else {
+      } else {
         const { data, error } = await supabase
           .from("matches")
-          .update([
+          .insert([
             {
               format: matchFormat,
               location: location,
               date: formattedDate,
               time: time,
+              team_id: activeTeam?.team_id,
+              team_name: activeTeam?.team_name,
+              team_rating: activeTeam?.rating,
               opponent_id: opponentId,
               opponent_name: opponentName,
               opponent_rating: opponentRating,
-              opponent_status: "pending"
+              match_status: "pending",
             },
           ])
-          .eq("match_id", `${match?.match_id}`)
-        console.log(error, "UpdateErr")
+          .select();
+        console.log(error, "Err")
         onClose();
       }
 
@@ -133,24 +143,6 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
     fetchOpponentTeams();
   }, [location]);
 
-  useEffect(() => {
-
-    const initialDate = (selectedDate) => {
-      if (!selectedDate) {
-        return 'Invalid Date'; // Handle the case where selectedDate is empty or undefined.
-      }
-      const parsedDate = parse(selectedDate, "EEE d MMM", new Date()); // Parse the date with the expected format
-      return format(parsedDate, 'yyyy-MM-dd'); // Format it as 'yyyy-MM-dd
-    };
-
-    setMatchFormat(match?.format)
-    setLocation(match?.location)
-    setDate(initialDate(match?.date))
-    setTime(match?.time)
-  }, [match])
-
-  console.log(!(match?.opponent_status == "accepted"), "matchStatus")
-
   return (
     <Modal
       isOpen={isOpen}
@@ -161,21 +153,21 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit Match</ModalHeader>
+        <ModalHeader>Join Tournament</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl isRequired>
             <Box mb={5}>
               <FormLabel>Format</FormLabel>
               <Select
-                value={matchFormat}
+                placeholder="Select format"
                 onChange={(e) => setMatchFormat(e.target.value)}
               >
                 <option value="5v5">5v5</option>
                 <option value="6v6">6v6</option>
                 <option value="7v7">7v7</option>
                 <option value="8v8">8v8</option>
-                <option value="11v11">11v11</option>
+                <option value="6v6">11v11</option>
               </Select>
               {!fieldErrors.format ? (
                 <FormHelperText>Select most played format</FormHelperText>
@@ -189,7 +181,7 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
             <Box mb={5}>
               <FormLabel>Location</FormLabel>
               <Select
-                value={location}
+                placeholder="Select ground"
                 onChange={(e) => setLocation(e.target.value)}
               >
                 <option value="MRIS, Charmwood">MRIS, Charmwood</option>
@@ -230,7 +222,7 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
               )}
             </Box>
 
-            <Box mb={5}>
+            {/* <Box mb={5}>
               <FormLabel>Time</FormLabel>
               <Input
                 type="time"
@@ -248,47 +240,44 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
                   {fieldErrors.time}
                 </Text>
               )}
-            </Box>
+            </Box> */}
 
-            {(match?.opponent_status === "declined" || match?.opponent_status === "no opponent")
-              &&
-              <Box mb={5}>
-                <FormLabel>Opponent</FormLabel>
-                <Select
-                  placeholder="Select opponent"
-                  onChange={(e) => {
-                    const selectedOpponentId = e.target.value;
-                    const selectedOpponent = opponentTeams.find(
-                      (team) => team.team_id === selectedOpponentId
-                    );
-                    if (selectedOpponent) {
-                      setOpponentName(selectedOpponent.team_name);
-                      setOpponentId(selectedOpponent.team_id); // Assuming there's an 'id' property in your opponent's data structure
-                      setOpponentRating(selectedOpponent.rating);
-                    }
-                  }}
-                >
-                  {opponentTeams?.map((team, idx) => (
-                    <option key={idx} value={team.team_id}>
-                      {team.team_name} - {team.location}
-                    </option>
-                  ))}
-                </Select>
-                <FormHelperText>
-                  Please select your opponent based on the location
-                </FormHelperText>
-              </Box>
-            }
+            {/* <Box mb={5}>
+              <FormLabel>Opponent</FormLabel>
+              <Select
+                placeholder="Select opponent"
+                onChange={(e) => {
+                  const selectedOpponentId = e.target.value;
+                  const selectedOpponent = opponentTeams.find(
+                    (team) => team.team_id === selectedOpponentId
+                  );
+                  if (selectedOpponent) {
+                    setOpponentName(selectedOpponent.team_name);
+                    setOpponentId(selectedOpponent.team_id); // Assuming there's an 'id' property in your opponent's data structure
+                    setOpponentRating(selectedOpponent.rating);
+                  }
+                }}
+              >
+                {opponentTeams?.map((team, idx) => (
+                  <option key={idx} value={team.team_id}>
+                    {team.team_name} - {team.location}
+                  </option>
+                ))}
+              </Select>
+              <FormHelperText>
+                Please select your opponent based on the location
+              </FormHelperText>
+            </Box> */}
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="messenger" onClick={onSaveClicked}>
-            Save
+          <Button colorScheme="messenger" onClick={onCreateClicked}>
+            Join
           </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};
 
-export default EditMatchModal
+export default JoinTournamentModal;

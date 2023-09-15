@@ -96,6 +96,7 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
               team_name: activeTeam?.team_name,
               team_rating: activeTeam?.rating,
               match_status: "pending",
+              opponent_status: "no opponent"
 
             },
           ])
@@ -180,7 +181,7 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
             <Box mb={5}>
               <FormLabel>Location</FormLabel>
               <Select
-                placeholder="Select your home ground"
+                placeholder="Select ground"
                 onChange={(e) => setLocation(e.target.value)}
               >
                 <option value="MRIS, Charmwood">MRIS, Charmwood</option>

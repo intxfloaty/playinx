@@ -135,6 +135,7 @@ const TeamPlayersStat = ({
                   placeholder="Select"
                   color="black"
                   borderColor="#161616"
+                  value={teamPlayerStat[idx]?.card || ""}
                   onChange={(e) => {
                     const card = e.target.value;
                     const playerName = player?.playerName;

@@ -26,6 +26,7 @@ type Player = {
   player_rating: string;
   player_position: string;
   player_id: string;
+  match_rating: string
   team_id: string;
 };
 
@@ -137,8 +138,11 @@ const MatchStats = ({ matchId, match }) => {
           p={3}
           borderY="1px solid gray"
         >
-          <Flex justifyContent="flex-start">
+          <Flex justifyContent="flex-start" flexDir="column">
             <Text fontSize="md" color="#E7E9EA">
+              {match?.team_match_rating}
+            </Text>
+            <Text fontSize="sm" color="gray">
               {match?.team_rating}
             </Text>
           </Flex>
@@ -147,8 +151,11 @@ const MatchStats = ({ matchId, match }) => {
               RATING
             </Text>
           </Flex>
-          <Flex>
+          <Flex flexDir="column">
             <Text fontSize="md" color="#E7E9EA">
+              {match?.opponent_match_rating}
+            </Text>
+            <Text fontSize="sm" color="gray">
               {match?.opponent_rating}
             </Text>
           </Flex>
@@ -322,7 +329,7 @@ const MatchStats = ({ matchId, match }) => {
                     </Flex>
                     <Flex>
                       <Text fontSize="md" color="#E7E9EA">
-                        +30
+                       {squad?.match_rating}
                       </Text>
                     </Flex>
                   </Flex>
@@ -358,7 +365,7 @@ const MatchStats = ({ matchId, match }) => {
                     </Flex>
                     <Flex>
                       <Text fontSize="md" color="#E7E9EA">
-                        +30
+                      {squad?.match_rating}
                       </Text>
                     </Flex>
                   </Flex>
@@ -394,7 +401,7 @@ const MatchStats = ({ matchId, match }) => {
                     </Flex>
                     <Flex>
                       <Text fontSize="md" color="#E7E9EA">
-                        +30
+                      {squad?.match_rating}
                       </Text>
                     </Flex>
                   </Flex>
@@ -430,7 +437,7 @@ const MatchStats = ({ matchId, match }) => {
                     </Flex>
                     <Flex>
                       <Text fontSize="md" color="#E7E9EA">
-                        +30
+                      {squad?.match_rating}
                       </Text>
                     </Flex>
                   </Flex>
@@ -468,7 +475,7 @@ const MatchStats = ({ matchId, match }) => {
                     </Flex>
                     <Flex>
                       <Text fontSize="md" color="#E7E9EA">
-                        +30
+                      {squad?.match_rating}
                       </Text>
                     </Flex>
                   </Flex>
@@ -504,7 +511,7 @@ const MatchStats = ({ matchId, match }) => {
                     </Flex>
                     <Flex>
                       <Text fontSize="md" color="#E7E9EA">
-                        +30
+                      {squad?.match_rating}
                       </Text>
                     </Flex>
                   </Flex>
@@ -540,7 +547,7 @@ const MatchStats = ({ matchId, match }) => {
                     </Flex>
                     <Flex>
                       <Text fontSize="md" color="#E7E9EA">
-                        +30
+                      {squad?.match_rating}
                       </Text>
                     </Flex>
                   </Flex>
@@ -576,7 +583,7 @@ const MatchStats = ({ matchId, match }) => {
                     </Flex>
                     <Flex>
                       <Text fontSize="md" color="#E7E9EA">
-                        +30
+                      {squad?.match_rating}
                       </Text>
                     </Flex>
                   </Flex>

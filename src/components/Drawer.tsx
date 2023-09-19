@@ -36,7 +36,12 @@ import useTeamStore from "../utils/store/teamStore";
 import { FaAward } from "react-icons/fa";
 import { GiSoccerKick } from "react-icons/gi";
 
-const Drawer = ({ children }) => {
+interface DrawerProps {
+  children: React.ReactNode;
+  TITLE?: string; // TITLE is now optional
+}
+
+const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
   const supabase = createClientComponentClient();
   const setActiveTeam = useTeamStore((state) => state.setActiveTeam);
   const router = useRouter();
@@ -105,9 +110,16 @@ const Drawer = ({ children }) => {
 
   return (
     <>
-      <Box padding={2}>
-        <IoMenu color="#E7E9EA" size={32} onClick={onOpen} />
-      </Box>
+      <Flex padding={2} justifyContent="space-between">
+        <Box flex={1}>
+          <IoMenu color="#E7E9EA" size={32} onClick={onOpen} />
+        </Box>
+        <Box flex={2}>
+          <Text fontSize="xl" color="#E7E9EA">
+            {TITLE}
+          </Text>
+        </Box>
+      </Flex>
       <SideMenu
         colorScheme="blue"
         placement="left"
@@ -215,7 +227,7 @@ const Drawer = ({ children }) => {
                   </Flex>
                 </Box>
               </Link> */}
-{/* 
+              {/* 
               <Link href={"/"}>
                 <Box
                   padding={2}
@@ -231,7 +243,7 @@ const Drawer = ({ children }) => {
                 </Box>
               </Link> */}
 
-              <Link href={"/"}>
+              <Link href={"/leaderboard"}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}

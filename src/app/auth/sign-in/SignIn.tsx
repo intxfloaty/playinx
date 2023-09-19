@@ -108,6 +108,7 @@ function SignIn() {
         xl: "8%",
       }}
     >
+      <Center mb={6}><Text fontSize="2xl" color="#E7E9EA" fontWeight="bold" >Log In</Text></Center>
       {fieldErrors.email && (
         <Text fontSize="md" color="#FFB400">
           {fieldErrors.email}

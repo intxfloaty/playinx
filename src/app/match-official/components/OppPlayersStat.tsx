@@ -134,6 +134,7 @@ const OppPlayersStat = ({
                   placeholder="Select"
                   color="black"
                   borderColor="#161616"
+                  value={oppPlayerStat[idx]?.card || ""}
                   onChange={(e) => {
                     const card = e.target.value;
                     const playerName = player?.playerName;

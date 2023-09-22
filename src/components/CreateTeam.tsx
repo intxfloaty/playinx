@@ -22,6 +22,8 @@ import {
 } from "../app/chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import useTeamStore from "../utils/store/teamStore";
+import { IoFootballOutline } from "react-icons/io5";
+
 
 interface Errors {
   [key: string]: string;
@@ -98,7 +100,7 @@ const CreateTeam = () => {
 
   return (
     <>
-      <Button colorScheme="messenger" size="md" onClick={onOpen}>
+      <Button leftIcon={<IoFootballOutline size={18}/>} w="100%" colorScheme="messenger" size="lg" onClick={onOpen}>
         Create Team
       </Button>
 
@@ -119,6 +121,7 @@ const CreateTeam = () => {
                 <FormLabel>Name</FormLabel>
                 <Input
                   type="text"
+                  placeholder="Name"
                   value={teamName}
                   onChange={(e) => setTeamName(e.target.value)}
                 />

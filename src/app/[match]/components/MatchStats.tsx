@@ -50,7 +50,7 @@ const MatchStats = ({ matchId, match }) => {
         attack: [],
       };
 
-      const updatedSquad = lineup.reduce((acc, player) => {
+      const updatedSquad = lineup?.reduce((acc, player) => {
         switch (player.player_position) {
           case "Goalkeeper":
             acc.goalKeeper.push(player);
@@ -90,7 +90,7 @@ const MatchStats = ({ matchId, match }) => {
         attack: [],
       };
 
-      const updatedSquad = lineup.reduce((acc, player) => {
+      const updatedSquad = lineup?.reduce((acc, player) => {
         switch (player.player_position) {
           case "Goal-Keeper":
             acc.goalKeeper.push(player);
@@ -217,7 +217,7 @@ const MatchStats = ({ matchId, match }) => {
         >
           <Flex>
             <Text fontSize="md" color="#E7E9EA">
-              8
+              {match?.team_corner}
             </Text>
           </Flex>
           <Flex>
@@ -227,7 +227,7 @@ const MatchStats = ({ matchId, match }) => {
           </Flex>
           <Flex>
             <Text fontSize="md" color="#E7E9EA">
-              5
+              {match?.opponent_corner}
             </Text>
           </Flex>
         </Flex>
@@ -241,7 +241,7 @@ const MatchStats = ({ matchId, match }) => {
         >
           <Flex>
             <Text fontSize="md" color="#E7E9EA">
-              2
+              {match?.team_yellow_card}
             </Text>
           </Flex>
           <Flex>
@@ -251,7 +251,7 @@ const MatchStats = ({ matchId, match }) => {
           </Flex>
           <Flex>
             <Text fontSize="md" color="#E7E9EA">
-              5
+              {match?.opponent_yellow_card}
             </Text>
           </Flex>
         </Flex>
@@ -265,7 +265,7 @@ const MatchStats = ({ matchId, match }) => {
         >
           <Flex>
             <Text fontSize="md" color="#E7E9EA">
-              0
+              {match?.team_red_card}
             </Text>
           </Flex>
           <Flex>
@@ -275,7 +275,7 @@ const MatchStats = ({ matchId, match }) => {
           </Flex>
           <Flex>
             <Text fontSize="md" color="#E7E9EA">
-              0
+              {match?.opponent_red_card}
             </Text>
           </Flex>
         </Flex>

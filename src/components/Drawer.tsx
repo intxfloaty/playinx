@@ -39,6 +39,7 @@ import { GiSoccerKick } from "react-icons/gi";
 interface DrawerProps {
   children: React.ReactNode;
   TITLE?: string; // TITLE is now optional
+  
 }
 
 const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {

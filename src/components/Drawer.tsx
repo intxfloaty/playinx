@@ -219,13 +219,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
                     {myTeams?.map((myTeam, idx) => {
                       return (
                         <React.Fragment key={idx}>
-                          <Flex
-                            padding={3}
-                            _hover={{ backgroundColor: "#161616" }}
-                            borderRadius={5}
-                            align="center"
-                            flexDir="row"
-                            gap={5}
+                          <Button w="100%" variant="unstyled"
                             onClick={() => {
                               setActiveTeam(myTeam);
                               saveActiveTeamToLocalStorage(myTeam?.team_id);
@@ -233,13 +227,21 @@ const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
                               router.push(
                                 `/my-teams/${myTeam?.team_name}?team_id=${team_id}`
                               );
-                            }}
-                          >
-                            <IoFootballOutline color="#E7E9EA" size={20} />
-                            <Text color="#E7E9EA" fontSize="md">
-                              {myTeam?.team_name}
-                            </Text>
-                          </Flex>
+                            }}>
+                            <Flex
+                              padding={3}
+                              _hover={{ backgroundColor: "#161616" }}
+                              borderRadius={5}
+                              align="center"
+                              flexDir="row"
+                              gap={5}
+                            >
+                              <IoFootballOutline color="#E7E9EA" size={20} />
+                              <Text color="#E7E9EA" fontSize="md">
+                                {myTeam?.team_name}
+                              </Text>
+                            </Flex>
+                          </Button>
                         </React.Fragment>
                       );
                     })}

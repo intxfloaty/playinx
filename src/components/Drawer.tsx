@@ -35,11 +35,12 @@ import { useRouter } from "next/navigation";
 import useTeamStore from "../utils/store/teamStore";
 import { FaAward } from "react-icons/fa";
 import { GiSoccerKick } from "react-icons/gi";
+import CreateTeam from "./CreateTeam";
 
 interface DrawerProps {
   children: React.ReactNode;
   TITLE?: string; // TITLE is now optional
-  
+
 }
 
 const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
@@ -105,9 +106,32 @@ const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
   };
 
   useEffect(() => {
+    const channel = supabase
+      .channel("new team")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "teams",
+        },
+        (payload) => {
+          console.log(payload.new, "payload");
+          getMyTeams()
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
+
+  useEffect(() => {
     getNameAndPhone();
     getMyTeams();
   }, []);
+
 
   return (
     <>
@@ -183,6 +207,12 @@ const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
                   </Flex>
 
                   <AccordionPanel color="#E7E9EA">
+                    {myTeams.length === 0
+                      &&
+                      <Box paddingX={10} paddingTop={8}>
+                        <CreateTeam />
+                      </Box>
+                    }
                     {myTeams?.map((myTeam, idx) => {
                       return (
                         <React.Fragment key={idx}>

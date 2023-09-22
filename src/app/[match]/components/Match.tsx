@@ -184,7 +184,7 @@ const Match = ({ user }) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase, router]);
+  }, [supabase]);
 
   return (
     <Box>

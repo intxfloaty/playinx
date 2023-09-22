@@ -162,28 +162,28 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
       )}
       {/* </Box> */}
       <Flex justifyContent="space-evenly" mt={6}>
-        <Box width="40%" backgroundColor="#161616" borderRadius={7}>
+        <Box width="40%" borderRadius={7}>
           <Flex flexDir="column" alignItems="flex-start" pl={4}>
             {mySquad?.map((squad, idx) => (
-              <List key={idx} spacing={3}>
-                <ListItem color="#E7E9EA">{squad?.player_name}</ListItem>
-              </List>
+              <Box key={idx} width="100%" mb={5}>
+                <Text fontSize="lg" color="#E7E9EA">{squad?.player_name}</Text>
+              </Box>
             ))}
           </Flex>
         </Box>
 
         <Box>
-          <Center height="50px">
+          <Center height="100%">
             <Divider orientation="vertical" />
           </Center>
         </Box>
 
-        <Box width="40%" backgroundColor="#161616" borderRadius={7}>
+        <Box width="40%" borderRadius={7}>
           <Flex flexDir="column" alignItems="flex-end" pr={4}>
             {oppSquad?.map((squad, idx) => (
-              <List key={idx} spacing={3}>
-                <ListItem color="#E7E9EA">{squad?.player_name}</ListItem>
-              </List>
+               <Box key={idx} width="100%" mb={5}>
+               <Text fontSize="lg" color="#E7E9EA">{squad?.player_name}</Text>
+             </Box>
             ))}
           </Flex>
         </Box>

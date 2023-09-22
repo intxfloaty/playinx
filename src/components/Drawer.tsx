@@ -19,6 +19,7 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  useDisclosure as RewardsDisclosure
 } from "../app/chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
@@ -36,6 +37,7 @@ import useTeamStore from "../utils/store/teamStore";
 import { FaAward } from "react-icons/fa";
 import { GiSoccerKick } from "react-icons/gi";
 import CreateTeam from "./CreateTeam";
+import ComingSoonModal from "./ComingSoonModal";
 
 interface DrawerProps {
   children: React.ReactNode;
@@ -48,6 +50,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
   const setActiveTeam = useTeamStore((state) => state.setActiveTeam);
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const rewards = RewardsDisclosure()
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [myTeams, setMyTeams] = useState([]);
@@ -289,7 +292,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
                 </Box>
               </Link>
 
-              <Link href={"/"}>
+              <Button w="100%" variant="unstyled" onClick={rewards.onOpen}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}
@@ -302,9 +305,10 @@ const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
                     </Text>
                   </Flex>
                 </Box>
-              </Link>
+              </Button>
             </Stack>
           </DrawerBody>
+          <ComingSoonModal isOpen={rewards.isOpen} onClose={rewards.onClose} />
 
           <DrawerFooter borderTopWidth="1px" borderTopColor="gray">
             <Button variant="unstyled" onClick={handleSignOut}>

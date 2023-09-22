@@ -60,10 +60,10 @@ const LeaderBoard = () => {
         <TabPanels>
           <TabPanel>
             {/* Render the leaderboard based on teams' ratings */}
-            <ul>
+            <ul style={{ listStyleType: 'none' }}>
               {teams.map((team, index) => (
                 <li key={index}>
-                  <Flex justifyContent="space-between" backgroundColor="#161616" p={4} borderRadius={7} >
+                  <Flex justifyContent="space-between" backgroundColor="#161616" p={4} mb={2} borderRadius={7} >
                     <Text fontSize="md" color="#E7E9EA">
                       {` ${index + 1}. ${team.team_name}`}
                     </Text>
@@ -78,10 +78,10 @@ const LeaderBoard = () => {
 
           <TabPanel>
             {/* Render the leaderboard based on players' ratings */}
-            <ul>
+            <ul style={{ listStyleType: 'none' }}>
               {players.map((player, index) => (
                 <li key={index}>
-                  <Flex justifyContent="space-between" backgroundColor="#161616" p={4} borderRadius={7} >
+                  <Flex justifyContent="space-between" backgroundColor="#161616" p={4} mb={2} borderRadius={7} >
                     <Text fontSize="md" color="#E7E9EA">
                       {` ${index + 1}. ${player.name}`}
                     </Text>

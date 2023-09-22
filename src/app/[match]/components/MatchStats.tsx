@@ -50,7 +50,7 @@ const MatchStats = ({ matchId, match }) => {
         attack: [],
       };
 
-      const updatedSquad = lineup.reduce((acc, player) => {
+      const updatedSquad = lineup?.reduce((acc, player) => {
         switch (player.player_position) {
           case "Goalkeeper":
             acc.goalKeeper.push(player);
@@ -90,7 +90,7 @@ const MatchStats = ({ matchId, match }) => {
         attack: [],
       };
 
-      const updatedSquad = lineup.reduce((acc, player) => {
+      const updatedSquad = lineup?.reduce((acc, player) => {
         switch (player.player_position) {
           case "Goal-Keeper":
             acc.goalKeeper.push(player);

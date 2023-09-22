@@ -31,10 +31,9 @@ const MyProfile = ({ user }) => {
   const supabase = createClientComponentClient();
   const myUserId = user?.id
   const [myProfile, setMyProfile] = useState<Profile>({})
+
   const router = useRouter();
   const { onOpen, isOpen, onClose } = useDisclosure()
-
-
 
   const getNameAndPhone = async () => {
     try {
@@ -50,6 +49,7 @@ const MyProfile = ({ user }) => {
     }
   };
 
+  
   useEffect(() => {
     getNameAndPhone();
   }, []);
@@ -120,10 +120,6 @@ const MyProfile = ({ user }) => {
             </Flex>
           </Flex>
         </Flex>
-        {/* <Flex alignItems="center" justifyContent="center">
-        <IoWalletOutline color="#E7E9EA" size={30} />
-       
-      </Flex> */}
         <Flex mt={4} gap={3} flexDir="column" alignItems="center" justifyContent="space-evenly">
           <Button leftIcon={<FaRegEdit size={18} />} w="100%" colorScheme="gray" size="lg" onClick={onOpen}>Edit Profile</Button>
           <CreateTeam />
@@ -132,12 +128,12 @@ const MyProfile = ({ user }) => {
       </Box>
 
       <Box mt={10} p={3}>
-        <Button w="100%" variant="unstyled">
+        <Button w="100%" variant="unstyled" onClick={() => console.log("Recharge your wallet!")}>
           <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
             <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
               <IoWalletOutline color="#E7E9EA" size={20} />
               <Text color="#E7E9EA" fontSize="md">
-                Wallet
+                Recharge Wallet
               </Text>
             </Flex>
             <Box flex={1}>

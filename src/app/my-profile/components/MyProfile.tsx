@@ -10,7 +10,8 @@ import {
   AvatarBadge,
   AvatarGroup,
   Grid, GridItem,
-  useDisclosure,
+  useDisclosure as EditProfileDisclosure,
+  useDisclosure as SupportDisclosure,
   Wrap,
   WrapItem,
 } from "../../chakraExports";
@@ -21,6 +22,7 @@ import CreateTeam from "../../../components/CreateTeam";
 import EditProfileModal from "./EditProfileModal";
 import { FaQuestion, FaRegEdit } from "react-icons/fa";
 import { GoQuestion } from "react-icons/go";
+import SupportModal from "./SupportModal";
 
 type Profile = {
   [key: string]: string
@@ -32,7 +34,8 @@ const MyProfile = ({ user }) => {
   const [myProfile, setMyProfile] = useState<Profile>({})
 
   const router = useRouter();
-  const { onOpen, isOpen, onClose } = useDisclosure()
+  const editProfileDisclosure = EditProfileDisclosure()
+  const supportDisclosure = SupportDisclosure()
 
   const getNameAndPhone = async () => {
     try {
@@ -45,6 +48,15 @@ const MyProfile = ({ user }) => {
       }
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error("ERROR:", error);
     }
   };
 
@@ -120,10 +132,10 @@ const MyProfile = ({ user }) => {
           </Flex>
         </Flex>
         <Flex mt={4} gap={3} flexDir="column" alignItems="center" justifyContent="space-evenly">
-          <Button leftIcon={<FaRegEdit size={18} />} w="100%" colorScheme="gray" size="lg" onClick={onOpen}>Edit Profile</Button>
+          <Button leftIcon={<FaRegEdit size={18} />} w="100%" colorScheme="gray" size="lg" onClick={editProfileDisclosure.onOpen}>Edit Profile</Button>
           <CreateTeam user={user} />
         </Flex>
-        <EditProfileModal isOpen={isOpen} onClose={onClose} myProfile={myProfile} myUserId={myUserId} />
+        <EditProfileModal isOpen={editProfileDisclosure.isOpen} onClose={editProfileDisclosure.onClose} myProfile={myProfile} myUserId={myUserId} />
       </Box>
 
       <Box mt={10} p={3}>
@@ -176,7 +188,7 @@ const MyProfile = ({ user }) => {
       </Box>
 
       <Box p={3}>
-        <Button w="100%" variant="unstyled">
+        <Button w="100%" variant="unstyled" onClick={supportDisclosure.onOpen}>
           <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
             <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
               <IoHeadsetOutline color="#E7E9EA" size={20} />
@@ -189,10 +201,11 @@ const MyProfile = ({ user }) => {
             </Box>
           </Flex>
         </Button>
+        <SupportModal isOpen={supportDisclosure.isOpen} onClose={supportDisclosure.onClose} />
       </Box>
 
       <Box p={3}>
-        <Button w="100%" variant="unstyled">
+        <Button w="100%" variant="unstyled" onClick={handleSignOut}>
           <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
             <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
               <IoLogOutOutline color="#E7E9EA" size={20} />

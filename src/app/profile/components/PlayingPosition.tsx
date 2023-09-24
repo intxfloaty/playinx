@@ -10,7 +10,7 @@ import {
 } from "../../chakraExports";
 import Link from "next/link";
 
-function PlayingPosition({ onNext, goBack, onPositionChange }) {
+function PlayingPosition({ onNext, goBack, onPositionChange, isLoading }) {
   const [position, setPosition] = useState("");
   const [positionError, setPositionError] = useState("");
 
@@ -64,6 +64,7 @@ function PlayingPosition({ onNext, goBack, onPositionChange }) {
         mt={7}
         colorScheme="messenger"
         size="md"
+        isLoading={isLoading}
         onClick={() => {
           const error = validate();
           setPositionError(error);

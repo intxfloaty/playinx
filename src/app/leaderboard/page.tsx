@@ -17,7 +17,7 @@ async function page() {
     redirect("/auth/sign-in");
   }
   return (
-    <Drawer TITLE="LEADERBOARD">
+    <Drawer user={user} TITLE="LEADERBOARD">
       <LeaderBoard />
     </Drawer>
   );

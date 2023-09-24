@@ -89,9 +89,8 @@ const CreateTeam = ({ user }) => {
           duration: 9000,
           isClosable: true,
         })
-        setIsLoading(false)
       }
-
+      
       // console.log(data, "data");
       console.log(error, "error");
       try {
@@ -99,6 +98,7 @@ const CreateTeam = ({ user }) => {
         console.log(e);
       }
     }
+    setIsLoading(false)
   };
 
   useEffect(() => {

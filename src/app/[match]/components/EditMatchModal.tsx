@@ -46,6 +46,19 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
     }
     if (!date) {
       errors.date = "Date is required";
+    } else {
+      const selectedDate = new Date(date);
+      const selectedFormattedDate = selectedDate.toISOString().split("T")[0]
+      // Get today's date
+      const currentDate = new Date().toISOString().split("T")[0];
+      const selectedDay = selectedDate.getDay(); // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+
+      // Check if the selected day is not Friday, Saturday, or Sunday
+      if (selectedDay !== 5 && selectedDay !== 6 && selectedDay !== 0) {
+        errors.date = "Only Friday, Saturday, and Sundays are allowed";
+      } else if (selectedFormattedDate < currentDate) {
+        errors.date = "Past dates are not allowed";
+      }
     }
     if (!location) {
       errors.location = "Location is required";
@@ -81,7 +94,7 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
       const formattedDate = formatSelectedDate(date);
-      if (match?.opponent_status === "accepted") {
+      if (match?.opponent_status === "accepted" || match?.opponent_status === "pending") {
         const { data, error } = await supabase
           .from("matches")
           .update([
@@ -93,7 +106,7 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
             },
           ])
           .eq("match_id", `${match?.match_id}`)
-        console.log(error, "UpdateErr")
+        console.log(error, "UpdateErr1")
         onClose();
       }
       else {
@@ -112,7 +125,7 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
             },
           ])
           .eq("match_id", `${match?.match_id}`)
-        console.log(error, "UpdateErr")
+        console.log(error, "UpdateErr2")
         onClose();
       }
 
@@ -219,6 +232,7 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
                 textColor="black"
                 size="md"
                 value={date}
+                min={new Date().toISOString().split("T")[0]} // Set the minimum date to today
                 onChange={(e) => {
                   setDate(e.target.value);
                 }}

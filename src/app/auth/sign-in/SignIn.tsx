@@ -183,7 +183,6 @@ function SignIn() {
         </AbsoluteCenter>
       </Box>
       <Button
-        isLoading={isLoading}
         colorScheme="messenger"
         size="md"
         leftIcon={<FcGoogle />}

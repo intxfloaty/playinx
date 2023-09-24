@@ -19,6 +19,7 @@ function ProfileWorkflow() {
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [position, setPosition] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleNext = () => {
     setStep(step + 1);
@@ -43,6 +44,7 @@ function ProfileWorkflow() {
   };
 
   const handlePositionChange = async (newPosition: string) => {
+    setIsLoading(true)
     const { data, error } = await supabase.from("profiles").insert([
       {
         name: name,
@@ -57,6 +59,7 @@ function ProfileWorkflow() {
     console.log(data, "data");
     console.log(error, "error");
     if (error === null) router.push("/");
+    setIsLoading(false)
   };
 
   const stepProps = {
@@ -66,6 +69,7 @@ function ProfileWorkflow() {
     onPhoneChange: handlePhoneChange,
     onDOBgenderChange: handleDOBgenderChange,
     onPositionChange: handlePositionChange,
+    isLoading: isLoading
   };
 
   const steps = [

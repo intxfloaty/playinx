@@ -42,7 +42,7 @@ import ComingSoonModal from "./ComingSoonModal";
 interface DrawerProps {
   children: React.ReactNode;
   TITLE?: string; // TITLE is now optional
-  user: User 
+  user?: User 
 }
 
 const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {

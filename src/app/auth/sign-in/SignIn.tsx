@@ -30,6 +30,7 @@ function SignIn() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
+  const [isLoading, setIsLoading] = useState(false)
 
   const supabase = createClientComponentClient<Database>();
 
@@ -53,39 +54,41 @@ function SignIn() {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
-      try {
-        let { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password,
-        });
-        console.log(data, "data");
-        console.log(error, "error");
-        if (data.user !== null && data.session !== null && error === null) {
-          router.push("/profile");
-        }
-        if (error?.message === "Invalid login credentials") {
-          setFieldErrors({
-            userExists:
-              "Invalid login credentials, please enter correct email and password",
-          });
-        }
-      } catch (e) {
-        console.log(e);
+      setIsLoading(true)
+      let { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+      console.log(data, "data");
+      console.log(error, "error");
+      if (data.user !== null && data.session !== null && error === null) {
+        router.push("/profile");
       }
+      if (error?.message === "Invalid login credentials") {
+        setFieldErrors({
+          userExists:
+            "Invalid login credentials, please enter correct email and password",
+        });
+      }
+      setIsLoading(false)
     }
   };
 
   const handleGoogleClick = async () => {
+    setIsLoading(true)
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: "http//localhost:3000/profile" },
+        options: {
+          redirectTo: `${location.origin}/auth/callback`,
+        },
       });
       console.log(data, "data");
       console.log(error.message, "mess");
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -156,7 +159,7 @@ function SignIn() {
           {fieldErrors.password}
         </Text>
       )}
-      <Button mt={7} colorScheme="messenger" size="md" onClick={handleLogin}>
+      <Button isLoading={isLoading} mt={7} colorScheme="messenger" size="md" onClick={handleLogin}>
         Log In
       </Button>
 
@@ -182,6 +185,7 @@ function SignIn() {
         </AbsoluteCenter>
       </Box>
       <Button
+        isLoading={isLoading}
         colorScheme="messenger"
         size="md"
         leftIcon={<FcGoogle />}

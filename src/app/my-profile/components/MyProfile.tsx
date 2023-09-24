@@ -49,7 +49,7 @@ const MyProfile = ({ user }) => {
     }
   };
 
-  
+
   useEffect(() => {
     getNameAndPhone();
   }, []);
@@ -122,7 +122,7 @@ const MyProfile = ({ user }) => {
         </Flex>
         <Flex mt={4} gap={3} flexDir="column" alignItems="center" justifyContent="space-evenly">
           <Button leftIcon={<FaRegEdit size={18} />} w="100%" colorScheme="gray" size="lg" onClick={onOpen}>Edit Profile</Button>
-          <CreateTeam />
+          <CreateTeam user={user} />
         </Flex>
         <EditProfileModal isOpen={isOpen} onClose={onClose} myProfile={myProfile} myUserId={myUserId} />
       </Box>

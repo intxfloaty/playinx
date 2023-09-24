@@ -19,6 +19,7 @@ import {
   FormHelperText,
   Select,
   Box,
+  useToast,
 } from "../app/chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import useTeamStore from "../utils/store/teamStore";
@@ -29,7 +30,7 @@ interface Errors {
   [key: string]: string;
 }
 
-const CreateTeam = () => {
+const CreateTeam = ({ user }) => {
   const supabase = createClientComponentClient();
   const addTeam = useTeamStore((state) => state.addTeam);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,6 +38,11 @@ const CreateTeam = () => {
   const [location, setLocation] = useState("");
   const [format, setFormat] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
+  const [isLoading, setIsLoading] = useState(false)
+
+  const toast = useToast()
+
+  const user_id = user?.id
 
   const validate = () => {
     let errors: Errors = {};
@@ -52,18 +58,12 @@ const CreateTeam = () => {
     return errors;
   };
 
-  const getUserId = async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (data && error === null) {
-      return data.user.id;
-    }
-  };
 
   const onCreateClicked = async () => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
-      const user_id = await getUserId();
+      setIsLoading(true)
       const { data, error } = await supabase
         .from("teams")
         .insert([
@@ -80,11 +80,20 @@ const CreateTeam = () => {
       if (data && data.length > 0 && error === null) {
         const newTeam = data[0];
         addTeam(newTeam);
+        onClose();
+        toast({
+          title: 'Team created.',
+          position: 'top',
+          description: `New team - ${teamName} is created!.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        setIsLoading(false)
       }
 
-      console.log(data, "data");
+      // console.log(data, "data");
       console.log(error, "error");
-      onClose();
       try {
       } catch (e) {
         console.log(e);
@@ -100,7 +109,7 @@ const CreateTeam = () => {
 
   return (
     <>
-      <Button leftIcon={<IoFootballOutline size={18}/>} w="100%" colorScheme="messenger" size="lg" onClick={onOpen}>
+      <Button leftIcon={<IoFootballOutline size={18} />} w="100%" colorScheme="messenger" size="lg" onClick={onOpen}>
         Create Team
       </Button>
 
@@ -185,7 +194,7 @@ const CreateTeam = () => {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="messenger" onClick={onCreateClicked}>
+            <Button isLoading={isLoading} colorScheme="messenger" onClick={onCreateClicked}>
               Create
             </Button>
           </ModalFooter>

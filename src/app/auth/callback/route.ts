@@ -21,6 +21,14 @@ export async function GET(request: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect("http://localhost:3000/profile");
+ // Determine the redirect URL based on the environment
+ let redirectUrl = process.env.REDIRECT_URL_PROD; // Default to production URL
+
+ if (process.env.NODE_ENV === "development") {
+   redirectUrl = process.env.REDIRECT_URL_DEV; // Use development URL if running in development mode
+ }
+
+ // URL to redirect to after the sign-in process completes
+ return NextResponse.redirect(redirectUrl);
 }
+

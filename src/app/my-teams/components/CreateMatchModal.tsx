@@ -27,7 +27,7 @@ interface Errors {
   [key: string]: string;
 }
 
-const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
+const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
   const supabase = createClientComponentClient();
   // const activeTeam = useTeamStore((state) => state.activeTeam);
   const [opponentTeams, setOpponentTeams] = useState([]);
@@ -48,6 +48,20 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
     }
     if (!date) {
       errors.date = "Date is required";
+    } else {
+      const selectedDate = new Date(date);
+      const selectedFormattedDate = selectedDate.toISOString().split("T")[0]
+      // Get today's date
+      const currentDate = new Date().toISOString().split("T")[0];
+
+      const selectedDay = selectedDate.getDay(); // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+
+      // Check if the selected day is not Friday, Saturday, or Sunday
+      if (selectedDay !== 5 && selectedDay !== 6 && selectedDay !== 0) {
+        errors.date = "Only Friday, Saturday, and Sundays are allowed";
+      } else if (selectedFormattedDate < currentDate) {
+        errors.date = "Past dates are not allowed";
+      }
     }
     if (!location) {
       errors.location = "Location is required";
@@ -119,6 +133,7 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
               opponent_name: opponentName,
               opponent_rating: opponentRating,
               match_status: "pending",
+              opponent_status: "pending"
             },
           ])
           .select();
@@ -211,6 +226,7 @@ const CreateMatchModal = ({ isOpen, onClose,  activeTeam}) => {
                 textColor="black"
                 size="md"
                 value={date}
+                min={new Date().toISOString().split("T")[0]} // Set the minimum date to today
                 onChange={(e) => {
                   setDate(e.target.value);
                 }}

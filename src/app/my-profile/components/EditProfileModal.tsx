@@ -29,6 +29,20 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
     }
     if (!DOB) {
       errors.DOB = "Date of birth is required";
+    } else {
+      // Parse the selected date into a Date object
+      const selectedDate = new Date(DOB);
+      // Get today's date
+      const currentDate = new Date();
+      // Set a minimum date (adjust this value as needed)
+      const minimumDate = new Date("1950-01-01");
+
+      // Compare the selected date with today's date
+      if (selectedDate > currentDate) {
+        errors.DOB = "Date of birth cannot be in the future";
+      } else if (selectedDate < minimumDate) {
+        errors.DOB = "Date of birth is too early";
+      }
     }
     if (!gender) {
       errors.gender = "Gender is required";
@@ -142,6 +156,8 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
                 onChange={(e) => {
                   setDOB(e.target.value);
                 }}
+                min="1950-01-01" // Set a realistic minimum date
+                max={new Date().toISOString().split("T")[0]} // Set the max attribute to today's date
               />
               {fieldErrors.DOB && (
                 <Text fontSize="md" color="#FFB400">

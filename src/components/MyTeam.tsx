@@ -18,7 +18,6 @@ const MyTeam = () => {
           xl: "8%",
         }}
       >
-        <CreateTeam />
       </Stack>
     </>
   );

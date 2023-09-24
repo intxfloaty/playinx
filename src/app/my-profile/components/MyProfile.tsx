@@ -16,7 +16,6 @@ import {
 } from "../../chakraExports";
 import { IoArrowBack, IoChevronForwardOutline, IoDocumentTextOutline, IoHeadsetOutline, IoLogOutOutline, IoNotificationsOutline, IoPodiumOutline, IoWalletOutline } from "react-icons/io5";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import MyTeam from "../../../components/MyTeam";
 import { useRouter } from "next/navigation";
 import CreateTeam from "../../../components/CreateTeam";
 import EditProfileModal from "./EditProfileModal";

@@ -22,10 +22,10 @@ export async function GET(request: NextRequest) {
   }
 
  // Determine the redirect URL based on the environment
- let redirectUrl = process.env.REDIRECT_URL_PROD; // Default to production URL
+ let redirectUrl = process.env.NEXT_PUBLIC_REDIRECT_URL_PROD; // Default to production URL
 
  if (process.env.NODE_ENV === "development") {
-   redirectUrl = process.env.REDIRECT_URL_DEV; // Use development URL if running in development mode
+   redirectUrl = process.env.NEXT_PUBLIC_REDIRECT_URL_DEV; // Use development URL if running in development mode
  }
 
  // URL to redirect to after the sign-in process completes

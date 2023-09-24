@@ -21,14 +21,12 @@ export async function GET(request: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
- // Determine the redirect URL based on the environment
- let redirectUrl = process.env.NEXT_PUBLIC_REDIRECT_URL_PROD; // Default to production URL
+  // Determine the redirect URL based on the environment
+  const redirectURL =
+    process.env.NODE_ENV === "production"
+      ? "https://playinx.vercel.app" // Replace with your production URL
+      : "http://localhost:3000"; // Use localhost for development
 
- if (process.env.NODE_ENV === "development") {
-   redirectUrl = process.env.NEXT_PUBLIC_REDIRECT_URL_DEV; // Use development URL if running in development mode
- }
-
- // URL to redirect to after the sign-in process completes
- return NextResponse.redirect(redirectUrl);
+  // URL to redirect to after sign in process completes
+  return NextResponse.redirect(redirectURL + "/profile");
 }
-

@@ -75,7 +75,6 @@ function SignIn() {
   };
 
   const handleGoogleClick = async () => {
-    setIsLoading(true)
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -88,7 +87,6 @@ function SignIn() {
     } catch (error) {
       console.log(error);
     }
-    setIsLoading(false)
   };
 
   useEffect(() => {

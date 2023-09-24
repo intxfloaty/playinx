@@ -30,6 +30,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
+  const [isLoading, setIsLoading] = useState(false)
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
@@ -58,32 +59,28 @@ const SignUp = () => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
-      try {
-        let { data, error } = await supabase.auth.signUp({
-          email: email,
-          password: password,
-          // options: {
-          //   emailRedirectTo: `${location.origin}/auth/callback`,
-          // },
-        });
-        console.log(data);
-        console.log(error);
-        // for when email confirmation is not required to sign up
-        if (data.user !== null && data.session !== null && error === null) {
-          router.push("/profile");
-        }
-        if (error?.message === "User already registered") {
-          setFieldErrors({
-            userExists: "User is already registered with this email",
-          });
-        }
-      } catch (error) {
-        console.log(error);
+      setIsLoading(true)
+      let { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      });
+      console.log(data);
+      console.log(error);
+      // for when email confirmation is not required to sign up
+      if (data.user !== null && data.session !== null && error === null) {
+        router.push("/profile");
       }
+      if (error?.message === "User already registered") {
+        setFieldErrors({
+          userExists: "User is already registered with this email",
+        });
+      }
+      setIsLoading(false)
     }
   };
 
   const handleGoogleClick = async () => {
+    setIsLoading(true)
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -96,6 +93,7 @@ const SignUp = () => {
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -118,7 +116,7 @@ const SignUp = () => {
         xl: "8%",
       }}
     >
-       <Center mb={6}><Text fontSize="2xl" color="#E7E9EA" fontWeight="bold" >Sign Up</Text></Center>
+      <Center mb={6}><Text fontSize="2xl" color="#E7E9EA" fontWeight="bold" >Sign Up</Text></Center>
       {fieldErrors.email && (
         <Text fontSize="md" color="#FFB400">
           {fieldErrors.email}
@@ -174,6 +172,7 @@ const SignUp = () => {
         mt={7}
         colorScheme="messenger"
         size="md"
+        isLoading={isLoading}
         onClick={handleContinueClick}
       >
         Continue

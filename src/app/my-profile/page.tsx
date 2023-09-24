@@ -17,7 +17,7 @@ async function page() {
     redirect("/auth/sign-in");
   }
   return (
-    <Drawer>
+    <Drawer user={user}>
       <MyProfile user={user} />
     </Drawer>
   );

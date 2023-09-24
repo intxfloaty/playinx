@@ -16,7 +16,6 @@ import {
 } from "../../chakraExports";
 import { IoArrowBack, IoChevronForwardOutline, IoDocumentTextOutline, IoHeadsetOutline, IoLogOutOutline, IoNotificationsOutline, IoPodiumOutline, IoWalletOutline } from "react-icons/io5";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import MyTeam from "../../../components/MyTeam";
 import { useRouter } from "next/navigation";
 import CreateTeam from "../../../components/CreateTeam";
 import EditProfileModal from "./EditProfileModal";
@@ -49,7 +48,7 @@ const MyProfile = ({ user }) => {
     }
   };
 
-  
+
   useEffect(() => {
     getNameAndPhone();
   }, []);
@@ -122,7 +121,7 @@ const MyProfile = ({ user }) => {
         </Flex>
         <Flex mt={4} gap={3} flexDir="column" alignItems="center" justifyContent="space-evenly">
           <Button leftIcon={<FaRegEdit size={18} />} w="100%" colorScheme="gray" size="lg" onClick={onOpen}>Edit Profile</Button>
-          <CreateTeam />
+          <CreateTeam user={user} />
         </Flex>
         <EditProfileModal isOpen={isOpen} onClose={onClose} myProfile={myProfile} myUserId={myUserId} />
       </Box>

@@ -14,7 +14,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
   const [gender, setGender] = useState("");
   const [position, setPosition] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
-
+  const [isLoading, setIsLoading] = useState(false)
 
 
   const validate = () => {
@@ -44,6 +44,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
+      setIsLoading(true)
       const { data, error } = await supabase
         .from('profiles')
         .update({
@@ -56,7 +57,8 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
         .eq("user_id", `${myUserId}`);
 
       console.log(error, "MyProfileERR")
-      if (!error) onClose()
+      setIsLoading(false);
+      if (!error) onClose();
     }
   }
 
@@ -194,7 +196,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="messenger" onClick={onSaveClicked}>
+          <Button isLoading={isLoading} colorScheme="messenger" onClick={onSaveClicked}>
             Save
           </Button>
         </ModalFooter>

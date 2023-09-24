@@ -21,7 +21,7 @@ import {
   AccordionIcon,
   useDisclosure as RewardsDisclosure
 } from "../app/chakraExports";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { User, createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   IoMenu,
   IoPersonOutline,
@@ -42,10 +42,10 @@ import ComingSoonModal from "./ComingSoonModal";
 interface DrawerProps {
   children: React.ReactNode;
   TITLE?: string; // TITLE is now optional
-
+  user?: User 
 }
 
-const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
+const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {
   const supabase = createClientComponentClient();
   const setActiveTeam = useTeamStore((state) => state.setActiveTeam);
   const router = useRouter();
@@ -213,7 +213,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, TITLE }) => {
                     {myTeams.length === 0
                       &&
                       <Box paddingX={10} paddingTop={8}>
-                        <CreateTeam />
+                        <CreateTeam user={user} />
                       </Box>
                     }
                     {myTeams?.map((myTeam, idx) => {

@@ -6,12 +6,25 @@ import { Box, Button, Center, Flex, Text } from '../../chakraExports';
 import { GiSoccerField, GiSoccerKick, GiWhistle } from 'react-icons/gi';
 import { IoFootballOutline, IoPeopleOutline, IoTimeOutline, IoLocationOutline } from 'react-icons/io5';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
+import { Database } from '../../../database.types';
+
+type Tournament = {
+  category: string
+  created_at: string
+  format: string
+  id: string
+  location: string
+  name: string
+  prize_money: string | null
+  start_date: string
+  type: string
+};
 
 const Tournament = () => {
   const searchParams = useSearchParams();
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
   const id = searchParams.get("id")
-  const [tournament, setTournament] = useState()
+  const [tournament, setTournament] = useState<Tournament>()
 
   const fetchTournamentDetails = async () => {
     let { data: tourna, error } = await supabase

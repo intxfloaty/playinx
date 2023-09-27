@@ -127,7 +127,7 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
                   variant="unstyled"
                   onClick={() => {
                     router.push(
-                      `/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
+                      `/match/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
                     );
                   }}
                   pr={6}

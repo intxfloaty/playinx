@@ -42,7 +42,7 @@ import ComingSoonModal from "./ComingSoonModal";
 interface DrawerProps {
   children: React.ReactNode;
   TITLE?: string; // TITLE is now optional
-  user?: User 
+  user?: User
 }
 
 const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {
@@ -249,7 +249,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {
                 </AccordionItem>
               </Accordion>
 
-              {/* <Link href={"/tournaments"}>
+              <Link href={"/tournaments"}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}
@@ -262,7 +262,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {
                     </Text>
                   </Flex>
                 </Box>
-              </Link> */}
+              </Link>
               {/* 
               <Link href={"/"}>
                 <Box

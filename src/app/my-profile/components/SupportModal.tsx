@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Text, FormControl, FormHelperText, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, InputGroup, InputLeftAddon, Center } from '../../chakraExports'
-
+import { Box, Button, Text,  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, InputGroup, InputLeftAddon, Center } from '../../chakraExports'
 
 
 const SupportModal = ({ isOpen, onClose, }) => {

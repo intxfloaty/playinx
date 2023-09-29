@@ -1,7 +1,7 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "../../../serverSupabaseClient";
-import Tournament from "./Tournament";
+import Event from "./Event";
 
 const page = async ({ params }: { params: { match: string } }) => {
   const supabase = createServerSupabaseClient()
@@ -13,7 +13,7 @@ const page = async ({ params }: { params: { match: string } }) => {
   if (!user) {
     redirect("/auth/sign-in");
   }
-  return <Tournament />;
+  return <Event />;
 };
 
 export default page;

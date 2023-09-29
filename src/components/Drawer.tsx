@@ -249,7 +249,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {
                 </AccordionItem>
               </Accordion>
 
-              <Link href={"/tournaments"}>
+              <Link href={"/events"}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}
@@ -258,7 +258,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {
                   <Flex align="center" flexDir="row" gap={5}>
                     <IoTrophyOutline color="#E7E9EA" size={20} />
                     <Text color="#E7E9EA" fontSize="md">
-                      Tournaments
+                      Events
                     </Text>
                   </Flex>
                 </Box>

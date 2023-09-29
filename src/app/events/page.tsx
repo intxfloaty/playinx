@@ -2,7 +2,7 @@ import React from "react";
 import { redirect } from "next/navigation";
 import Drawer from "../../components/Drawer";
 import { createServerSupabaseClient } from "../../serverSupabaseClient";
-import TournamentList from "./TournamentList";
+import EventsList from "./EventsList";
 
 async function page() {
   const supabase = createServerSupabaseClient()
@@ -16,7 +16,7 @@ async function page() {
   }
   return (
     <Drawer user={user} TITLE="TOURNAMENTS">
-      <TournamentList user={user} />
+      <EventsList user={user} />
     </Drawer>
   );
 }

@@ -114,11 +114,11 @@ const Team = ({ user }) => {
             Matches
           </Tab>
           <Tab fontSize="lg" color="#E7E9EA">
+            Season
+          </Tab>
+          <Tab fontSize="lg" color="#E7E9EA">
             Squad
           </Tab>
-          {/* <Tab fontSize="lg" color="#E7E9EA">
-            Stats
-          </Tab> */}
         </TabList>
         <TabIndicator
           mt="-1.5px"
@@ -131,6 +131,9 @@ const Team = ({ user }) => {
           <TabPanel>
             <MatchList team={team} userId={userId} matches={matches} setMatches={setMatches} getMatches={getMatches} />
 
+          </TabPanel>
+          <TabPanel>
+            
           </TabPanel>
           <TabPanel>
             <PlayersList activeTeam={team} />

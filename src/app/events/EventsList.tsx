@@ -5,33 +5,33 @@ import { IoFootballOutline, IoLocationOutline, IoPeopleOutline, IoTimeOutline } 
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const TournamentList = ({ user }) => {
+const EventsList = ({ user }) => {
   const router = useRouter();
   const supabase = createClientComponentClient();
-  const [tournamentList, setTournamentList] = useState([])
+  const [eventsList, setEventsList] = useState([])
 
-  const fetchTournamentList = async () => {
-    let { data: tournaments, error } = await supabase
-      .from("tournaments")
+  const fetchEventstList = async () => {
+    let { data: events, error } = await supabase
+      .from("events")
       .select("*")
 
     if (!error) {
-      setTournamentList(tournaments);
+      setEventsList(events);
     }
-    console.log(error, "tournaErr");
+    console.log(error, "eventsErr");
   }
 
   useEffect(() => {
-    fetchTournamentList()
+    fetchEventstList()
   }, [])
 
 
   return (
     <Box p={4}>
-      {tournamentList?.map((tourna, idx) => {
+      {eventsList?.map((tourna, idx) => {
         return (
           <Box key={idx} backgroundColor="#161616" mt={4} borderRadius={7} mb={12}>
-            <button onClick={() => router.push(`/tournaments/${tourna?.name}?id=${tourna?.id}`)}>
+            <button onClick={() => router.push(`/events/${tourna?.name}?id=${tourna?.id}`)}>
               {/* tourna banner image container */}
               <Box w={{
                 base: "100%", // 0-48em
@@ -53,8 +53,8 @@ const TournamentList = ({ user }) => {
                 <Flex flexDir="row" justifyContent="space-between">
                   <Flex mt={2} flexDir="column" flex={1}>
                     <Flex flexDir="row" alignItems="center" mb={3}>
-                      <IoFootballOutline size={24} color="#E7E9EA" />
-                      <Flex flexDir="column" alignItems="flex-start" pl={5}>
+                      <IoFootballOutline size={18} color="#E7E9EA" />
+                      <Flex flexDir="column" alignItems="flex-start" pl={3}>
                         <Text fontSize="md" color="gray">
                           Category
                         </Text>
@@ -65,8 +65,8 @@ const TournamentList = ({ user }) => {
                     </Flex>
 
                     <Flex flexDir="row" alignItems="center" mb={3}>
-                      <IoPeopleOutline size={24} color="#E7E9EA" />
-                      <Flex flexDir="column" alignItems="flex-start" pl={5}>
+                      <IoPeopleOutline size={18} color="#E7E9EA" />
+                      <Flex flexDir="column" alignItems="flex-start" pl={3}>
                         <Text fontSize="md" color="gray">
                           Format
                         </Text>
@@ -79,8 +79,8 @@ const TournamentList = ({ user }) => {
 
                   <Flex mt={2} flexDir="column" flex={1}>
                     <Flex flexDir="row" alignItems="center" mb={3}>
-                      <IoTimeOutline size={24} color="#E7E9EA" />
-                      <Flex flexDir="column" alignItems="flex-start" pl={5}>
+                      <IoTimeOutline size={18} color="#E7E9EA" />
+                      <Flex flexDir="column" alignItems="flex-start" pl={3}>
                         <Text fontSize="md" color="gray">
                           Kick-off
                         </Text>
@@ -91,8 +91,8 @@ const TournamentList = ({ user }) => {
                     </Flex>
 
                     <Flex flexDir="row" alignItems="center" mb={3}>
-                      <IoLocationOutline size={24} color="#E7E9EA" />
-                      <Flex flexDir="column" alignItems="flex-start" pl={5}>
+                      <IoLocationOutline size={18} color="#E7E9EA" />
+                      <Flex flexDir="column" alignItems="flex-start" pl={3}>
                         <Text fontSize="md" color="gray">
                           Location
                         </Text>
@@ -113,4 +113,4 @@ const TournamentList = ({ user }) => {
   )
 }
 
-export default TournamentList
+export default EventsList

@@ -51,6 +51,11 @@ const MyProfile = ({ user }) => {
     }
   };
 
+  const onRechargeWalletClicked = async () => {
+    const data = await fetch('http://localhost:3000/my-profile/api/phonePe', { method: 'POST' }).then((t) => t.json())
+    console.log(data, "data ==>>>")
+  }
+
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
 
@@ -139,7 +144,11 @@ const MyProfile = ({ user }) => {
       </Box>
 
       <Box mt={10} p={3}>
-        <Button w="100%" variant="unstyled" onClick={() => console.log("Recharge your wallet!")}>
+        <Button
+          w="100%"
+          variant="unstyled"
+        // onClick={onRechargeWalletClicked}
+        >
           <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
             <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
               <IoWalletOutline color="#E7E9EA" size={20} />

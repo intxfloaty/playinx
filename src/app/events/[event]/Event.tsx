@@ -4,11 +4,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Box, Button, Center, Flex, Text } from '../../chakraExports';
 import { GiSoccerField, GiSoccerKick, GiWhistle } from 'react-icons/gi';
-import { IoFootballOutline, IoPeopleOutline, IoTimeOutline, IoLocationOutline } from 'react-icons/io5';
+import { IoFootballOutline, IoPeopleOutline, IoTimeOutline, IoLocationOutline, IoArrowBack } from 'react-icons/io5';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
 import { Database } from '../../../database.types';
 
-type Tournament = {
+type Event = {
   category: string
   created_at: string
   format: string
@@ -18,33 +18,49 @@ type Tournament = {
   prize_money: string | null
   start_date: string
   type: string
+  entry_fee: string
 };
 
-const Tournament = () => {
+const Event = () => {
   const searchParams = useSearchParams();
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClientComponentClient();
   const id = searchParams.get("id")
-  const [tournament, setTournament] = useState<Tournament>()
+  const router = useRouter()
+  const [event, setEvent] = useState<Event>()
 
-  const fetchTournamentDetails = async () => {
-    let { data: tourna, error } = await supabase
-      .from("tournaments")
+  const fetchEventDetails = async () => {
+    let { data: event, error } = await supabase
+      .from("events")
       .select("*")
       .eq("id", `${id}`);
 
-    console.log(tourna, "matches");
+    console.log(event, "event");
     console.log(error, "err");
     if (!error) {
-      setTournament(tourna[0]);
+      setEvent(event[0]);
     }
   }
 
   useEffect(() => {
-    fetchTournamentDetails()
+    fetchEventDetails()
   }, [])
 
   return (
     <Box p={4}>
+      <Flex alignItems="center" justifyContent="space-between">
+        <Button variant="unstyled" >
+          <IoArrowBack
+            onClick={() => router.back()}
+            color="#E7E9EA"
+            size={25}
+          />
+        </Button>
+      </Flex>
+      <Center mb={4}>
+        <Text fontSize="lg" color="GrayText" fontWeight="extrabold" textTransform="uppercase">
+          {event?.name}
+        </Text>
+      </Center>
       <Box w={{
         base: "100%", // 0-48em
         md: "50%", // 48em-80em,
@@ -71,9 +87,9 @@ const Tournament = () => {
 
           <Flex flexDir="row" alignItems="center" mb={3}>
             <IoFootballOutline size={24} color="#E7E9EA" />
-            <Flex flexDir="column" alignItems="flex-start" pl={5}>
+            <Flex flexDir="column" alignItems="flex-start" pl={3}>
               <Text textTransform="capitalize" fontSize="md" color="#E7E9EA">
-                {tournament?.category}
+                {event?.category}
               </Text>
               <Text fontSize="md" color="gray">
                 Category
@@ -83,9 +99,9 @@ const Tournament = () => {
 
           <Flex flexDir="row" alignItems="center" mb={3}>
             <GiSoccerKick size={24} color="#E7E9EA" />
-            <Flex flexDir="column" alignItems="flex-start" pl={5}>
+            <Flex flexDir="column" alignItems="flex-start" pl={3}>
               <Text textTransform="capitalize" fontSize="md" color="#E7E9EA">
-                {tournament?.type}
+                {event?.type}
               </Text>
               <Text fontSize="md" color="gray">
                 Type
@@ -96,9 +112,9 @@ const Tournament = () => {
 
           <Flex flexDir="row" alignItems="center" mb={3}>
             <GiSoccerField size={24} color="#E7E9EA" />
-            <Flex flexDir="column" alignItems="flex-start" pl={5}>
+            <Flex flexDir="column" alignItems="flex-start" pl={3}>
               <Text textTransform="capitalize" fontSize="md" color="#E7E9EA">
-                {tournament?.format}
+                {event?.format}
               </Text>
               <Text fontSize="md" color="gray">
                 Format
@@ -108,9 +124,9 @@ const Tournament = () => {
 
           <Flex flexDir="row" alignItems="center" mb={3}>
             <IoTimeOutline size={24} color="#E7E9EA" />
-            <Flex flexDir="column" alignItems="flex-start" pl={5}>
+            <Flex flexDir="column" alignItems="flex-start" pl={3}>
               <Text textTransform="capitalize" fontSize="md" color="#E7E9EA">
-                {tournament?.start_date}
+                {event?.start_date}
               </Text>
               <Text fontSize="md" color="gray">
                 Kick-off
@@ -120,9 +136,9 @@ const Tournament = () => {
 
           <Flex flexDir="row" alignItems="center" mb={3}>
             <IoLocationOutline size={24} color="#E7E9EA" />
-            <Flex flexDir="column" alignItems="flex-start" pl={5}>
+            <Flex flexDir="column" alignItems="flex-start" pl={3}>
               <Text textTransform="capitalize" fontSize="md" color="#E7E9EA">
-                {tournament?.location}
+                {event?.location}
               </Text>
               <Text fontSize="md" color="gray">
                 Location
@@ -132,12 +148,12 @@ const Tournament = () => {
 
           <Flex flexDir="row" alignItems="center" mb={3}>
             <FaRegMoneyBillAlt size={24} color="#E7E9EA" />
-            <Flex flexDir="column" alignItems="flex-start" pl={5}>
+            <Flex flexDir="column" alignItems="flex-start" pl={3}>
               <Text textTransform="capitalize" fontSize="md" color="#E7E9EA">
-                {tournament?.prize_money}*
+                {event?.entry_fee}
               </Text>
               <Text fontSize="md" color="gray">
-                Prize
+                Entry fee
               </Text>
             </Flex>
           </Flex>
@@ -151,4 +167,4 @@ const Tournament = () => {
   )
 }
 
-export default Tournament
+export default Event

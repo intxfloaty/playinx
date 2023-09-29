@@ -15,8 +15,16 @@ import {
   TabIndicator,
   useDisclosure,
   Center,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
 } from "../../chakraExports";
-import { IoArrowBack, IoSettingsOutline } from "react-icons/io5";
+import { IoArrowBack, IoChevronDownOutline, IoSettingsOutline } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
 import Settings from "./SettingsModal";
 import useTeamStore from "../../../utils/store/teamStore";
@@ -43,9 +51,9 @@ type Team = {
   team_admin: string
 }
 
-const Team = ({ user }) => {
+const Tournament = ({ event }) => {
   const searchParams = useSearchParams();
-  const userId = user?.id;
+  // const userId = user?.id;
   const supabase = createClientComponentClient();
   const team_id = searchParams.get("team_id");
   const [team, setTeam] = useState<Team>()
@@ -79,14 +87,14 @@ const Team = ({ user }) => {
         setTeam(teams[0])
       }
     }
-    fetchTeamInfo();
-    getMatches()
+    // fetchTeamInfo();
+    // getMatches()
   }, [])
 
 
   return (
     <Box>
-      <Flex alignItems="center" justifyContent="space-between" padding={4}>
+      <Flex alignItems="center" justifyContent="space-between" paddingTop={2} paddingX={4}>
         <Button variant="unstyled">
           <IoArrowBack
             onClick={() => router.push("/")}
@@ -94,30 +102,25 @@ const Team = ({ user }) => {
             size={26}
           />
         </Button>
-        <Text fontSize="xl" color="#E7E9EA">
-          {team?.team_name}
-        </Text>
-        <Button variant="unstyled">
-          {team?.team_admin === userId &&
-            <IoSettingsOutline
-              onClick={() => onOpen()}
-              color="#E7E9EA"
-              size={26}
-            />
-          }
-        </Button>
       </Flex>
-      <Settings isSettingsOpen={isOpen} onSettingsClose={onClose} userId={userId} activeTeam={team} />
+      <Center mb={4}>
+        <Text fontSize="lg" color="GrayText" fontWeight="medium" textTransform="uppercase">
+          {event?.name}
+        </Text>
+      </Center>
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">
-            Matches
+            Matchday
           </Tab>
           <Tab fontSize="lg" color="#E7E9EA">
-            Season
+            Table
           </Tab>
           <Tab fontSize="lg" color="#E7E9EA">
-            Squad
+            Stats
+          </Tab>
+          <Tab fontSize="lg" color="#E7E9EA">
+            Teams
           </Tab>
         </TabList>
         <TabIndicator
@@ -128,15 +131,30 @@ const Team = ({ user }) => {
         />
 
         <TabPanels>
+          <TabPanel m={0} p={0}>
+            <Box>
+              <Menu>
+                <MenuButton backgroundColor="#161616" borderRadius={7} w="100%" p={3} mt={3}>
+                  <Flex justifyContent="space-between" alignItems="center">
+                    <Text fontSize="md" color="#E7E9EA">Matchday 1</Text>
+                    <IoChevronDownOutline color="#E7E9EA" />
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+                  <MenuItem>MatchDay 2</MenuItem>
+                  <MenuItem>Create a Copy</MenuItem>
+                  <MenuItem>Mark as Draft</MenuItem>
+                  <MenuItem>Delete</MenuItem>
+                  <MenuItem>Attend a Workshop</MenuItem>
+                </MenuList>
+              </Menu>
+            </Box>
+          </TabPanel>
           <TabPanel>
-            <MatchList team={team} userId={userId} matches={matches} setMatches={setMatches} getMatches={getMatches} />
 
           </TabPanel>
           <TabPanel>
-            
-          </TabPanel>
-          <TabPanel>
-            <PlayersList activeTeam={team} />
+            {/* <PlayersList activeTeam={team} /> */}
           </TabPanel>
           {/* <TabPanel>
             <Flex alignItems="center" justifyContent="center"><Text fontSize="lg" color="#E7E9EA">COMING SOON</Text></Flex>
@@ -147,4 +165,4 @@ const Team = ({ user }) => {
   );
 };
 
-export default Team;
+export default Tournament;

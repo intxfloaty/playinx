@@ -13,7 +13,7 @@ const page = async ({ params }: { params: { match: string } }) => {
   if (!user) {
     redirect("/auth/sign-in");
   }
-  return <Event />;
+  return <Event user={user} />;
 };
 
 export default page;

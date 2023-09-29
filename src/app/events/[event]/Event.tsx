@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Box, Button, Center, Flex, Text } from '../../chakraExports';
+import { Box, Button, Center, Flex, Text, useDisclosure as JoinTournamentDisclosure } from '../../chakraExports';
 import { GiSoccerField, GiSoccerKick, GiWhistle } from 'react-icons/gi';
 import { IoFootballOutline, IoPeopleOutline, IoTimeOutline, IoLocationOutline, IoArrowBack } from 'react-icons/io5';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
 import { Database } from '../../../database.types';
+import Tournament from '../../my-teams/components/Tournament';
+import JoinTournamentModal from '../../my-teams/components/JoinTournamentModal';
 
 type Event = {
   category: string
@@ -21,12 +23,14 @@ type Event = {
   entry_fee: string
 };
 
-const Event = () => {
+const Event = ({ user }) => {
   const searchParams = useSearchParams();
   const supabase = createClientComponentClient();
   const id = searchParams.get("id")
   const router = useRouter()
+  const joinTournamentDisc = JoinTournamentDisclosure()
   const [event, setEvent] = useState<Event>()
+  const [team, setTeam] = useState()
 
   const fetchEventDetails = async () => {
     let { data: event, error } = await supabase
@@ -41,11 +45,31 @@ const Event = () => {
     }
   }
 
+  // const getEventTeams = async () => {
+  //   try {
+  //     let { data: teams, error } = await supabase
+  //       .from("teams")
+  //       .select("*")
+  //       .or(`team_admin.eq.${myUserId},players.cs.{${myUserId}}`);
+
+  //     if (teams && teams.length > 0 && error === null) {
+  //       setMyTeams(teams);
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
+
   useEffect(() => {
     fetchEventDetails()
   }, [])
 
   return (
+    // <>
+    // <Tournament event={event} />
+
+    // </>
     <Box p={4}>
       <Flex alignItems="center" justifyContent="space-between">
         <Button variant="unstyled" >
@@ -62,9 +86,9 @@ const Event = () => {
         </Text>
       </Center>
       <Box w={{
-        base: "100%", // 0-48em
-        md: "50%", // 48em-80em,
-        xl: "25%", // 80em+
+        base: "100%",
+        md: "50%",
+        xl: "25%",
       }}>
         <img
           style={{ maxWidth: "100%", objectFit: "contain" }}
@@ -161,7 +185,8 @@ const Event = () => {
         </Flex>
       </Box>
       <Center mt={6}>
-        <Button size="lg" >Join Tournament</Button>
+        <Button size="lg" onClick={joinTournamentDisc.onOpen} >Join Tournament</Button>
+        <JoinTournamentModal isOpen={joinTournamentDisc.isOpen} onClose={joinTournamentDisc.onClose} user={user} event={event} />
       </Center>
     </Box>
   )

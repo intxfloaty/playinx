@@ -22,6 +22,7 @@ import Settings from "./SettingsModal";
 import useTeamStore from "../../../utils/store/teamStore";
 import MatchList from "./MatchList";
 import PlayersList from "./PlayersList";
+import Season from "./Season";
 
 type Match = {
   match_id: string;
@@ -41,6 +42,7 @@ type Match = {
 type Team = {
   team_name: string
   team_admin: string
+  events: []
 }
 
 const Team = ({ user }) => {
@@ -51,6 +53,7 @@ const Team = ({ user }) => {
   const [team, setTeam] = useState<Team>()
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [matches, setMatches] = useState<Match[]>([]);
+  const [eventsList, setEventsList] = useState([])
   const router = useRouter();
 
   const getMatches = async () => {
@@ -66,22 +69,42 @@ const Team = ({ user }) => {
     console.log(error, "matchError");
   };
 
-  useEffect(() => {
-    const fetchTeamInfo = async () => {
-      let { data: teams, error } = await supabase
-        .from('teams')
-        .select('*')
-        .eq("team_id", `${team_id}`)
+  const fetchTeamInfo = async () => {
+    let { data: teams, error } = await supabase
+      .from('teams')
+      .select('*')
+      .eq("team_id", `${team_id}`)
 
-      console.log(error, "TeamErr")
+    console.log(error, "TeamErr")
 
-      if (!error) {
-        setTeam(teams[0])
-      }
+    if (!error) {
+      setTeam(teams[0])
     }
+  }
+
+
+  const fetchEventstList = async () => {
+    let { data: events, error } = await supabase
+      .from("events")
+      .select("*")
+      .in("id", team?.events)
+
+    if (!error) {
+      setEventsList(events);
+    }
+    console.log(error, "eventsErr");
+  }
+
+  useEffect(() => {
     fetchTeamInfo();
     getMatches()
   }, [])
+
+  useEffect(() => {
+    if (team && team?.events?.length > 0) {
+      fetchEventstList()
+    }
+  }, [team])
 
 
   return (
@@ -130,17 +153,15 @@ const Team = ({ user }) => {
         <TabPanels>
           <TabPanel>
             <MatchList team={team} userId={userId} matches={matches} setMatches={setMatches} getMatches={getMatches} />
+          </TabPanel>
 
-          </TabPanel>
           <TabPanel>
-            
+            <Season eventsList={eventsList} />
           </TabPanel>
+
           <TabPanel>
             <PlayersList activeTeam={team} />
           </TabPanel>
-          {/* <TabPanel>
-            <Flex alignItems="center" justifyContent="center"><Text fontSize="lg" color="#E7E9EA">COMING SOON</Text></Flex>
-          </TabPanel> */}
         </TabPanels>
       </Tabs>
     </Box>

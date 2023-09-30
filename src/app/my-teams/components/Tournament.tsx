@@ -113,9 +113,10 @@ const Tournament = ({ event }) => {
           <Tab fontSize="lg" color="#E7E9EA">
             Matchday
           </Tab>
-          <Tab fontSize="lg" color="#E7E9EA">
-            Table
-          </Tab>
+          {event?.type === "league" &&
+            <Tab fontSize="lg" color="#E7E9EA">
+              Table
+            </Tab>}
           <Tab fontSize="lg" color="#E7E9EA">
             Stats
           </Tab>
@@ -131,8 +132,9 @@ const Tournament = ({ event }) => {
         />
 
         <TabPanels>
+          {/* matchday */}
           <TabPanel m={0} p={0}>
-            <Box>
+            {/* <Box>
               <Menu>
                 <MenuButton backgroundColor="#161616" borderRadius={7} w="100%" p={3} mt={3}>
                   <Flex justifyContent="space-between" alignItems="center">
@@ -148,17 +150,22 @@ const Tournament = ({ event }) => {
                   <MenuItem>Attend a Workshop</MenuItem>
                 </MenuList>
               </Menu>
-            </Box>
+            </Box> */}
           </TabPanel>
-          <TabPanel>
 
-          </TabPanel>
+          {/*  table */}
+          {event?.type === "league" &&
+            <TabPanel>
+              <Text fontSize="lg" color="#E7E9EA">Table!!!===</Text>
+            </TabPanel>}
+
+          {/* stats */}
+          <TabPanel></TabPanel>
+
+          {/* teams */}
           <TabPanel>
-            {/* <PlayersList activeTeam={team} /> */}
+            {/* <Flex alignItems="center" justifyContent="center"><Text fontSize="lg" color="#E7E9EA">COMING SOON</Text></Flex> */}
           </TabPanel>
-          {/* <TabPanel>
-            <Flex alignItems="center" justifyContent="center"><Text fontSize="lg" color="#E7E9EA">COMING SOON</Text></Flex>
-          </TabPanel> */}
         </TabPanels>
       </Tabs>
     </Box>

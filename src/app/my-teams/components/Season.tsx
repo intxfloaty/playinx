@@ -1,60 +1,33 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Flex, Text, useDisclosure } from "../chakraExports";
+import { Box, Button, Flex, Text, useDisclosure } from "../../chakraExports";
 import { IoFootballOutline, IoLocationOutline, IoPeopleOutline, IoTimeOutline } from 'react-icons/io5';
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const EventsList = ({ user }) => {
+const Season = ({ eventsList }) => {
   const router = useRouter();
   const supabase = createClientComponentClient();
-  const [eventsList, setEventsList] = useState([])
 
-  const fetchEventstList = async () => {
-    let { data: events, error } = await supabase
-      .from("events")
-      .select("*")
-
-    if (!error) {
-      setEventsList(events);
-    }
-    console.log(error, "eventsErr");
-  }
-
-  useEffect(() => {
-    fetchEventstList()
-  }, [])
 
 
   return (
-    <Box p={4}>
+    <>
       {eventsList?.map((tourna, idx) => {
         return (
           <Box
             key={idx}
             backgroundColor="#161616"
-            mt={4}
             borderRadius={7}
-            mb={12}
+            mb={6}
+            p={2}
             onClick={() => router.push(`/events/${tourna?.name}?id=${tourna?.id}`)}
             _active={{
               transform: "scale(0.95)", // Add a slight scale-down effect when clicked
               backgroundColor: "#333" // Change the background color when clicked
             }}>
-            {/* tourna banner image container */}
-            <Box w={{
-              base: "100%", // 0-48em
-              md: "50%", // 48em-80em,
-              xl: "25%", // 80em+
-            }}>
-              <img
-                style={{ maxWidth: "100%", objectFit: "contain" }}
-                alt="Logo"
-                src="/images/tournaBanner.jpeg" />
-            </Box>
-
             {/* tourna details box */}
-            <Flex flexDir='column' mt={2} p={2}>
+            <Flex flexDir='column' mt={2} >
               <Flex borderBottomWidth="1px" pb={2}>
                 <Text fontFamily="monospace" fontSize="xl" textAlign="center" color="#E7E9EA">{tourna?.name}</Text>
               </Flex>
@@ -117,8 +90,8 @@ const EventsList = ({ user }) => {
         )
       })}
 
-    </Box>
+    </>
   )
 }
 
-export default EventsList
+export default Season

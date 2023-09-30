@@ -31,7 +31,10 @@ interface Errors {
 const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
   const supabase = createClientComponentClient();
   const [teams, setTeams] = useState([]);
-  const [selectedTeam, setSelectedTeam] = useState("");
+  const [selectedTeam, setSelectedTeam] = useState({
+    teamName: "",
+    teamId: ""
+  });
   const [paymentMethod, setPaymentMethod] = useState("")
 
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
@@ -59,10 +62,10 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
     }
   };
 
-  // add event id in events array in teams table 
+  // add event id in events column in teams table 
   const updateTeamWithEvent = async () => {
     const { data, error } = await supabase.rpc("add_event_to_team", {
-      p_team_id: selectedTeam,
+      p_team_id: selectedTeam.teamId,
       p_event_id: `${event?.id}`,
     });
 
@@ -70,12 +73,13 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
     console.log(error, "rpcErr");
   };
 
-  // add teamid, teamAdmin and paymentStatus as a json obj in teams array in events table
+  // add teamid, teamAdmin and paymentStatus as a json obj in teams column in events table
   const updateEventWithTeam = async () => {
     const teamAdmin = user?.id
     const { data, error } = await supabase.rpc("add_team_to_event", {
-      p_team_id: selectedTeam,
+      p_team_id: `${selectedTeam.teamId}`,
       p_team_admin: teamAdmin,
+      p_team_name: selectedTeam.teamName,
       p_payment_status: "pending",
       p_event_id: `${event?.id}`,
     });
@@ -125,10 +129,13 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
               <FormLabel>Team</FormLabel>
               <Select
                 placeholder="Select team"
-                onChange={(e) => setSelectedTeam(e.target.value)}
+                onChange={(e) => {
+                  const teamName = e.target.selectedOptions[0].getAttribute("data-team-name");
+                  setSelectedTeam({ teamName: teamName, teamId: e.target.value })
+                }}
               >
                 {teams?.map((team, idx) => (
-                  <option key={idx} value={team.team_id}>
+                  <option key={idx} value={team.team_id} data-team-name={team?.team_name}>
                     {team.team_name}
                   </option>
                 ))}

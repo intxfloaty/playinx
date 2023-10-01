@@ -7,8 +7,8 @@ import { GiSoccerField, GiSoccerKick, GiWhistle } from 'react-icons/gi';
 import { IoFootballOutline, IoPeopleOutline, IoTimeOutline, IoLocationOutline, IoArrowBack } from 'react-icons/io5';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
 import { Database } from '../../../database.types';
-import Tournament from '../../my-teams/components/Tournament';
-import JoinTournamentModal from '../../my-teams/components/JoinTournamentModal';
+import Tournament from './components/Tournament';
+import JoinTournamentModal from './components/JoinTournamentModal';
 
 type Event = {
   category: string

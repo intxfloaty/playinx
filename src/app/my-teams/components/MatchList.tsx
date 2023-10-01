@@ -8,7 +8,7 @@ import {
 import CreateMatchModal from "./CreateMatchModal";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
-import JoinTournamentModal from "./JoinTournamentModal";
+import JoinTournamentModal from "../../events/[event]/components/JoinTournamentModal";
 
 type Team = {
   [key: string]: string;

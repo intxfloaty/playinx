@@ -15,21 +15,11 @@ import {
   TabIndicator,
   useDisclosure,
   Center,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
-} from "../../chakraExports";
+} from "../../../chakraExports";
 import { IoArrowBack, IoChevronDownOutline, IoSettingsOutline } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
-import Settings from "./SettingsModal";
-import useTeamStore from "../../../utils/store/teamStore";
-import MatchList from "./MatchList";
-import PlayersList from "./PlayersList";
+import Settings from "../../../my-teams/components/SettingsModal";
+import EventTeamList from "./EventTeamList";
 
 type Match = {
   match_id: string;
@@ -164,7 +154,7 @@ const Tournament = ({ event }) => {
 
           {/* teams */}
           <TabPanel>
-            {/* <Flex alignItems="center" justifyContent="center"><Text fontSize="lg" color="#E7E9EA">COMING SOON</Text></Flex> */}
+            <EventTeamList event={event} />
           </TabPanel>
         </TabPanels>
       </Tabs>

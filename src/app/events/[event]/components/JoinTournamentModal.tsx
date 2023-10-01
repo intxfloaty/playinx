@@ -20,7 +20,7 @@ import {
   Box,
   Radio,
   RadioGroup
-} from "../../chakraExports";
+} from "../../../chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { format } from "date-fns";
 

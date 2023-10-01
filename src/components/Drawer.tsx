@@ -30,6 +30,7 @@ import {
   IoPodiumOutline,
   IoLogOutOutline,
   IoFootballOutline,
+  IoHomeOutline,
 } from "react-icons/io5";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -171,6 +172,21 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {
 
           <DrawerBody mt={5}>
             <Stack spacing={8}>
+              <Link href={"/"}>
+                <Box
+                  padding={2}
+                  _hover={{ backgroundColor: "#161616" }}
+                  borderRadius={5}
+                >
+                  <Flex align="center" flexDir="row" gap={5}>
+                    <IoHomeOutline color="#E7E9EA" size={20} />
+                    <Text color="#E7E9EA" fontSize="md">
+                      Home
+                    </Text>
+                  </Flex>
+                </Box>
+              </Link>
+
               <Link href={"/my-profile"}>
                 <Box
                   padding={2}
@@ -263,7 +279,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {
                   </Flex>
                 </Box>
               </Link>
-              {/* 
+
               <Link href={"/"}>
                 <Box
                   padding={2}
@@ -277,7 +293,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, TITLE }) => {
                     </Text>
                   </Flex>
                 </Box>
-              </Link> */}
+              </Link>
 
               <Link href={"/leaderboard"}>
                 <Box

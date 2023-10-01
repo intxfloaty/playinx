@@ -14,11 +14,22 @@ export default async function Page() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const { data: profiles, error } = await supabase
+    .from("profiles")
+    .select("name,phone")
+    .eq("user_id", `${user?.id}`);
+
+  const { data: teams } = await supabase
+    .from("teams")
+    .select("*")
+    .or(`team_admin.eq.${user?.id},players.cs.{${user?.id}}`);
+
+
   if (!user) {
     redirect("/auth/sign-in");
   }
   return (
-    <Drawer user={user}>
+    <Drawer user={user} profiles={profiles} teams={teams}>
       <Home user={user} />
     </Drawer>
   )

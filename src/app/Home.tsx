@@ -6,13 +6,13 @@ import { IoArrowBackOutline, IoArrowForwardOutline, IoFootballOutline, IoLocatio
 import router from 'next/router';
 import { useRouter } from 'next/navigation';
 
-const images = [
-  'tournaBanner.jpeg',
-  'tournaBanner.jpeg',
-  'tournaBanner.jpeg',
-  'tournaBanner.jpeg',
-  'tournaBanner.jpeg',
-];
+// const images = [
+//   'tournaBanner.jpeg',
+//   'tournaBanner.jpeg',
+//   'tournaBanner.jpeg',
+//   'tournaBanner.jpeg',
+//   'tournaBanner.jpeg',
+// ];
 
 const Home = ({ user }) => {
   const router = useRouter();
@@ -24,6 +24,7 @@ const Home = ({ user }) => {
     let { data: events, error } = await supabase
       .from("events")
       .select("*")
+      .order('created_at', { ascending: false })
 
     if (!error) {
       setEventsList(events);
@@ -35,13 +36,13 @@ const Home = ({ user }) => {
     fetchEventstList()
   }, [])
 
-  const prevImage = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
-  };
+  // const prevImage = () => {
+  //   setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+  // };
 
-  const nextImage = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
-  };
+  // const nextImage = () => {
+  //   setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+  // };
 
   return (
     <Box p={4}>

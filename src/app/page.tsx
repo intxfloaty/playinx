@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Input } from "./chakraExports";
 import Drawer from "../components/Drawer";
 import { createServerSupabaseClient } from "../serverSupabaseClient";
+import Home from "./Home";
 
 export default async function Page() {
   const supabase = createServerSupabaseClient()
@@ -18,7 +19,7 @@ export default async function Page() {
   }
   return (
     <Drawer user={user}>
-      
+      <Home user={user} />
     </Drawer>
   )
 }

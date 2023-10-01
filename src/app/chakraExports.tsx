@@ -82,6 +82,7 @@ export {
   useToast,
   Radio,
   RadioGroup,
+  Slide,
 } from "@chakra-ui/react";
 
 export { Link } from "@chakra-ui/next-js";

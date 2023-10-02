@@ -8,7 +8,6 @@ import {
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
   useDisclosure,
   Text,
   Stack,
@@ -50,7 +49,7 @@ interface DrawerProps {
 
 const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE }) => {
   const supabase = createClientComponentClient();
-  // const myUserId = user?.id
+  const myUserId = user?.id
   const setActiveTeam = useTeamStore((state) => state.setActiveTeam);
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -59,35 +58,35 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
   const [phone, setPhone] = useState("");
   const [myTeams, setMyTeams] = useState([]);
 
-  // const getNameAndPhone = async () => {
-  //   try {
-  //     let { data: profiles, error } = await supabase
-  //       .from("profiles")
-  //       .select("name,phone")
-  //       .eq("user_id", `${myUserId}`);
-  //     if (profiles && error === null) {
-  //       setName(profiles[0].name);
-  //       setPhone(profiles[0].phone);
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+  const getNameAndPhone = async () => {
+    try {
+      let { data: profiles, error } = await supabase
+        .from("profiles")
+        .select("name,phone")
+        .eq("user_id", `${myUserId}`);
+      if (profiles && error === null) {
+        setName(profiles[0].name);
+        setPhone(profiles[0].phone);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-  // const getMyTeams = async () => {
-  //   try {
-  //     let { data: teams, error } = await supabase
-  //       .from("teams")
-  //       .select("*")
-  //       .or(`team_admin.eq.${myUserId},players.cs.{${myUserId}}`);
+  const getMyTeams = async () => {
+    try {
+      let { data: teams, error } = await supabase
+        .from("teams")
+        .select("*")
+        .or(`team_admin.eq.${myUserId},players.cs.{${myUserId}}`);
 
-  //     if (teams && teams.length > 0 && error === null) {
-  //       setMyTeams(teams);
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+      if (teams && teams.length > 0 && error === null) {
+        setMyTeams(teams);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // Function to save activeTeam to localStorage
   const saveActiveTeamToLocalStorage = (team) => {
@@ -126,11 +125,8 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
   }, [supabase]);
 
   useEffect(() => {
-    // getNameAndPhone();
-    setName(profiles[0].name);
-    setPhone(profiles[0].phone);
-    setMyTeams(teams);
-    // getMyTeams();
+    getNameAndPhone();
+    getMyTeams();
   }, []);
 
 

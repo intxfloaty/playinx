@@ -19,10 +19,12 @@ import {
   Select,
   Box,
   Radio,
-  RadioGroup
+  RadioGroup,
+  Flex
 } from "../../../chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { format } from "date-fns";
+import { IoCloseOutline } from "react-icons/io5";
 
 interface Errors {
   [key: string]: string;
@@ -35,7 +37,10 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
     teamName: "",
     teamId: ""
   });
+  const [players, setPlayers] = useState([])
+  const [teamPlayers, setTeamPlayers] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState("")
+
 
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
 
@@ -61,6 +66,18 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
       setTeams(teams);
     }
   };
+
+  const fetchTeamPlayers = async () => {
+    setTeamPlayers([])
+    let { data: players, error } = await supabase
+      .from("players")
+      .select("*")
+      .eq("team_id", `${selectedTeam?.teamId}`)
+
+    if (!error) {
+      setPlayers(players);
+    }
+  }
 
   // add event id in events column in teams table 
   const updateTeamWithEvent = async () => {
@@ -104,6 +121,14 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
   }, [selectedTeam, paymentMethod]);
 
   useEffect(() => {
+    const fetchPlayers = async () => {
+      fetchTeamPlayers();
+    };
+    if (selectedTeam?.teamId) fetchPlayers();
+
+  }, [selectedTeam?.teamId]);
+
+  useEffect(() => {
     const fetchTeams = async () => {
       await getMyTeams();
     };
@@ -111,13 +136,14 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
     fetchTeams();
   }, []);
 
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       isCentered
       motionPreset="slideInBottom"
-      size="sm"
+      size="full"
     >
       <ModalOverlay />
       <ModalContent>
@@ -150,14 +176,71 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
             </Box>
 
             <Box mb={5}>
-              <FormLabel>Entry fees</FormLabel>
-              <RadioGroup onChange={(e) => setPaymentMethod(e)} >
-                <Stack direction='column'>
-                  <Radio value='Pay online per team basis' isDisabled>Pay online per team basis</Radio>
-                  <Radio value='Pay online per player basis' isDisabled>Pay online per player basis</Radio>
-                  <Radio value='Pay offline'>Pay offline</Radio>
-                </Stack>
-              </RadioGroup>
+              <FormLabel>Select Players</FormLabel>
+              <Select
+                placeholder="Select Players"
+                color="black"
+                borderColor="#161616"
+                onChange={(e) => {
+                  const newPlayer = e.target.value;
+                  const playerId = e.target.selectedOptions[0].getAttribute("data-player-id");
+                  const playerPosition = e.target.selectedOptions[0].getAttribute("data-player-position")
+                  if (newPlayer !== "" && !teamPlayers?.some((player) => player?.playerId === playerId)) {
+                    const updatedTeamPlayers = [...teamPlayers];
+                    updatedTeamPlayers.push({
+                      playerId,
+                      playerPosition,
+                      playerName: newPlayer,
+                    });
+                    setTeamPlayers(updatedTeamPlayers);
+                  }
+                }}
+              >
+                {players?.map((player, idx) => (
+                  <option
+                    key={idx}
+                    value={player?.player_name}
+                    data-player-id={player?.player_id}
+                    data-player-position={player?.player_position}
+                  >
+                    {player?.player_name}
+                  </option>
+                ))}
+              </Select>
+
+              {teamPlayers?.map((player, idx) => {
+                return (
+                  <Flex
+                    key={idx}
+                    my={6}
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Flex w="90%" flexDir="row" alignItems="center" justifyContent="space-between">
+                      <Text color="black" fontSize="sm" flex="1" textAlign="left">
+                        {player?.playerName}
+                      </Text>
+                      <Text color="black" fontSize="sm" flex="1" textAlign="left">
+                        {player?.playerPosition}
+                      </Text>
+                    </Flex>
+
+
+                    <Box position="relative" right={0}>
+                      <IoCloseOutline
+                        color="black"
+                        size={24}
+                        onClick={() => {
+                          const updatedTeamPlayers = teamPlayers.filter(
+                            (_, i) => i !== idx
+                          );
+                          setTeamPlayers(updatedTeamPlayers);
+                        }}
+                      />
+                    </Box>
+                  </Flex>
+                );
+              })}
               {fieldErrors.paymentMethod
                 &&
                 <Text fontSize="md" color="#FFB400">
@@ -168,7 +251,7 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="messenger" onClick={onJoinClicked}>
-            Join
+            Continue
           </Button>
         </ModalFooter>
       </ModalContent>

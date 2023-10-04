@@ -9,8 +9,6 @@ const Season = ({ eventsList }) => {
   const router = useRouter();
   const supabase = createClientComponentClient();
 
-
-
   return (
     <>
       {eventsList?.map((tourna, idx) => {

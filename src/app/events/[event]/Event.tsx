@@ -38,6 +38,7 @@ const Event = ({ user }) => {
   const [event, setEvent] = useState<Event>()
   const [team, setTeam] = useState()
 
+
   const fetchEventDetails = async () => {
     let { data: event, error } = await supabase
       .from("events")

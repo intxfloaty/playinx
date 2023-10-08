@@ -30,9 +30,8 @@ interface Errors {
   [key: string]: string;
 }
 
-const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
+const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
   const supabase = createClientComponentClient();
-  const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState({
     teamName: "",
     teamId: ""
@@ -46,26 +45,13 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
 
   const validate = () => {
     let errors: Errors = {};
-    if (!selectedTeam) {
+    if (!selectedTeam?.teamName) {
       errors.selectedTeam = "Please select a team";
     }
-    if (!paymentMethod) {
-      errors.paymentMethod = "Select payment method";
-    }
+
     return errors;
   };
 
-
-  const getMyTeams = async () => {
-    let { data: teams, error } = await supabase
-      .from("teams")
-      .select("*")
-      .eq("team_admin", `${user?.id}`)
-
-    if (!error) {
-      setTeams(teams);
-    }
-  };
 
   const fetchTeamPlayers = async () => {
     setTeamPlayers([])
@@ -105,12 +91,30 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
     console.log(error, "rpcErr");
   }
 
-  const onJoinClicked = async () => {
+  const addTeamToEvent = async () => {
+    const teamAdmin = user?.id
+    const { data, error } = await supabase
+      .from('event_teams')
+      .insert([
+        {
+          event_id: `${event?.id}`,
+          team_id: `${selectedTeam.teamId}`,
+          team_admin: teamAdmin,
+          team_name: selectedTeam.teamName,
+          payment_status: "pending",
+        },
+      ])
+      .select()
+
+    console.log(error, "event_teamsErr")
+  }
+
+  const onContinueClicked = async () => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
       await updateTeamWithEvent()
-      await updateEventWithTeam()
+      await addTeamToEvent()
     }
   };
 
@@ -118,7 +122,9 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
     if (Object.keys(fieldErrors).length !== 0) {
       setFieldErrors(validate());
     }
-  }, [selectedTeam, paymentMethod]);
+  }, [selectedTeam?.teamName]);
+
+  console.log(fieldErrors, "errs")
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -127,15 +133,6 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
     if (selectedTeam?.teamId) fetchPlayers();
 
   }, [selectedTeam?.teamId]);
-
-  useEffect(() => {
-    const fetchTeams = async () => {
-      await getMyTeams();
-    };
-
-    fetchTeams();
-  }, []);
-
 
   return (
     <Modal
@@ -241,16 +238,16 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event }) => {
                   </Flex>
                 );
               })}
-              {fieldErrors.paymentMethod
+              {/* {fieldErrors.paymentMethod
                 &&
                 <Text fontSize="md" color="#FFB400">
                   {fieldErrors.paymentMethod}
-                </Text>}
+                </Text>} */}
             </Box>
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="messenger" onClick={onJoinClicked}>
+          <Button colorScheme="messenger" onClick={onContinueClicked}>
             Continue
           </Button>
         </ModalFooter>

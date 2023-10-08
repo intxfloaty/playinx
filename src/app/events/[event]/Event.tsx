@@ -21,11 +21,13 @@ type Event = {
   start_date: string
   type: string
   entry_fee: string
+  status: string
   teams: []
 };
 
 type TeamType = {
   teamAdmin: string
+  paymentStatus: string
 }
 
 const Event = ({ user }) => {
@@ -36,7 +38,8 @@ const Event = ({ user }) => {
   const router = useRouter()
   const joinTournamentDisc = JoinTournamentDisclosure()
   const [event, setEvent] = useState<Event>()
-  const [team, setTeam] = useState()
+  const [teams, setTeams] = useState([]);
+
 
 
   const fetchEventDetails = async () => {
@@ -52,8 +55,20 @@ const Event = ({ user }) => {
     }
   }
 
+  const getMyTeams = async () => {
+    let { data: teams, error } = await supabase
+      .from("teams")
+      .select("*")
+      .eq("team_admin", `${user?.id}`)
+
+    if (!error) {
+      setTeams(teams);
+    }
+  };
+
   useEffect(() => {
     fetchEventDetails()
+    getMyTeams();
   }, [])
 
   useEffect(() => {
@@ -79,11 +94,9 @@ const Event = ({ user }) => {
     };
   }, [supabase]);
 
-
-
   return (
     <>
-      {event?.teams?.some((team: TeamType) => team?.teamAdmin === userId) ? (<Tournament event={event} />) :
+      {event?.status === "slots confirmed" ? (<Tournament />) :
         (
           <Box p={4}>
             <Flex alignItems="center" justifyContent="space-between">
@@ -196,15 +209,13 @@ const Event = ({ user }) => {
                     </Text>
                   </Flex>
                 </Flex>
-
               </Flex>
             </Box>
             <Center mt={6}>
               <Button size="lg" onClick={joinTournamentDisc.onOpen} >Join Tournament</Button>
-              <JoinTournamentModal isOpen={joinTournamentDisc.isOpen} onClose={joinTournamentDisc.onClose} user={user} event={event} />
+              <JoinTournamentModal isOpen={joinTournamentDisc.isOpen} onClose={joinTournamentDisc.onClose} user={user} event={event} teams={teams} />
             </Center>
           </Box>
-
         )}
     </>
   )

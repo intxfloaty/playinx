@@ -36,51 +36,53 @@ type Match = {
   opponent_score: string;
 };
 
+type Event = {
+  category: string
+  created_at: string
+  format: string
+  id: string
+  location: string
+  name: string
+  prize_money: string | null
+  start_date: string
+  type: string
+  entry_fee: string
+  status: string
+  teams: []
+};
+
 type Team = {
   team_name: string
   team_admin: string
 }
 
-const Tournament = ({ event }) => {
+const Tournament = () => {
   const searchParams = useSearchParams();
   // const userId = user?.id;
   const supabase = createClientComponentClient();
-  const team_id = searchParams.get("team_id");
+  const id = searchParams.get("id");
+  const router = useRouter();
   const [team, setTeam] = useState<Team>()
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [matches, setMatches] = useState<Match[]>([]);
-  const router = useRouter();
+  const [event, setEvent] = useState<Event>()
 
-  const getMatches = async () => {
-    let { data: matches, error } = await supabase
-      .from("matches")
+  const fetchEventDetails = async () => {
+    let { data: event, error } = await supabase
+      .from("events")
       .select("*")
-      .or(
-        `team_id.eq.${team_id},opponent_id.eq.${team_id}`
-      );
-    if (matches && matches.length > 0 && error === null) {
-      setMatches(matches);
+      .eq("id", `${id}`);
+
+    console.log(event, "event");
+    console.log(error, "err");
+    if (!error) {
+      setEvent(event[0]);
     }
-    console.log(error, "matchError");
-  };
+  }
 
   useEffect(() => {
-    const fetchTeamInfo = async () => {
-      let { data: teams, error } = await supabase
-        .from('teams')
-        .select('*')
-        .eq("team_id", `${team_id}`)
-
-      console.log(error, "TeamErr")
-
-      if (!error) {
-        setTeam(teams[0])
-      }
-    }
-    // fetchTeamInfo();
-    // getMatches()
+    fetchEventDetails()
   }, [])
-
 
   return (
     <Box>

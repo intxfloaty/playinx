@@ -19,7 +19,7 @@ const Season = ({ eventsList }) => {
             borderRadius={7}
             mb={6}
             p={2}
-            onClick={() => router.push(`/events/${tourna?.name}?id=${tourna?.id}`)}
+            onClick={() => router.push(`/season/${tourna?.name}?id=${tourna?.id}`)}
             _active={{
               transform: "scale(0.95)", // Add a slight scale-down effect when clicked
               backgroundColor: "#333" // Change the background color when clicked

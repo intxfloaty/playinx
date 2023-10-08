@@ -14,7 +14,6 @@ import {
   useDisclosure,
 } from "../../chakraExports";
 import { useRouter, useSearchParams } from "next/navigation";
-import useTeamStore from "../../../utils/store/teamStore";
 import JoinSquad from "./JoinSquad";
 import MatchHeader from "./MatchHeader";
 import Overview from "./Overview";

@@ -1,8 +1,5 @@
 import React from "react";
 import { Providers } from "./providers";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-
 import AuthProvider from "../components/AuthProvider";
 import { createServerSupabaseClient } from "../serverSupabaseClient";
 

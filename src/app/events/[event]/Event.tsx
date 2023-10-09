@@ -109,7 +109,7 @@ const Event = ({ user }) => {
               </Button>
             </Flex>
             <Center mb={4}>
-              <Text fontSize="lg" color="GrayText" fontWeight="extrabold" textTransform="uppercase">
+              <Text fontSize="lg" color="#E7E9EA" fontWeight="extrabold" textTransform="uppercase">
                 {event?.name}
               </Text>
             </Center>

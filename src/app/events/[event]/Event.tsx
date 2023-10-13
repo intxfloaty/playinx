@@ -40,8 +40,6 @@ const Event = ({ user }) => {
   const [event, setEvent] = useState<Event>()
   const [teams, setTeams] = useState([]);
 
-
-
   const fetchEventDetails = async () => {
     let { data: event, error } = await supabase
       .from("events")
@@ -55,7 +53,7 @@ const Event = ({ user }) => {
     }
   }
 
-  const getMyTeams = async () => {
+  const fetchMyTeams = async () => {
     let { data: teams, error } = await supabase
       .from("teams")
       .select("*")
@@ -68,7 +66,7 @@ const Event = ({ user }) => {
 
   useEffect(() => {
     fetchEventDetails()
-    getMyTeams();
+    fetchMyTeams();
   }, [])
 
   useEffect(() => {
@@ -99,20 +97,19 @@ const Event = ({ user }) => {
       {event?.status === "slots confirmed" ? (<Tournament />) :
         (
           <Box p={4}>
-            <Flex alignItems="center" justifyContent="space-between">
-              <Button variant="unstyled" >
+            <Flex alignItems="center" justifyContent="space-between" mb={4}>
+              <Button variant="unstyled" flex={1} justifyContent="flex-start">
                 <IoArrowBack
                   onClick={() => router.back()}
                   color="#E7E9EA"
                   size={25}
                 />
               </Button>
-            </Flex>
-            <Center mb={4}>
-              <Text fontSize="lg" color="GrayText" fontWeight="extrabold" textTransform="uppercase">
+              <Text flex={4} fontSize="lg" color="#E7E9EA" fontWeight="bold" textTransform="uppercase">
                 {event?.name}
               </Text>
-            </Center>
+            </Flex>
+
             <Box w={{
               base: "100%",
               md: "50%",

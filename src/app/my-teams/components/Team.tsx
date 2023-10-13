@@ -14,15 +14,21 @@ import {
   Button,
   TabIndicator,
   useDisclosure,
+  useDisclosure as AddPlayersDisclosure,
   Center,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from "../../chakraExports";
-import { IoArrowBack, IoSettingsOutline } from "react-icons/io5";
+import { IoArrowBack, IoEllipsisVertical, IoSettingsOutline } from "react-icons/io5";
 import { useRouter, useSearchParams } from "next/navigation";
 import Settings from "./SettingsModal";
 import useTeamStore from "../../../utils/store/teamStore";
 import MatchList from "./MatchList";
 import PlayersList from "./PlayersList";
 import Season from "./Season";
+import AddPlayers from "./AddPlayersModal";
 
 type Match = {
   match_id: string;
@@ -52,6 +58,7 @@ const Team = ({ user }) => {
   const team_id = searchParams.get("team_id");
   const [team, setTeam] = useState<Team>()
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const addPlayersDisclosure = AddPlayersDisclosure();
   const [matches, setMatches] = useState<Match[]>([]);
   const [eventsList, setEventsList] = useState([])
   const router = useRouter();
@@ -120,17 +127,25 @@ const Team = ({ user }) => {
         <Text fontSize="xl" color="#E7E9EA">
           {team?.team_name}
         </Text>
-        <Button variant="unstyled">
-          {team?.team_admin === userId &&
-            <IoSettingsOutline
-              onClick={() => onOpen()}
-              color="#E7E9EA"
-              size={26}
-            />
-          }
-        </Button>
+        {/* <Button variant="unstyled"> */}
+        {team?.team_admin === userId &&
+          <Menu>
+            <MenuButton>
+              <IoEllipsisVertical
+                color="#E7E9EA"
+                size={26}
+              />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={addPlayersDisclosure.onOpen}>Add Players</MenuItem>
+            </MenuList>
+            <AddPlayers isAddPlayerOpen={addPlayersDisclosure.isOpen} onAddPlayerClose={addPlayersDisclosure.onClose} />
+          </Menu>
+
+        }
+        {/* </Button> */}
       </Flex>
-      <Settings isSettingsOpen={isOpen} onSettingsClose={onClose} userId={userId} activeTeam={team} />
+      {/* <Settings isSettingsOpen={isOpen} onSettingsClose={onClose} userId={userId} activeTeam={team} /> */}
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">
@@ -146,7 +161,7 @@ const Team = ({ user }) => {
         <TabIndicator
           mt="-1.5px"
           height="2px"
-          bg="blue.500"
+          bg="#E7E9EA"
           borderRadius="1px"
         />
 

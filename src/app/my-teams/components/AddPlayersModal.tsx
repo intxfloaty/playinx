@@ -52,7 +52,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
       .eq("player_phone", `${phoneNumber}`);
 
     if (players.length > 0) {
-      setPhoneError("Player is already part of your squad!");
+      setPhoneError("Player is already part of the squad!");
       return true;
     }
   };
@@ -105,8 +105,8 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
           setPhoneError("Player does not exist");
         }
 
-        if(!error) {
-            setSuccessMsg("Player added successfully!")
+        if (!error) {
+          setSuccessMsg("Player added successfully!")
         }
 
       }

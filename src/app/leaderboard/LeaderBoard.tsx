@@ -6,7 +6,6 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { IoArrowBack, IoSettingsOutline } from 'react-icons/io5'
 
 
-
 const LeaderBoard = () => {
   const supabase = createClientComponentClient()
   const [teams, setTeams] = useState([])

@@ -96,7 +96,7 @@ const Tournament = () => {
         </Button>
       </Flex>
       <Center mb={4}>
-        <Text fontSize="lg" color="GrayText" fontWeight="medium" textTransform="uppercase">
+        <Text fontSize="lg" color="#E7E9EA" fontWeight="medium" textTransform="uppercase">
           {event?.name}
         </Text>
       </Center>
@@ -119,7 +119,7 @@ const Tournament = () => {
         <TabIndicator
           mt="-1.5px"
           height="2px"
-          bg="blue.500"
+          bg="#E7E9EA"
           borderRadius="1px"
         />
 

@@ -30,7 +30,7 @@ interface Errors {
   [key: string]: string;
 }
 
-const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
+const JoinTournamentModal = ({ isOpen, onClose, user, event, teams, }) => {
   const supabase = createClientComponentClient();
   const [selectedTeam, setSelectedTeam] = useState({
     teamName: "",
@@ -38,9 +38,7 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
   });
   const [players, setPlayers] = useState([])
   const [teamPlayers, setTeamPlayers] = useState([]);
-  const [paymentMethod, setPaymentMethod] = useState("")
-
-
+  const [associatedTeamMsg, setAssociatedTeamMsg] = useState("")
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
 
   const validate = () => {
@@ -51,7 +49,6 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
 
     return errors;
   };
-
 
   const fetchTeamPlayers = async () => {
     setTeamPlayers([])
@@ -66,7 +63,7 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
   }
 
   // add event id in events column in teams table 
-  const updateTeamWithEvent = async () => {
+  const updateTeamWithEventId = async () => {
     const { data, error } = await supabase.rpc("add_event_to_team", {
       p_team_id: selectedTeam.teamId,
       p_event_id: `${event?.id}`,
@@ -76,45 +73,43 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
     console.log(error, "rpcErr");
   };
 
-  // add teamid, teamAdmin and paymentStatus as a json obj in teams column in events table
-  const updateEventWithTeam = async () => {
-    const teamAdmin = user?.id
-    const { data, error } = await supabase.rpc("add_team_to_event", {
-      p_team_id: `${selectedTeam.teamId}`,
-      p_team_admin: teamAdmin,
-      p_team_name: selectedTeam.teamName,
-      p_payment_status: "pending",
-      p_event_id: `${event?.id}`,
-    });
-
-    console.log(data, "rpcData");
-    console.log(error, "rpcErr");
-  }
-
-  const addTeamToEvent = async () => {
-    const teamAdmin = user?.id
+  const registerTeamWithEvent = async () => {
+    const teamAdmin = user?.id;
     const { data, error } = await supabase
       .from('event_teams')
       .insert([
         {
           event_id: `${event?.id}`,
+          event_name: event?.name,
           team_id: `${selectedTeam.teamId}`,
           team_admin: teamAdmin,
           team_name: selectedTeam.teamName,
-          payment_status: "pending",
+          payment_status: 'pending',
         },
       ])
-      .select()
-
-    console.log(error, "event_teamsErr")
-  }
+      .select();
+    console.log(error, 'event_teamsErr');
+  };
 
   const onContinueClicked = async () => {
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
-      await updateTeamWithEvent()
-      await addTeamToEvent()
+      // Check if the team is already associated with the event
+      const { data: existingEventTeam, error } = await supabase
+        .from('event_teams')
+        .select()
+        .eq('event_id', event?.id)
+        .eq('team_id', selectedTeam.teamId);
+
+      if (!error && existingEventTeam.length === 0) {
+        // Team is not associated with the event, proceed to add it
+        await registerTeamWithEvent();
+        await updateTeamWithEventId();
+      } else {
+        // Team is already associated with the event, handle accordingly
+        setAssociatedTeamMsg('Team is already registered with the event');
+      }
     }
   };
 
@@ -124,9 +119,8 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
     }
   }, [selectedTeam?.teamName]);
 
-  console.log(fieldErrors, "errs")
-
   useEffect(() => {
+    setAssociatedTeamMsg("")
     const fetchPlayers = async () => {
       fetchTeamPlayers();
     };
@@ -170,6 +164,10 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
                   {fieldErrors.selectedTeam}
                 </Text>
               )}
+              {associatedTeamMsg &&
+                <Text fontSize="md" color="#FFB400">
+                  {associatedTeamMsg}
+                </Text>}
             </Box>
 
             <Box mb={5}>
@@ -215,7 +213,7 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
                   >
                     <Flex w="90%" flexDir="row" alignItems="center" justifyContent="space-between">
                       <Text color="black" fontSize="sm" flex="1" textAlign="left">
-                        {player?.playerName}
+                        {`  ${idx + 1}. ${player?.playerName}`}
                       </Text>
                       <Text color="black" fontSize="sm" flex="1" textAlign="left">
                         {player?.playerPosition}
@@ -238,11 +236,6 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams }) => {
                   </Flex>
                 );
               })}
-              {/* {fieldErrors.paymentMethod
-                &&
-                <Text fontSize="md" color="#FFB400">
-                  {fieldErrors.paymentMethod}
-                </Text>} */}
             </Box>
           </FormControl>
         </ModalBody>

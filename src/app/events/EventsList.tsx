@@ -51,7 +51,7 @@ const EventsList = ({ user }) => {
               <img
                 style={{ maxWidth: "100%", objectFit: "contain" }}
                 alt="Logo"
-                src="/images/tournaBanner.jpeg" />
+                src={tourna?.banner_image_URL} />
             </Box>
 
             {/* tourna details box */}

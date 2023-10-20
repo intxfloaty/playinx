@@ -114,7 +114,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
         },
         (payload) => {
           console.log(payload.new, "payload");
-          // getMyTeams()
+          getMyTeams()
         }
       )
       .subscribe();

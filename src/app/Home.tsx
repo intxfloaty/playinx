@@ -73,7 +73,7 @@ const Home = ({ user }) => {
                 backgroundColor: "#333" // Change the background color when clicked
               }}>
               <Box>
-                <img style={{ maxWidth: "100%", objectFit: "contain" }} src={`/images/tournaBanner.jpeg`} alt={`Image ${idx}`} />
+                <img style={{ maxWidth: "100%", objectFit: "contain" }} src={tourna?.banner_image_URL}  alt={`Image ${idx}`} />
               </Box>
               <Flex mt={2} flexDir="column">
                 <Flex flexDir="row" justifyContent="flex-start" alignItems="center" my={1}>

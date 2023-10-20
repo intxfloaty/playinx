@@ -293,7 +293,16 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
         }
         if (isOpponent && isAccepted) {
           return (
-            <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}>
+            <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}
+              onClick={() => {
+                router.push(
+                  `/match/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
+                );
+              }}
+              _active={{
+                transform: "scale(0.95)", // Add a slight scale-down effect when clicked
+                backgroundColor: "#333" // Change the background color when clicked
+              }}>
               {/* upper container */}
               <Flex
                 flexDir="row"
@@ -315,17 +324,9 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
                     {match?.date}
                   </Text>
                 </Flex>
-                <Button
-                  variant="unstyled"
-                  onClick={() => {
-                    router.push(
-                      `/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
-                    );
-                  }}
-                  pr={6}
-                >
+                <Box pr={6} >
                   <IoArrowForwardOutline color="#E7E9EA" size={25} />
-                </Button>
+                </Box>
               </Flex>
 
               {/* lower container */}

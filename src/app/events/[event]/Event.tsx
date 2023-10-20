@@ -11,6 +11,7 @@ import Tournament from './components/Tournament';
 import JoinTournamentModal from './components/JoinTournamentModal';
 
 type Event = {
+  banner_image_URL: string
   category: string
   created_at: string
   format: string
@@ -118,7 +119,7 @@ const Event = ({ user }) => {
               <img
                 style={{ maxWidth: "100%", objectFit: "contain" }}
                 alt="Logo"
-                src="/images/tournaBanner.jpeg" />
+                src={event?.banner_image_URL} />
             </Box>
             <Box mt={4}>
               <Flex

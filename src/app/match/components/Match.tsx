@@ -168,12 +168,12 @@ const Match = ({ user }) => {
       .on(
         "postgres_changes",
         {
-          event: "*",
+          event: "UPDATE",
           schema: "public",
           table: "matches",
         },
         (payload) => {
-          console.log(payload.new, "payload");
+          console.log(payload, "payload");
           const updatedMatch = payload.new as Match
           setMatch(updatedMatch)
         }

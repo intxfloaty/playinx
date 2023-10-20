@@ -140,7 +140,6 @@ const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
         console.log(error, "Err")
         onClose();
       }
-
     }
   };
 

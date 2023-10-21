@@ -9,7 +9,7 @@ import {
   IconButton,
   InputGroup,
   InputRightElement,
-} from "../../chakraExports";
+} from "../chakraExports";
 import { useRouter } from "next/navigation";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 

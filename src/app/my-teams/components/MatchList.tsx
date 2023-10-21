@@ -89,7 +89,6 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
     };
   }, [supabase]);
 
-  console.log(matches, "matches");
 
   return (
     <>

@@ -101,7 +101,7 @@ const MyProfile = ({ user }) => {
             <Avatar
               size="xl"
               name="Pravesh Jha"
-              src="https://bit.ly/dan-abramov"
+              src={myProfile?.avatar_URL}
             />
           </WrapItem>
         </Wrap>

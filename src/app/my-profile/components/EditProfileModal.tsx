@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Text, FormControl, FormHelperText, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, InputGroup, InputLeftAddon } from '../../chakraExports'
+import { Box, Button, Text, FormControl, FormHelperText, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, InputGroup, InputLeftAddon, Wrap, Avatar, WrapItem, Center } from '../../chakraExports'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { FaEdit } from 'react-icons/fa';
+import { v4 as uuidv4 } from "uuid";
+
 
 interface Errors {
   [key: string]: string;
@@ -15,6 +18,36 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
   const [position, setPosition] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
   const [isLoading, setIsLoading] = useState(false)
+  const [imageURL, setImageURL] = useState("");
+
+
+  const uploadImage = async (e) => {
+    // Fetch all the user's existing images
+    const { data: existingImages, error: fetchError } = await supabase.storage
+      .from("event_banners")
+      .list(`${myUserId}`);
+
+    if (fetchError) {
+      console.error("Error fetching existing images", fetchError);
+    } else {
+      // Delete all the existing images
+      const deletePromises = existingImages.map((image) =>
+        supabase.storage.from("event_banners").remove([`${myUserId}/${image.name}`])
+      );
+
+      // Delete all the images first and then upload the new one
+      await Promise.all(deletePromises);
+    }
+
+    let file = e.target.files[0];
+    const { data, error } = await supabase.storage
+      .from("event_banners")
+      .upload(myUserId + "/" + uuidv4(), file);
+
+    if (!error) {
+      setImageURL(`https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/event_banners/${data?.path}`);
+    } else console.log(error, "uploadImageErr");
+  };
 
 
   const validate = () => {
@@ -67,6 +100,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
           dob: DOB,
           gender: gender,
           position: position,
+          avatar_URL: imageURL
         })
         .eq("user_id", `${myUserId}`);
 
@@ -103,6 +137,32 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
         <ModalHeader>Edit Profile</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          <Center flexDir="column">
+            <Wrap>
+              <WrapItem>
+                <label style={{ position: "relative", display: "inline-block" }}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={(e) => uploadImage(e)}
+                  />
+                  <Avatar
+                    size="xl"
+                    name={myProfile.name}
+                    src={imageURL}
+                  />
+                  <FaEdit style={{ position: "absolute", bottom: 2, right: 2 }} size={18} color="#000" />
+                </label>
+              </WrapItem>
+            </Wrap>
+            <Text fontSize="sm" mt="2" color="gray.500">
+                  *Accepted formats: PNG, JPEG
+                </Text>
+                <Text fontSize="sm" mt="2" color="gray.500">
+                  *Image size should not exceed 2mb
+                </Text>
+          </Center>
           <FormControl isRequired>
             <Box mb={5}>
               <FormLabel>Name</FormLabel>

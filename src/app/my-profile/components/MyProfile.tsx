@@ -79,6 +79,7 @@ const MyProfile = ({ user }) => {
           event: "UPDATE",
           schema: "public",
           table: "profiles",
+          filter: `user_id=eq.${myUserId}`
         },
         (payload) => {
           console.log(payload, "payload");
@@ -100,7 +101,7 @@ const MyProfile = ({ user }) => {
           <WrapItem>
             <Avatar
               size="xl"
-              name="Pravesh Jha"
+              name={myProfile?.name}
               src={myProfile?.avatar_URL}
             />
           </WrapItem>

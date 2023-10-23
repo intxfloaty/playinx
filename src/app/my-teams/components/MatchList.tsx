@@ -146,14 +146,14 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
               <Flex paddingX={4} paddingY={4} justifyContent="space-between">
                 {/* team box */}
                 <Box
-                  flex="2"
+                  flex="4"
                   borderRightColor="gray"
                   borderRightWidth="1px"
                   pr={3}
                 >
                   <Flex flexDir="column">
-                    <Flex justifyContent="space-between" mb={2}>
-                      <Text fontSize="lg" color="#E7E9EA">
+                    <Flex flex={1} justifyContent="space-between" mb={2}>
+                      <Text fontSize="lg" color="#E7E9EA" textAlign="left">
                         {match?.team_name}
                       </Text>
                       {match?.team_score && (
@@ -162,13 +162,13 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
                         </Text>
                       )}
                     </Flex>
-                    <Flex justifyContent="space-between">
+                    <Flex flex={1} justifyContent="space-between">
                       {match?.opponent_name === null && (
                         <Text fontSize="lg" color="#E7E9EA">
                           TBD
                         </Text>
                       )}
-                      <Text fontSize="lg" color="#E7E9EA">
+                      <Text fontSize="lg" color="#E7E9EA" textAlign="left">
                         {match?.opponent_name}
                       </Text>
                       {match?.opponent_score && (
@@ -180,7 +180,7 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
                   </Flex>
                 </Box>
 
-                {/*  score box */}
+                {/*  time box */}
                 <Box
                   flex="1"
                   display="flex"

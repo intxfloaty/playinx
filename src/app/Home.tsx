@@ -47,7 +47,7 @@ const Home = ({ user }) => {
   return (
     <Box p={4}>
       <Text fontSize="md" fontWeight="medium" color="#E7E9EA">
-        UPCOMING EVENTS
+        EVENTS
       </Text>
       <Slide direction="right" in={true} style={{ position: "static" }}>
         <Box

@@ -101,7 +101,7 @@ const MyProfile = ({ user }) => {
           <WrapItem>
             <Avatar
               size="xl"
-              name="Pravesh Jha"
+              name={myProfile?.name}
               src={myProfile?.avatar_URL}
             />
           </WrapItem>

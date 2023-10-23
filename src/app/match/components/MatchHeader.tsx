@@ -49,9 +49,10 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
           flexDir="column"
           alignItems="center"
           justifyContent="space-between"
+          flex={1}
         >
           <IoFootball color="green" size={36} />
-          <Text fontSize="md" color="#E7E9EA" mt={2}>
+          <Text fontSize="md" color="#E7E9EA" mt={2} textAlign="center">
             {match?.team_name}
           </Text>
         </Flex>
@@ -59,6 +60,7 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
           flexDir="column"
           alignItems="center"
           justifyContent="space-between"
+          flex={1}
         >
           {match?.match_status === "completed" ? (
             <Flex
@@ -66,13 +68,13 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
               alignItems="center"
               justifyContent="space-between"
             >
-              <Text fontSize="xl" color="#E7E9EA" p={1}>
+              <Text fontSize="2xl" color="#E7E9EA" p={1} fontWeight="medium">
                 {match?.team_score}
               </Text>
               <Text fontSize="xl" color="#E7E9EA">
                 :
               </Text>
-              <Text fontSize="xl" color="#E7E9EA" p={1}>
+              <Text fontSize="2xl" color="#E7E9EA" p={1} fontWeight="medium">
                 {match?.opponent_score}
               </Text>
             </Flex>
@@ -95,9 +97,10 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
           flexDir="column"
           alignItems="center"
           justifyContent="space-between"
+          flex={1}
         >
           <IoFootball color="green" size={36} />
-          <Text fontSize="md" color="#E7E9EA" mt={2}>
+          <Text fontSize="md" color="#E7E9EA" mt={2} textAlign="center">
             {match?.opponent_name ? match?.opponent_name : "TBD"}
           </Text>
         </Flex>

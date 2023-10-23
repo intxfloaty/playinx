@@ -111,6 +111,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
   }
 
   useEffect(() => {
+    setImageURL(myProfile?.avatar_URL)
     setName(myProfile?.name)
     setPhoneNumber(myProfile?.phone)
     setDOB(myProfile?.dob)
@@ -149,7 +150,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
                   />
                   <Avatar
                     size="xl"
-                    name={myProfile.name}
+                    name={myProfile?.name}
                     src={imageURL}
                   />
                   <FaEdit style={{ position: "absolute", bottom: 2, right: 2 }} size={18} color="#000" />

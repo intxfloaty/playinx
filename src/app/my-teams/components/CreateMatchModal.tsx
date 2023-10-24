@@ -56,10 +56,11 @@ const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
 
       const selectedDay = selectedDate.getDay(); // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
 
-      // Check if the selected day is not Friday, Saturday, or Sunday
-      if (selectedDay !== 5 && selectedDay !== 6 && selectedDay !== 0) {
-        errors.date = "Only Friday, Saturday, and Sundays are allowed";
-      } else if (selectedFormattedDate < currentDate) {
+      // // Check if the selected day is not Friday, Saturday, or Sunday
+      // if (selectedDay !== 5 && selectedDay !== 6 && selectedDay !== 0) {
+      //   errors.date = "Only Friday, Saturday, and Sundays are allowed";
+      // } else 
+      if (selectedFormattedDate < currentDate) {
         errors.date = "Past dates are not allowed";
       }
     }

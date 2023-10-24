@@ -30,7 +30,16 @@ interface Errors {
   [key: string]: string;
 }
 
-const CreateTeam = ({ user }) => {
+type PlayerDetails = {
+  user_id: string;
+  phone: string
+  name: string;
+  dob: string;
+  position: string;
+  rating: number;
+};
+
+const CreateTeam = ({ user, myProfile }) => {
   const supabase = createClientComponentClient();
   const addTeam = useTeamStore((state) => state.addTeam);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -58,6 +67,32 @@ const CreateTeam = ({ user }) => {
     return errors;
   };
 
+  const updateTeamWithPlayer = async (team_id) => {
+    const { data, error } = await supabase.rpc("add_player_to_team", {
+      p_team_id: team_id,
+      p_user_id: `${user_id}`,
+    });
+
+    console.log(data, "rpcData");
+    console.log(error, "rpcErr");
+  };
+
+  const addMyselfToTheTeam = async (team_id) => {
+      await updateTeamWithPlayer(team_id);
+      const { data, error } = await supabase
+        .from("players")
+        .insert([
+          {
+            team_id: team_id,
+            player_phone: myProfile?.phone,
+            player_name: myProfile?.name,
+            player_dob: myProfile?.dob,
+            player_position: myProfile?.position,
+            player_rating: myProfile?.rating,
+          },
+        ])
+      console.log(error, "ERRaddingMyselfToTheTeam");
+  }
 
   const onCreateClicked = async () => {
     const errors = validate();
@@ -79,6 +114,8 @@ const CreateTeam = ({ user }) => {
 
       if (data && data.length > 0 && error === null) {
         const newTeam = data[0];
+        const team_id = newTeam?.team_id
+        await addMyselfToTheTeam(team_id)
         addTeam(newTeam);
         onClose();
         toast({

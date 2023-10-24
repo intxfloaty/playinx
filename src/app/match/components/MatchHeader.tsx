@@ -51,8 +51,10 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
           justifyContent="space-between"
           flex={1}
         >
-          <IoFootball color="green" size={36} />
-          <Text fontSize="md" color="#E7E9EA" mt={2} textAlign="center">
+          <Box flex={1}>
+          <IoFootball color="green" size={36}/>
+          </Box>
+          <Text flex={1} fontSize="md" color="#E7E9EA" mt={2} textAlign="center">
             {match?.team_name}
           </Text>
         </Flex>
@@ -99,8 +101,10 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
           justifyContent="space-between"
           flex={1}
         >
-          <IoFootball color="green" size={36} />
-          <Text fontSize="md" color="#E7E9EA" mt={2} textAlign="center">
+          <Box flex={1}>
+          <IoFootball color="green" size={36}/>
+          </Box>
+          <Text flex={2} fontSize="md" color="#E7E9EA" mt={2} textAlign="center">
             {match?.opponent_name ? match?.opponent_name : "TBD"}
           </Text>
         </Flex>

@@ -47,6 +47,10 @@ interface DrawerProps {
   teams?
 }
 
+type Profile = {
+  [key: string]: string
+}
+
 const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE }) => {
   const supabase = createClientComponentClient();
   const myUserId = user?.id
@@ -54,8 +58,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const rewards = RewardsDisclosure()
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [myProfile, setMyProfile] = useState<Profile>({})
   const [myTeams, setMyTeams] = useState([]);
 
   const getNameAndPhone = async () => {
@@ -65,8 +68,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
         .select("name,phone")
         .eq("user_id", `${myUserId}`);
       if (profiles && error === null) {
-        setName(profiles[0].name);
-        setPhone(profiles[0].phone);
+        setMyProfile(profiles[0])
       }
     } catch (e) {
       console.log(e);
@@ -155,10 +157,10 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
           <DrawerHeader borderBottomWidth="1px" borderBottomColor="gray">
             <Box padding={2}>
               <Text color="#E7E9EA" fontSize="md">
-                {name}
+                {myProfile?.name}
               </Text>
               <Text color="#E7E9EA" fontSize="sm">
-                {phone}
+                {myProfile?.phone}
               </Text>
             </Box>
           </DrawerHeader>
@@ -222,7 +224,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                     {myTeams.length === 0
                       &&
                       <Box paddingX={10} paddingTop={8}>
-                        <CreateTeam user={user} />
+                        <CreateTeam user={user} myProfile={myProfile} />
                       </Box>
                     }
                     {myTeams?.map((myTeam, idx) => {

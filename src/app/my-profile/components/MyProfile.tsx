@@ -139,7 +139,7 @@ const MyProfile = ({ user }) => {
         </Flex>
         <Flex mt={4} gap={3} flexDir="column" alignItems="center" justifyContent="space-evenly">
           <Button leftIcon={<FaRegEdit size={18} />} w="100%" colorScheme="gray" size="lg" onClick={editProfileDisclosure.onOpen}>Edit Profile</Button>
-          <CreateTeam user={user} />
+          <CreateTeam user={user} myProfile={myProfile} />
         </Flex>
         <EditProfileModal isOpen={editProfileDisclosure.isOpen} onClose={editProfileDisclosure.onClose} myProfile={myProfile} myUserId={myUserId} />
       </Box>

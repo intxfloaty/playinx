@@ -2,27 +2,41 @@ import { Stack, Flex, Wrap, WrapItem, Avatar, Text } from "../../chakraExports";
 import React, { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-const PlayersList = ({ activeTeam }) => {
+type Player = {
+  [key: string]: string
+}
+
+const PlayersList = ({ players, getPlayers, team_id }) => {
   const supabase = createClientComponentClient();
-  const [players, setPlayers] = useState([]);
-
-  const getPlayers = async () => {
-    let { data: players, error } = await supabase
-      .from("players")
-      .select("*")
-      .eq("team_id", `${activeTeam?.team_id}`);
-
-    console.log(error, "PlayersListErr")
-
-    if (!error) {
-      setPlayers(players);
-    }
-  };
-
+ 
   useEffect(() => {
-    if (activeTeam) getPlayers();
-  }, [activeTeam]);
+    const channel = supabase
+      .channel("players list")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "players",
+          filter: `team_id=eq.${team_id}`
+        },
+        (payload) => {
+          console.log(payload, "payload");
+          const newPlayer = payload.new;
 
+          if (newPlayer) {
+            // Update the players array with the new player
+            // setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
+            getPlayers()
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   return (
     <Stack spacing={5}>
@@ -42,8 +56,8 @@ const PlayersList = ({ activeTeam }) => {
               <WrapItem>
                 <Avatar
                   size="sm"
-                  name="Pravesh Jha"
-                  src="https://bit.ly/dan-abramov"
+                  name={player?.player_name}
+                  src={player?.avatar_URL}
                 />
               </WrapItem>
               <Flex

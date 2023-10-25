@@ -16,6 +16,7 @@ import {
   ModalCloseButton,
   Text,
   Center,
+  useToast,
 } from "../../chakraExports";
 import useTeamStore from "../../../utils/store/teamStore";
 
@@ -25,14 +26,17 @@ type PlayerDetails = {
   dob: string;
   position: string;
   rating: number;
+  avatar_URL: string
 };
 
-const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
+const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose, activeTeam }) => {
   const supabase = createClientComponentClient();
-  const activeTeam = useTeamStore((state) => state.activeTeam);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [successMsg, setSuccessMsg] = useState("")
   const [phoneError, setPhoneError] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
+
+  const toast = useToast()
 
   const validate = () => {
     let error = "";
@@ -83,6 +87,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
     setPhoneError(error);
     const duplicatePlayer = await isPlayerDuplicate();
     if (!duplicatePlayer) {
+      setIsLoading(true)
       const playerDetails = await getPlayerDetails();
       console.log(playerDetails, "data");
       if (!error) {
@@ -92,11 +97,13 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
           .insert([
             {
               team_id: activeTeam.team_id,
+              team_name: activeTeam?.team_name,
               player_phone: phoneNumber,
               player_name: playerDetails?.name,
               player_dob: playerDetails?.dob,
               player_position: playerDetails?.position,
               player_rating: playerDetails?.rating,
+              avatar_URL: playerDetails?.avatar_URL
             },
           ])
           .select();
@@ -106,18 +113,26 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
         }
 
         if (!error) {
-          setSuccessMsg("Player added successfully!")
+          onAddPlayerClose()
+          toast({
+            title: 'Player added!.',
+            position: 'top',
+            description: `${playerDetails?.name} is added to the squad!.`,
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          })
+          setPhoneNumber("")
         }
-
       }
     }
+    setIsLoading(false)
   };
 
   useEffect(() => {
     if (phoneError !== "") {
       setPhoneError(validate());
     }
-    setSuccessMsg("")
   }, [phoneNumber]);
 
   return (
@@ -149,10 +164,10 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose }) => {
                 {phoneError}
               </Text>
             )}
-            {successMsg && <Center my={4}><Text fontSize="lg" colorScheme="blue">{successMsg}</Text></Center>}
+            {/* {successMsg && <Center my={4}><Text fontSize="lg" colorScheme="blue">{successMsg}</Text></Center>} */}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleAddClicked}>
+            <Button isLoading={isLoading} colorScheme="blue" mr={3} onClick={handleAddClicked}>
               Add
             </Button>
           </ModalFooter>

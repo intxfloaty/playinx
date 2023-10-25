@@ -58,7 +58,7 @@ const Settings = ({ isSettingsOpen, onSettingsClose, userId, activeTeam }) => {
                     <Button variant="unstyled" onClick={addPlayersDisclosure.onOpen}>
                       <IoPersonAddOutline size={30} color="#111111" />
                     </Button>
-                    <AddPlayers isAddPlayerOpen={addPlayersDisclosure.isOpen} onAddPlayerClose={addPlayersDisclosure.onClose} />
+                    <AddPlayers isAddPlayerOpen={addPlayersDisclosure.isOpen} onAddPlayerClose={addPlayersDisclosure.onClose} activeTeam={activeTeam} />
                   </Flex>
                 </Stack>
               </>

@@ -60,6 +60,7 @@ const Team = ({ user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const addPlayersDisclosure = AddPlayersDisclosure();
   const [matches, setMatches] = useState<Match[]>([]);
+  const [players, setPlayers] = useState([]);
   const [eventsList, setEventsList] = useState([])
   const router = useRouter();
 
@@ -89,6 +90,19 @@ const Team = ({ user }) => {
     }
   }
 
+  const getPlayers = async () => {
+    let { data: players, error } = await supabase
+      .from("players")
+      .select("*")
+      .eq("team_id", `${team_id}`);
+
+    console.log(error, "PlayersListErr")
+
+    if (!error) {
+      setPlayers(players);
+    }
+  };
+
 
   const fetchEventstList = async () => {
     let { data: events, error } = await supabase
@@ -105,6 +119,7 @@ const Team = ({ user }) => {
   useEffect(() => {
     fetchTeamInfo();
     getMatches()
+    getPlayers()
   }, [])
 
   useEffect(() => {
@@ -139,7 +154,7 @@ const Team = ({ user }) => {
             <MenuList>
               <MenuItem onClick={addPlayersDisclosure.onOpen}>Add Players</MenuItem>
             </MenuList>
-            <AddPlayers isAddPlayerOpen={addPlayersDisclosure.isOpen} onAddPlayerClose={addPlayersDisclosure.onClose} />
+            <AddPlayers isAddPlayerOpen={addPlayersDisclosure.isOpen} onAddPlayerClose={addPlayersDisclosure.onClose} activeTeam={team} />
           </Menu>
 
         }
@@ -175,7 +190,7 @@ const Team = ({ user }) => {
           </TabPanel>
 
           <TabPanel>
-            <PlayersList activeTeam={team} />
+            <PlayersList players={players} getPlayers={getPlayers} team_id={team_id} />
           </TabPanel>
         </TabPanels>
       </Tabs>

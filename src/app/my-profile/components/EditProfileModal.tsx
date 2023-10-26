@@ -3,6 +3,7 @@ import { Box, Button, Text, FormControl, FormHelperText, FormLabel, Input, Modal
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { FaEdit } from 'react-icons/fa';
 import { v4 as uuidv4 } from "uuid";
+import LoadingSpinner from '../../../components/LoadingSpinner';
 
 
 interface Errors {
@@ -18,10 +19,12 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
   const [position, setPosition] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
   const [isLoading, setIsLoading] = useState(false)
+  const [isImageUploadLoading, setIsImageUploadLoading] = useState(false)
   const [imageURL, setImageURL] = useState("");
 
 
   const uploadImage = async (e) => {
+    setIsImageUploadLoading(true)
     // Fetch all the user's existing images
     const { data: existingImages, error: fetchError } = await supabase.storage
       .from("user_avatar")
@@ -47,6 +50,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
     if (!error) {
       setImageURL(`https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/user_avatar/${data?.path}`);
     } else console.log(error, "uploadImageErr");
+    setIsImageUploadLoading(false)
   };
 
 
@@ -137,6 +141,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
       <ModalContent>
         <ModalHeader>Edit Profile</ModalHeader>
         <ModalCloseButton />
+        {isImageUploadLoading && <LoadingSpinner />}
         <ModalBody>
           <Center flexDir="column">
             <Wrap>
@@ -158,11 +163,11 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
               </WrapItem>
             </Wrap>
             <Text fontSize="sm" mt="2" color="gray.500">
-                  *Accepted formats: PNG, JPEG
-                </Text>
-                <Text fontSize="sm" mt="2" color="gray.500">
-                  *Image size should not exceed 2mb
-                </Text>
+              *Accepted formats: PNG, JPEG
+            </Text>
+            <Text fontSize="sm" mt="2" color="gray.500">
+              *Image size should not exceed 2mb
+            </Text>
           </Center>
           <FormControl isRequired>
             <Box mb={5}>

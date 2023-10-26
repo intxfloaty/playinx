@@ -24,7 +24,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
   const uploadImage = async (e) => {
     // Fetch all the user's existing images
     const { data: existingImages, error: fetchError } = await supabase.storage
-      .from("event_banners")
+      .from("user_avatar")
       .list(`${myUserId}`);
 
     if (fetchError) {
@@ -32,7 +32,7 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
     } else {
       // Delete all the existing images
       const deletePromises = existingImages.map((image) =>
-        supabase.storage.from("event_banners").remove([`${myUserId}/${image.name}`])
+        supabase.storage.from("user_avatar").remove([`${myUserId}/${image.name}`])
       );
 
       // Delete all the images first and then upload the new one
@@ -41,11 +41,11 @@ const EditProfileModal = ({ isOpen, onClose, myProfile, myUserId }) => {
 
     let file = e.target.files[0];
     const { data, error } = await supabase.storage
-      .from("event_banners")
+      .from("user_avatar")
       .upload(myUserId + "/" + uuidv4(), file);
 
     if (!error) {
-      setImageURL(`https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/event_banners/${data?.path}`);
+      setImageURL(`https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/user_avatar/${data?.path}`);
     } else console.log(error, "uploadImageErr");
   };
 

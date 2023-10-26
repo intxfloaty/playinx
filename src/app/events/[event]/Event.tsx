@@ -2,13 +2,24 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Box, Button, Center, Flex, Text, useDisclosure as JoinTournamentDisclosure } from '../../chakraExports';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Text,
+  useDisclosure as JoinTournamentDisclosure,
+  useDisclosure as DetailsDisclosure,
+  useDisclosure as RulesDisclosure
+} from '../../chakraExports';
 import { GiSoccerField, GiSoccerKick, GiWhistle } from 'react-icons/gi';
 import { IoFootballOutline, IoPeopleOutline, IoTimeOutline, IoLocationOutline, IoArrowBack } from 'react-icons/io5';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
 import { Database } from '../../../database.types';
 import Tournament from './components/Tournament';
 import JoinTournamentModal from './components/JoinTournamentModal';
+import DetailsModal from './components/DetailsModal';
+import RulesModal from './components/RulesModal';
 
 type Event = {
   banner_image_URL: string
@@ -23,6 +34,7 @@ type Event = {
   type: string
   entry_fee: string
   status: string
+  description: string
   teams: []
 };
 
@@ -38,6 +50,8 @@ const Event = ({ user }) => {
   const userId = user?.id
   const router = useRouter()
   const joinTournamentDisc = JoinTournamentDisclosure()
+  const detailsDisc = DetailsDisclosure()
+  const rulesDisc = RulesDisclosure()
   const [event, setEvent] = useState<Event>()
   const [teams, setTeams] = useState([]);
 
@@ -123,18 +137,18 @@ const Event = ({ user }) => {
             </Box>
             <Box mt={4}>
               <Flex
-                justifyContent="flex-start"
+                justifyContent="space-around"
                 p={4}
                 borderBottomColor="gray"
                 borderBottomWidth="1px"
               >
-                <Text fontSize="md" color="#E7E9EA">
-                  TOURNAMENT DETAILS
-                </Text>
+                <Button size="lg" colorScheme='messenger' onClick={detailsDisc.onOpen} >Details</Button>
+                <DetailsModal isOpen={detailsDisc.isOpen} onClose={detailsDisc.onClose} description={event?.description}/>
+                <Button size="lg" colorScheme='messenger' onClick={rulesDisc.onOpen} >Rules</Button>
+                <RulesModal isOpen={rulesDisc.isOpen} onClose={rulesDisc.onClose} />
               </Flex>
 
               <Flex flexDir="column" p={4}>
-
                 <Flex flexDir="row" alignItems="center" mb={3}>
                   <IoFootballOutline size={24} color="#E7E9EA" />
                   <Flex flexDir="column" alignItems="flex-start" pl={3}>

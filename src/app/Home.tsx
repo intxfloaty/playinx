@@ -6,14 +6,6 @@ import { IoArrowBackOutline, IoArrowForwardOutline, IoFootballOutline, IoLocatio
 import router from 'next/router';
 import { useRouter } from 'next/navigation';
 
-// const images = [
-//   'tournaBanner.jpeg',
-//   'tournaBanner.jpeg',
-//   'tournaBanner.jpeg',
-//   'tournaBanner.jpeg',
-//   'tournaBanner.jpeg',
-// ];
-
 const Home = ({ user }) => {
   const router = useRouter();
   const supabase = createClientComponentClient();

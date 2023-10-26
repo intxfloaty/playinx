@@ -158,7 +158,7 @@ const MyProfile = ({ user }) => {
               </Text>
             </Flex>
             <Box flex={1}>
-              <Text color="#E7E9EA" fontSize="2xl">₹ 3000</Text>
+              <Text color="#E7E9EA" fontSize="xl">₹ 3000</Text>
 
             </Box>
           </Flex>

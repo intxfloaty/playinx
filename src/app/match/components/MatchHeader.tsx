@@ -23,7 +23,7 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
             size={22}
           />
         </Button>
-        {activeTeam?.team_admin === userId &&
+        {activeTeam?.team_admin === userId && !(match?.match_status === "completed") &&
           <>
             <Button variant="unstyled">
               <IoSettingsOutline
@@ -52,7 +52,7 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
           flex={1}
         >
           <Box flex={1}>
-          <IoFootball color="green" size={36}/>
+            <IoFootball color="green" size={36} />
           </Box>
           <Text flex={1} fontSize="md" color="#E7E9EA" mt={2} textAlign="center">
             {match?.team_name}
@@ -102,7 +102,7 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
           flex={1}
         >
           <Box flex={1}>
-          <IoFootball color="green" size={36}/>
+            <IoFootball color="green" size={36} />
           </Box>
           <Text flex={2} fontSize="md" color="#E7E9EA" mt={2} textAlign="center">
             {match?.opponent_name ? match?.opponent_name : "TBD"}

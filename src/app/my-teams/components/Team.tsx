@@ -139,9 +139,11 @@ const Team = ({ user }) => {
             size={26}
           />
         </Button>
-        <Text fontSize="xl" color="#E7E9EA">
-          {team?.team_name}
-        </Text>
+        <Flex alignItems="center" justifyContent="center" flex="1">
+          <Text fontSize="xl" color="#E7E9EA">
+            {team?.team_name}
+          </Text>
+        </Flex>
         {/* <Button variant="unstyled"> */}
         {team?.team_admin === userId &&
           <Menu>

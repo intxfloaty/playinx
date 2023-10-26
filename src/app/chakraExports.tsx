@@ -83,6 +83,7 @@ export {
   Radio,
   RadioGroup,
   Slide,
+  Spinner,
 } from "@chakra-ui/react";
 
 export { Link } from "@chakra-ui/next-js";

@@ -23,7 +23,7 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
             size={22}
           />
         </Button>
-        {activeTeam?.team_admin === userId && !(match?.match_status === "completed") &&
+        {activeTeam?.team_admin === userId && !(match?.match_status === "completed") && !(match?.match_type === "Tournament") &&
           <>
             <Button variant="unstyled">
               <IoSettingsOutline

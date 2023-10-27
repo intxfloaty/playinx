@@ -181,28 +181,29 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
         <Box width="40%" borderRadius={7}>
           <Flex flexDir="column" alignItems="flex-end" pr={4}>
             {oppSquad?.map((squad, idx) => (
-               <Box key={idx} width="100%" mb={5}>
-               <Text fontSize="lg" color="#E7E9EA">{squad?.player_name}</Text>
-             </Box>
+              <Box key={idx} width="100%" mb={5}>
+                <Text fontSize="lg" color="#E7E9EA">{squad?.player_name}</Text>
+              </Box>
             ))}
           </Flex>
         </Box>
       </Flex>
 
-      <Flex alignItems="center" justifyContent="center" mt={10}>
-        {match?.team_id === activeTeam?.team_id &&
-          !mySquad?.some((player) => player?.player_id === userId) && (
-            <Button colorScheme="messenger" onClick={handleJoinMySquadBtn}>
-              Join squad
-            </Button>
-          )}
-        {match?.opponent_id === activeTeam?.team_id &&
-          !oppSquad?.some((player) => player?.player_id === userId) && (
-            <Button colorScheme="messenger" onClick={handleJoinOppSquadBtn}>
-              Join squad
-            </Button>
-          )}
-      </Flex>
+      {!(match?.match_type === "Tournament") &&
+        <Flex alignItems="center" justifyContent="center" mt={10}>
+          {match?.team_id === activeTeam?.team_id &&
+            !mySquad?.some((player) => player?.player_id === userId) && (
+              <Button colorScheme="messenger" onClick={handleJoinMySquadBtn}>
+                Join squad
+              </Button>
+            )}
+          {match?.opponent_id === activeTeam?.team_id &&
+            !oppSquad?.some((player) => player?.player_id === userId) && (
+              <Button colorScheme="messenger" onClick={handleJoinOppSquadBtn}>
+                Join squad
+              </Button>
+            )}
+        </Flex>}
     </>
   );
 };

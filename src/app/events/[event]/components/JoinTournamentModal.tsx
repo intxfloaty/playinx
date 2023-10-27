@@ -34,12 +34,15 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams, }) => {
   const supabase = createClientComponentClient();
   const [selectedTeam, setSelectedTeam] = useState({
     teamName: "",
-    teamId: ""
+    teamId: "",
+    teamRating: ""
   });
   const [players, setPlayers] = useState([])
   const [teamPlayers, setTeamPlayers] = useState([]);
   const [associatedTeamMsg, setAssociatedTeamMsg] = useState("")
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
+
+  console.log(teamPlayers, "teampLayers===>..")
 
   const validate = () => {
     let errors: Errors = {};
@@ -74,6 +77,7 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams, }) => {
   };
 
   const registerTeamWithEvent = async () => {
+    const playerIdArr = teamPlayers?.map(player => player.playerId);
     const teamAdmin = user?.id;
     const { data, error } = await supabase
       .from('event_teams')
@@ -84,6 +88,8 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams, }) => {
           team_id: `${selectedTeam.teamId}`,
           team_admin: teamAdmin,
           team_name: selectedTeam.teamName,
+          team_rating: selectedTeam?.teamRating,
+          players: playerIdArr,
           payment_status: 'pending',
         },
       ])
@@ -148,11 +154,12 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams, }) => {
                 placeholder="Select team"
                 onChange={(e) => {
                   const teamName = e.target.selectedOptions[0].getAttribute("data-team-name");
-                  setSelectedTeam({ teamName: teamName, teamId: e.target.value })
+                  const teamRating = e.target.selectedOptions[0].getAttribute("data-team-rating");
+                  setSelectedTeam({ teamName: teamName, teamId: e.target.value, teamRating: teamRating })
                 }}
               >
                 {teams?.map((team, idx) => (
-                  <option key={idx} value={team.team_id} data-team-name={team?.team_name}>
+                  <option key={idx} value={team.team_id} data-team-name={team?.team_name} data-team-rating={team?.rating}>
                     {team.team_name}
                   </option>
                 ))}

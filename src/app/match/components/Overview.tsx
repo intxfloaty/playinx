@@ -33,7 +33,7 @@ const Overview = ({ match }) => {
                 Competition
               </Text>
               <Text fontSize="md" color="gray">
-                Rated
+                {match?.match_type}
               </Text>
             </Flex>
           </Flex>

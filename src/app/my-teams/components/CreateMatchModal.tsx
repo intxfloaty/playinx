@@ -111,6 +111,7 @@ const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
               team_name: activeTeam?.team_name,
               team_rating: activeTeam?.rating,
               match_status: "pending",
+              match_type: "Rated",
               opponent_status: "no opponent"
 
             },
@@ -134,6 +135,7 @@ const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
               opponent_name: opponentName,
               opponent_rating: opponentRating,
               match_status: "pending",
+              match_type: "Rated",
               opponent_status: "pending"
             },
           ])

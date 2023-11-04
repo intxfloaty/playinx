@@ -84,6 +84,7 @@ const JoinTournamentModal = ({ isOpen, onClose, user, event, teams, }) => {
       .insert([
         {
           event_id: `${event?.id}`,
+          event_type: event?.type,
           event_name: event?.name,
           team_id: `${selectedTeam.teamId}`,
           team_admin: teamAdmin,

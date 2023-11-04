@@ -12,6 +12,7 @@ import {
   Grid, GridItem,
   useDisclosure as EditProfileDisclosure,
   useDisclosure as SupportDisclosure,
+  useDisclosure as FaqDisclosure,
   Wrap,
   WrapItem,
 } from "../../chakraExports";
@@ -23,6 +24,7 @@ import EditProfileModal from "./EditProfileModal";
 import { FaQuestion, FaRegEdit } from "react-icons/fa";
 import { GoQuestion } from "react-icons/go";
 import SupportModal from "./SupportModal";
+import FAQsModal from "./FAQsModal";
 
 type Profile = {
   [key: string]: string
@@ -36,6 +38,7 @@ const MyProfile = ({ user }) => {
   const router = useRouter();
   const editProfileDisclosure = EditProfileDisclosure()
   const supportDisclosure = SupportDisclosure()
+  const faqDisclosure = FaqDisclosure()
 
   const getNameAndPhone = async () => {
     try {
@@ -182,7 +185,7 @@ const MyProfile = ({ user }) => {
       </Box>
 
       <Box p={3}>
-        <Button w="100%" variant="unstyled">
+        <Button w="100%" variant="unstyled" onClick={faqDisclosure.onOpen}>
           <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
             <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
               <GoQuestion color="#E7E9EA" size={20} />
@@ -195,6 +198,7 @@ const MyProfile = ({ user }) => {
             </Box>
           </Flex>
         </Button>
+        <FAQsModal isOpen={faqDisclosure.isOpen} onClose={faqDisclosure.onClose} />
       </Box>
 
       <Box p={3}>

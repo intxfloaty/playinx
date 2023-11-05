@@ -13,6 +13,7 @@ import {
   useDisclosure as EditProfileDisclosure,
   useDisclosure as SupportDisclosure,
   useDisclosure as FaqDisclosure,
+  useDisclosure as TcDisclosure,
   Wrap,
   WrapItem,
 } from "../../chakraExports";
@@ -25,6 +26,7 @@ import { FaQuestion, FaRegEdit } from "react-icons/fa";
 import { GoQuestion } from "react-icons/go";
 import SupportModal from "./SupportModal";
 import FAQsModal from "./FAQsModal";
+import TcModal from "./TcModal";
 
 type Profile = {
   [key: string]: string
@@ -39,6 +41,7 @@ const MyProfile = ({ user }) => {
   const editProfileDisclosure = EditProfileDisclosure()
   const supportDisclosure = SupportDisclosure()
   const faqDisclosure = FaqDisclosure()
+  const tcDisclosure = TcDisclosure()
 
   const getNameAndPhone = async () => {
     try {
@@ -169,7 +172,7 @@ const MyProfile = ({ user }) => {
       </Box>
 
       <Box mt={10} p={3}>
-        <Button w="100%" variant="unstyled">
+        <Button w="100%" variant="unstyled" onClick={tcDisclosure.onOpen}>
           <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
             <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
               <IoDocumentTextOutline color="#E7E9EA" size={20} />
@@ -182,6 +185,7 @@ const MyProfile = ({ user }) => {
             </Box>
           </Flex>
         </Button>
+        <TcModal isOpen={tcDisclosure.isOpen} onClose={tcDisclosure.onClose}/>
       </Box>
 
       <Box p={3}>

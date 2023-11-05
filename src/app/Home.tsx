@@ -6,11 +6,78 @@ import { IoArrowBackOutline, IoArrowForwardOutline, IoFootballOutline, IoLocatio
 import router from 'next/router';
 import { useRouter } from 'next/navigation';
 
+type Match = {
+  match_id: string;
+  date: string;
+  location: string;
+  time: string;
+  team_name: string;
+  team_id: string;
+  opponent_name: string;
+  opponent_id: string;
+  match_status: string;
+  opponent_status: string;
+  team_score: string;
+  opponent_score: string;
+};
+
 const Home = ({ user }) => {
   const router = useRouter();
+  const myUserId = user?.id
   const supabase = createClientComponentClient();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [myTeams, setMyTeams] = useState([]);
+  const [matches, setMatches] = useState<Match[]>([]);
   const [eventsList, setEventsList] = useState([])
+
+  const getMyTeams = async () => {
+    try {
+      let { data: teams, error } = await supabase
+        .from("teams")
+        .select("*")
+        .or(`team_admin.eq.${myUserId},players.cs.{${myUserId}}`);
+
+      if (teams && teams.length > 0 && error === null) {
+        setMyTeams(teams);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  async function fetchMatchesForTeams(teamIds) {
+    const promises = teamIds.map(async (team) => {
+      const { data: matches, error } = await supabase
+        .from("matches")
+        .select("*")
+        .or(
+          `team_id.eq.${team},opponent_id.eq.${team}`
+        );
+      return { matches, error };
+    });
+
+    const results = await Promise.all(promises);
+
+    const allMatches = results
+    .reduce((matches, result) => {
+      if (result.matches && result.matches.length > 0 && result.error === null) {
+        return matches.concat(result.matches);
+      }
+      return matches;
+    }, []);
+    return allMatches;
+  }
+
+  const getMatches = async () => {
+    const teamIdArr = myTeams?.map(team => team?.team_id);
+    fetchMatchesForTeams(teamIdArr)
+      .then((matches) => {
+        // Do something with the matches, e.g., set them in state
+        setMatches(matches);
+      })
+      .catch((error) => {
+        console.error(error, "matchError");
+      });
+  };
 
   const fetchEventstList = async () => {
     let { data: events, error } = await supabase
@@ -26,66 +93,175 @@ const Home = ({ user }) => {
 
   useEffect(() => {
     fetchEventstList()
+    getMyTeams();
   }, [])
 
-  // const prevImage = () => {
-  //   setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
-  // };
+  useEffect(() => {
+    if (myTeams?.length > 0) getMatches()
+  }, [myTeams])
 
-  // const nextImage = () => {
-  //   setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
-  // };
 
+  console.log(matches, "matches")
   return (
     <Box p={4}>
-      <Text fontSize="md" fontWeight="medium" color="#E7E9EA">
-        EVENTS
-      </Text>
-      <Slide direction="right" in={true} style={{ position: "static" }}>
-        <Box
-          mt={2}
-          display="flex"
-          overflowX="auto"
-          width="100vw"
-          maxWidth="100%"
-          whiteSpace="nowrap"
-        >
-          {eventsList.map((tourna, idx) => (
+
+      {/* Upcoming matches box */}
+      <Box>
+        <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
+          UPCOMING MATCHES
+        </Text>
+
+        {matches?.map((match, idx) => {
+          return (
             <Box
-              key={idx}
-              mx={2}
               backgroundColor="#161616"
               borderRadius={7}
               mb={6}
-              p={2}
-              width="75vw" flexShrink={0}
-              onClick={() => router.push(`/events/${tourna?.name}?id=${tourna?.id}`)}
+              key={idx}
+              onClick={() => {
+                router.push(
+                  `/match/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
+                );
+              }}
               _active={{
                 transform: "scale(0.95)", // Add a slight scale-down effect when clicked
                 backgroundColor: "#333" // Change the background color when clicked
               }}>
-              <Box>
-                <img style={{ maxWidth: "100%", objectFit: "contain" }} src={tourna?.banner_image_URL}  alt={`Image ${idx}`} />
-              </Box>
-              <Flex mt={2} flexDir="column">
-                <Flex flexDir="row" justifyContent="flex-start" alignItems="center" my={1}>
-                  <IoTimeOutline size={12} color="#E7E9EA" />
-                  <Text fontSize="xs" color="#E7E9EA" pl={2}>
-                    {tourna?.start_date}
+              {/* upper container */}
+              <Flex
+                flexDir="row"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottomColor="gray"
+                borderBottomWidth="1px"
+              >
+                <Flex
+                  flexDir="column"
+                  alignItems="flex-start"
+                  paddingX={4}
+                  paddingY={2}
+                >
+                  <Text fontSize="xl" color="#E7E9EA">
+                    Matchday
+                  </Text>
+                  <Text fontSize="sm" color="gray">
+                    {match?.date}
                   </Text>
                 </Flex>
+                <Box
+                  pr={6}
+                >
+                  <IoArrowForwardOutline color="#E7E9EA" size={25} />
+                </Box>
+              </Flex>
 
-                <Flex flexDir="row" justifyContent="flex-start" alignItems="center" my={1}>
-                  <IoLocationOutline size={12} color="#E7E9EA" />
-                  <Text fontSize="xs" color="#E7E9EA" pl={2}>
-                    {tourna?.location}
+              {/* lower container */}
+              <Flex paddingX={4} paddingY={4} justifyContent="space-between">
+                {/* team box */}
+                <Box
+                  flex="4"
+                  borderRightColor="gray"
+                  borderRightWidth="1px"
+                  pr={3}
+                >
+                  <Flex flexDir="column">
+                    <Flex flex={1} justifyContent="space-between" mb={2}>
+                      <Text fontSize="lg" color="#E7E9EA" textAlign="left">
+                        {match?.team_name}
+                      </Text>
+                      {match?.team_score && (
+                        <Text fontSize="md" color="#E7E9EA">
+                          {match?.team_score}
+                        </Text>
+                      )}
+                    </Flex>
+                    <Flex flex={1} justifyContent="space-between">
+                      {match?.opponent_name === null && (
+                        <Text fontSize="lg" color="#E7E9EA">
+                          TBD
+                        </Text>
+                      )}
+                      <Text fontSize="lg" color="#E7E9EA" textAlign="left">
+                        {match?.opponent_name}
+                      </Text>
+                      {match?.opponent_score && (
+                        <Text fontSize="md" color="#E7E9EA">
+                          {match?.opponent_score}
+                        </Text>
+                      )}
+                    </Flex>
+                  </Flex>
+                </Box>
+
+                {/*  time box */}
+                <Box
+                  flex="1"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Text fontSize="md" color="gray">
+                    {match?.time}
                   </Text>
-                </Flex>
+                </Box>
               </Flex>
             </Box>
-          ))}
-        </Box>
-      </Slide>
+          )
+        })
+        }
+      </Box>
+
+      {/* events box */}
+      <Box >
+        <Text fontSize="md" fontWeight="medium" color="#E7E9EA">
+          EVENTS
+        </Text>
+        <Slide direction="right" in={true} style={{ position: "static" }}>
+          <Box
+            mt={2}
+            display="flex"
+            overflowX="auto"
+            width="100vw"
+            maxWidth="100%"
+            whiteSpace="nowrap"
+          >
+            {eventsList.map((tourna, idx) => (
+              <Box
+                key={idx}
+                mx={2}
+                backgroundColor="#161616"
+                borderRadius={7}
+                mb={6}
+                p={2}
+                width="75vw" flexShrink={0}
+                onClick={() => router.push(`/events/${tourna?.name}?id=${tourna?.id}`)}
+                _active={{
+                  transform: "scale(0.95)", // Add a slight scale-down effect when clicked
+                  backgroundColor: "#333" // Change the background color when clicked
+                }}>
+                <Box>
+                  <img style={{ maxWidth: "100%", objectFit: "contain" }} src={tourna?.banner_image_URL} alt={`Image ${idx}`} />
+                </Box>
+                <Flex mt={2} flexDir="column">
+                  <Flex flexDir="row" justifyContent="flex-start" alignItems="center" my={1}>
+                    <IoTimeOutline size={12} color="#E7E9EA" />
+                    <Text fontSize="xs" color="#E7E9EA" pl={2}>
+                      {tourna?.start_date}
+                    </Text>
+                  </Flex>
+
+                  <Flex flexDir="row" justifyContent="flex-start" alignItems="center" my={1}>
+                    <IoLocationOutline size={12} color="#E7E9EA" />
+                    <Text fontSize="xs" color="#E7E9EA" pl={2}>
+                      {tourna?.location}
+                    </Text>
+                  </Flex>
+                </Flex>
+              </Box>
+            ))}
+          </Box>
+        </Slide>
+      </Box>
     </Box>
   );
 };

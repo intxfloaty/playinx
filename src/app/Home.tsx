@@ -49,6 +49,7 @@ const Home = ({ user }) => {
       const { data: matches, error } = await supabase
         .from("matches")
         .select("*")
+        .eq("match_status", "pending")
         .or(
           `team_id.eq.${team},opponent_id.eq.${team}`
         );
@@ -102,27 +103,6 @@ const Home = ({ user }) => {
 
 
   console.log(matches, "matches")
-
-  if (matches?.length === 0) {
-    return (
-      <Box p={4}>
-         <Text mb={3} fontSize="md" fontWeight="medium" color="#E7E9EA">
-          UPCOMING MATCHES
-        </Text>
-        <Center
-          backgroundColor="#161616"
-          borderRadius={7}
-          p={4}
-          minH={20}>
-          <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
-            You do not have any upcoming matches.
-          </Text>
-        </Center>
-      </Box>
-
-    )
-  }
-
   return (
     <Box p={4}>
       {/* Upcoming matches box */}
@@ -130,6 +110,26 @@ const Home = ({ user }) => {
         <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
           UPCOMING MATCHES
         </Text>
+
+        {matches?.length === 0 &&
+          <Flex
+            flexDir="column"
+            backgroundColor="#161616"
+            borderRadius={7}
+            p={4}
+          >
+            <Box>
+              <img
+                style={{ maxWidth: "100%", objectFit: "contain" }}
+                alt="Logo"
+                src="/images/morethanaGame.jpeg" />
+            </Box>
+            <Center mt={2}>
+              <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
+                No upcoming matches!
+              </Text>
+            </Center>
+          </Flex>}
 
         {matches?.map((match, idx) => {
           return (

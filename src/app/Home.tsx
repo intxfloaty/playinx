@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Box, Flex, IconButton, Slide, Text } from './chakraExports';
+import { Box, Center, Flex, IconButton, Slide, Text } from './chakraExports';
 import { IoArrowBackOutline, IoArrowForwardOutline, IoFootballOutline, IoLocationOutline, IoPeopleOutline, IoTimeOutline } from 'react-icons/io5';
 import router from 'next/router';
 import { useRouter } from 'next/navigation';
@@ -58,12 +58,12 @@ const Home = ({ user }) => {
     const results = await Promise.all(promises);
 
     const allMatches = results
-    .reduce((matches, result) => {
-      if (result.matches && result.matches.length > 0 && result.error === null) {
-        return matches.concat(result.matches);
-      }
-      return matches;
-    }, []);
+      .reduce((matches, result) => {
+        if (result.matches && result.matches.length > 0 && result.error === null) {
+          return matches.concat(result.matches);
+        }
+        return matches;
+      }, []);
     return allMatches;
   }
 
@@ -102,9 +102,29 @@ const Home = ({ user }) => {
 
 
   console.log(matches, "matches")
+
+  if (matches?.length === 0) {
+    return (
+      <Box p={4}>
+         <Text mb={3} fontSize="md" fontWeight="medium" color="#E7E9EA">
+          UPCOMING MATCHES
+        </Text>
+        <Center
+          backgroundColor="#161616"
+          borderRadius={7}
+          p={4}
+          minH={20}>
+          <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
+            You do not have any upcoming matches.
+          </Text>
+        </Center>
+      </Box>
+
+    )
+  }
+
   return (
     <Box p={4}>
-
       {/* Upcoming matches box */}
       <Box>
         <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
@@ -212,7 +232,7 @@ const Home = ({ user }) => {
       </Box>
 
       {/* events box */}
-      <Box >
+      {/* <Box >
         <Text fontSize="md" fontWeight="medium" color="#E7E9EA">
           EVENTS
         </Text>
@@ -261,7 +281,7 @@ const Home = ({ user }) => {
             ))}
           </Box>
         </Slide>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

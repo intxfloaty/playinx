@@ -18,7 +18,8 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
-  useDisclosure as RewardsDisclosure
+  useDisclosure as RewardsDisclosure,
+  useDisclosure as PickupDisclosure
 } from "../app/chakraExports";
 import { User, createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
@@ -58,6 +59,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const rewards = RewardsDisclosure()
+  const pickup = PickupDisclosure()
   const [myProfile, setMyProfile] = useState<Profile>({})
   const [myTeams, setMyTeams] = useState([]);
 
@@ -260,7 +262,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                 </AccordionItem>
               </Accordion>
 
-              <Link href={"/events"}>
+              {/* <Link href={"/events"}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}
@@ -273,22 +275,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                     </Text>
                   </Flex>
                 </Box>
-              </Link>
-
-              <Link href={"/"}>
-                <Box
-                  padding={2}
-                  _hover={{ backgroundColor: "#161616" }}
-                  borderRadius={5}
-                >
-                  <Flex align="center" flexDir="row" gap={5}>
-                    <GiSoccerKick color="#E7E9EA" size={20} />
-                    <Text color="#E7E9EA" fontSize="md">
-                      Pick-up games
-                    </Text>
-                  </Flex>
-                </Box>
-              </Link>
+              </Link> */}
 
               <Link href={"/leaderboard"}>
                 <Box
@@ -304,6 +291,23 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                   </Flex>
                 </Box>
               </Link>
+
+              {/* <Button w="100%" variant="unstyled" onClick={pickup.onOpen}>
+                <Box
+                  padding={2}
+                  _hover={{ backgroundColor: "#161616" }}
+                  borderRadius={5}
+                >
+                  <Flex align="center" flexDir="row" gap={5}>
+                    <GiSoccerKick color="#E7E9EA" size={20} />
+                    <Text color="#E7E9EA" fontSize="md">
+                      Pick-up games
+                    </Text>
+                  </Flex>
+                </Box>
+              </Button>
+              <ComingSoonModal isOpen={pickup.isOpen} onClose={pickup.onClose} /> */}
+
 
               <Button w="100%" variant="unstyled" onClick={rewards.onOpen}>
                 <Box

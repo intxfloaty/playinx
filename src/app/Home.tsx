@@ -21,28 +21,28 @@ type Match = {
   opponent_score: string;
 };
 
-const Home = ({ user }) => {
+const Home = ({ user, myTeams }) => {
   const router = useRouter();
   const myUserId = user?.id
   const supabase = createClientComponentClient();
-  const [myTeams, setMyTeams] = useState([]);
+  // const [myTeams, setMyTeams] = useState([]);
   const [matches, setMatches] = useState<Match[]>([]);
   const [eventsList, setEventsList] = useState([])
 
-  const getMyTeams = async () => {
-    try {
-      let { data: teams, error } = await supabase
-        .from("teams")
-        .select("*")
-        .or(`team_admin.eq.${myUserId},players.cs.{${myUserId}}`);
+  // const getMyTeams = async () => {
+  //   try {
+  //     let { data: teams, error } = await supabase
+  //       .from("teams")
+  //       .select("*")
+  //       .or(`team_admin.eq.${myUserId},players.cs.{${myUserId}}`);
 
-      if (teams && teams.length > 0 && error === null) {
-        setMyTeams(teams);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  //     if (teams && teams.length > 0 && error === null) {
+  //       setMyTeams(teams);
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   async function fetchMatchesForTeams(teamIds) {
     const promises = teamIds.map(async (team) => {
@@ -94,7 +94,7 @@ const Home = ({ user }) => {
 
   useEffect(() => {
     fetchEventstList()
-    getMyTeams();
+    // getMyTeams();
   }, [])
 
   useEffect(() => {
@@ -102,7 +102,7 @@ const Home = ({ user }) => {
   }, [myTeams])
 
 
-  console.log(matches, "matches")
+  console.log(myTeams, "myTeams")
   return (
     <Box p={4}>
       {/* Upcoming matches box */}
@@ -118,13 +118,7 @@ const Home = ({ user }) => {
             borderRadius={7}
             p={4}
           >
-            <Box>
-              <img
-                style={{ maxWidth: "100%", objectFit: "contain" }}
-                alt="Logo"
-                src="/images/morethanaGame.jpeg" />
-            </Box>
-            <Center mt={2}>
+            <Center >
               <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
                 No upcoming matches!
               </Text>

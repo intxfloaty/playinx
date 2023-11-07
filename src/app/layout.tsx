@@ -2,6 +2,7 @@ import React from "react";
 import { Providers } from "./providers";
 import AuthProvider from "../components/AuthProvider";
 import { createServerSupabaseClient } from "../serverSupabaseClient";
+import Drawer from "../components/Drawer";
 
 export default async function RootLayout({
   children,
@@ -14,7 +15,22 @@ export default async function RootLayout({
     data: { session },
   } = await supabase.auth.getSession();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+
   const accessToken = session?.access_token || null;
+
+  // Conditionally render the Drawer component only if the user is authenticated
+  const isAuthenticated = user !== null;
+  const drawerComponent = isAuthenticated ? (
+    <Drawer user={user}>{children}</Drawer>
+  ) : (
+    children
+  );
+
+
   return (
     <html lang="en">
       <body
@@ -24,7 +40,7 @@ export default async function RootLayout({
         }}
       >
         <AuthProvider accessToken={accessToken}>
-          <Providers>{children}</Providers>
+          <Providers>{drawerComponent}</Providers>
         </AuthProvider>
       </body>
     </html>

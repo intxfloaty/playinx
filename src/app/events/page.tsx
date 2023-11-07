@@ -15,9 +15,7 @@ async function page() {
     redirect("/auth/sign-in");
   }
   return (
-    <Drawer user={user} TITLE="TOURNAMENTS">
       <EventsList user={user} />
-    </Drawer>
   );
 }
 

@@ -11,6 +11,8 @@ export default async function RootLayout({
 }) {
   const supabase = createServerSupabaseClient()
 
+  
+
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -23,12 +25,12 @@ export default async function RootLayout({
   const accessToken = session?.access_token || null;
 
   // Conditionally render the Drawer component only if the user is authenticated
-  const isAuthenticated = user !== null;
-  const drawerComponent = isAuthenticated ? (
-    <Drawer user={user}>{children}</Drawer>
-  ) : (
-    children
-  );
+  // const isAuthenticated = user !== null;
+  // const drawerComponent = isAuthenticated ? (
+  //   <Drawer user={user}>{children}</Drawer>
+  // ) : (
+  //   children
+  // );
 
 
   return (
@@ -40,7 +42,7 @@ export default async function RootLayout({
         }}
       >
         <AuthProvider accessToken={accessToken}>
-          <Providers>{drawerComponent}</Providers>
+          <Providers>{children}</Providers>
         </AuthProvider>
       </body>
     </html>

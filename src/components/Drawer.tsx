@@ -169,7 +169,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
 
           <DrawerBody mt={5}>
             <Stack spacing={8}>
-              <Link href={"/"}>
+              <Link href={"/"} style={{ outline: "none", border: "none" }}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}
@@ -184,7 +184,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                 </Box>
               </Link>
 
-              <Link href={"/my-profile"}>
+              <Link href={"/my-profile"} style={{ outline: "none", border: "none" }}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}
@@ -277,7 +277,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                 </Box>
               </Link> */}
 
-              <Link href={"/leaderboard"}>
+              <Link href={"/leaderboard"} style={{ outline: "none", border: "none" }}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}

@@ -20,6 +20,8 @@ export default async function Page() {
     redirect("/auth/sign-in");
   }
   return (
+    <Drawer user={user} >
       <Home user={user} myTeams={teams} />
+    </Drawer>
   )
 }

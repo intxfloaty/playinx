@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Box, Center, Flex, IconButton, Slide, Text } from './chakraExports';
+import { Avatar, Box, Center, Flex, IconButton, Slide, Text, Wrap, WrapItem } from './chakraExports';
 import { IoArrowBackOutline, IoArrowForwardOutline, IoFootballOutline, IoLocationOutline, IoPeopleOutline, IoTimeOutline } from 'react-icons/io5';
 import router from 'next/router';
 import { useRouter } from 'next/navigation';
@@ -224,6 +224,115 @@ const Home = ({ user, myTeams }) => {
         })
         }
       </Box>
+
+
+      {/* team of the week box */}
+      <Box mt={6} style={{ position: 'relative' }}>
+        <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
+          TEAM OF THE WEEK
+        </Text>
+        <Box style={{ position: 'relative' }}>
+          <img
+            style={{ maxWidth: "100%", objectFit: "contain" }}
+            alt="Logo"
+            src="/images/footballGround.jpg"
+          />
+          <Wrap style={{
+            position: 'absolute',
+            top: '40%',
+            left: '20%',
+            transform: 'translate(-50%, -50%)',
+          }}>
+            <WrapItem>
+              <Avatar
+                size="lg"
+                name="Pravesh Jha"
+              // src="https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/user_avatar/b7b000e5-234a-4719-beba-2211c8d16e9e/1d733274-7830-489c-9887-ffa2cc289e70"
+              />
+            </WrapItem>
+          </Wrap>
+
+          <Wrap style={{
+            position: 'absolute',
+            top: '30%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}>
+            <WrapItem>
+              <Avatar
+                size="lg"
+                name="Cristiano Ronaldo"
+              // src="https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/user_avatar/b7b000e5-234a-4719-beba-2211c8d16e9e/1d733274-7830-489c-9887-ffa2cc289e70"
+              />
+            </WrapItem>
+          </Wrap>
+
+          <Wrap style={{
+            position: 'absolute',
+            top: '40%',
+            left: '80%',
+            transform: 'translate(-50%, -50%)',
+          }}>
+            <WrapItem>
+              <Avatar
+                size="lg"
+                name="Lionel Messi"
+              // src="https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/user_avatar/b7b000e5-234a-4719-beba-2211c8d16e9e/1d733274-7830-489c-9887-ffa2cc289e70"
+              />
+            </WrapItem>
+          </Wrap>
+
+          <Wrap style={{
+            position: 'absolute',
+            top: '70%',
+            left: '20%',
+            transform: 'translate(-50%, -50%)',
+          }}>
+            <WrapItem>
+              <Avatar
+                size="lg"
+                name="Zinedine Zidane"
+              // src="https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/user_avatar/b7b000e5-234a-4719-beba-2211c8d16e9e/1d733274-7830-489c-9887-ffa2cc289e70"
+              />
+            </WrapItem>
+          </Wrap>
+
+          <Wrap style={{
+            position: 'absolute',
+            top: '60%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}>
+            <WrapItem>
+              <Avatar
+                size="lg"
+                name="Pravesh Jha"
+                src="https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/user_avatar/b7b000e5-234a-4719-beba-2211c8d16e9e/1d733274-7830-489c-9887-ffa2cc289e70"
+              />
+            </WrapItem>
+          </Wrap>
+
+          <Wrap style={{
+            position: 'absolute',
+            top: '70%',
+            left: '80%',
+            transform: 'translate(-50%, -50%)',
+          }}>
+            <WrapItem>
+              <Avatar
+                size="lg"
+                name="Sergio Ramos"
+              // src="https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/user_avatar/b7b000e5-234a-4719-beba-2211c8d16e9e/1d733274-7830-489c-9887-ffa2cc289e70"
+              />
+            </WrapItem>
+          </Wrap>
+        </Box>
+        <Text mb={2} fontSize="xx-small" fontWeight="medium" color="#E7E9EA">
+        Image by macrovector on Freepik
+        </Text>
+      </Box>
+
+
 
       {/* events box */}
       {/* <Box >

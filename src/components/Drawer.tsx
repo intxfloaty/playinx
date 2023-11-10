@@ -317,7 +317,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                 >
                   <Flex align="center" flexDir="row" gap={5}>
                     <FaAward color="#E7E9EA" size={20} />
-                    <Text color="#E7E9EA" fontSize="md">
+                    <Text color="#E7E9EA" fontSize="md" fontWeight="normal">
                       Rewards
                     </Text>
                   </Flex>

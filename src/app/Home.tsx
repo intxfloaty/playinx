@@ -110,124 +110,138 @@ const Home = ({ user, myTeams }) => {
         <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
           UPCOMING MATCHES
         </Text>
-
-        {matches?.length === 0 &&
-          <Flex
-            flexDir="column"
-            backgroundColor="#161616"
-            borderRadius={7}
-            p={4}
+        <Slide direction="right" in={true} style={{ position: "static" }}>
+          <Box
+            mt={2}
+            display="flex"
+            overflowX="auto"
+            width="100vw"
+            maxWidth="100%"
+            whiteSpace="nowrap"
           >
-            <Center >
-              <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
-                No upcoming matches!
-              </Text>
-            </Center>
-          </Flex>}
 
-        {matches?.map((match, idx) => {
-          return (
-            <Box
-              backgroundColor="#161616"
-              borderRadius={7}
-              mb={6}
-              key={idx}
-              onClick={() => {
-                router.push(
-                  `/match/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
-                );
-              }}
-              _active={{
-                transform: "scale(0.95)", // Add a slight scale-down effect when clicked
-                backgroundColor: "#333" // Change the background color when clicked
-              }}>
-              {/* upper container */}
+            {matches?.length === 0 &&
               <Flex
-                flexDir="row"
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottomColor="gray"
-                borderBottomWidth="1px"
+                flexDir="column"
+                backgroundColor="#161616"
+                borderRadius={7}
+                p={4}
               >
-                <Flex
-                  flexDir="column"
-                  alignItems="flex-start"
-                  paddingX={4}
-                  paddingY={2}
-                >
-                  <Text fontSize="xl" color="#E7E9EA">
-                    Matchday
+                <Center >
+                  <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
+                    No upcoming matches!
                   </Text>
-                  <Text fontSize="sm" color="gray">
-                    {match?.date}
-                  </Text>
-                </Flex>
-                <Box
-                  pr={6}
-                >
-                  <IoArrowForwardOutline color="#E7E9EA" size={25} />
-                </Box>
-              </Flex>
+                </Center>
+              </Flex>}
 
-              {/* lower container */}
-              <Flex paddingX={4} paddingY={4} justifyContent="space-between">
-                {/* team box */}
+            {matches?.map((match, idx) => {
+              return (
                 <Box
-                  flex="4"
-                  borderRightColor="gray"
-                  borderRightWidth="1px"
-                  pr={3}
-                >
-                  <Flex flexDir="column">
-                    <Flex flex={1} justifyContent="space-between" mb={2}>
-                      <Text fontSize="lg" color="#E7E9EA" textAlign="left">
-                        {match?.team_name}
+                  backgroundColor="#161616"
+                  borderRadius={7}
+                  mb={6}
+                  mx={2}
+                  p={2}
+                  width="75vw" flexShrink={0} 
+                  key={idx}
+                  onClick={() => {
+                    router.push(
+                      `/match/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
+                    );
+                  }}
+                  _active={{
+                    transform: "scale(0.95)", // Add a slight scale-down effect when clicked
+                    backgroundColor: "#333" // Change the background color when clicked
+                  }}>
+                  {/* upper container */}
+                  <Flex
+                    flexDir="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    borderBottomColor="gray"
+                    borderBottomWidth="1px"
+                  >
+                    <Flex
+                      flexDir="column"
+                      alignItems="flex-start"
+                      paddingX={4}
+                      paddingY={2}
+                    >
+                      <Text fontSize="xl" color="#E7E9EA">
+                        Matchday
                       </Text>
-                      {match?.team_score && (
-                        <Text fontSize="md" color="#E7E9EA">
-                          {match?.team_score}
-                        </Text>
-                      )}
-                    </Flex>
-                    <Flex flex={1} justifyContent="space-between">
-                      {match?.opponent_name === null && (
-                        <Text fontSize="lg" color="#E7E9EA">
-                          TBD
-                        </Text>
-                      )}
-                      <Text fontSize="lg" color="#E7E9EA" textAlign="left">
-                        {match?.opponent_name}
+                      <Text fontSize="sm" color="gray">
+                        {match?.date}
                       </Text>
-                      {match?.opponent_score && (
-                        <Text fontSize="md" color="#E7E9EA">
-                          {match?.opponent_score}
-                        </Text>
-                      )}
                     </Flex>
+                    <Box
+                      pr={6}
+                    >
+                      <IoArrowForwardOutline color="#E7E9EA" size={25} />
+                    </Box>
+                  </Flex>
+
+                  {/* lower container */}
+                  <Flex paddingX={4} paddingY={4} justifyContent="space-between">
+                    {/* team box */}
+                    <Box
+                      flex="4"
+                      borderRightColor="gray"
+                      borderRightWidth="1px"
+                      pr={3}
+                    >
+                      <Flex flexDir="column">
+                        <Flex flex={1} justifyContent="space-between" mb={2}>
+                          <Text fontSize="lg" color="#E7E9EA" textAlign="left">
+                            {match?.team_name}
+                          </Text>
+                          {match?.team_score && (
+                            <Text fontSize="md" color="#E7E9EA">
+                              {match?.team_score}
+                            </Text>
+                          )}
+                        </Flex>
+                        <Flex flex={1} justifyContent="space-between">
+                          {match?.opponent_name === null && (
+                            <Text fontSize="lg" color="#E7E9EA">
+                              TBD
+                            </Text>
+                          )}
+                          <Text fontSize="lg" color="#E7E9EA" textAlign="left">
+                            {match?.opponent_name}
+                          </Text>
+                          {match?.opponent_score && (
+                            <Text fontSize="md" color="#E7E9EA">
+                              {match?.opponent_score}
+                            </Text>
+                          )}
+                        </Flex>
+                      </Flex>
+                    </Box>
+
+                    {/*  time box */}
+                    <Box
+                      flex="1"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Text fontSize="md" color="gray">
+                        {match?.time}
+                      </Text>
+                    </Box>
                   </Flex>
                 </Box>
-
-                {/*  time box */}
-                <Box
-                  flex="1"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Text fontSize="md" color="gray">
-                    {match?.time}
-                  </Text>
-                </Box>
-              </Flex>
-            </Box>
-          )
-        })
-        }
+              )
+            })
+            }
+          </Box>
+        </Slide>
       </Box>
 
 
       {/* team of the week box */}
-      <Box mt={6} style={{ position: 'relative' }}>
+      <Box mt={4} style={{ position: 'relative' }}>
         <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
           TEAM OF THE WEEK
         </Text>
@@ -327,15 +341,15 @@ const Home = ({ user, myTeams }) => {
             </WrapItem>
           </Wrap>
         </Box>
-        <Text mb={2} fontSize="xx-small" fontWeight="medium" color="#E7E9EA">
-        Image by macrovector on Freepik
+        <Text mb={2} fontSize="xx-small" textAlign="right" fontWeight="medium" color="gray">
+          Image by macrovector on Freepik
         </Text>
       </Box>
 
 
 
       {/* events box */}
-      {/* <Box >
+      <Box mt={4} >
         <Text fontSize="md" fontWeight="medium" color="#E7E9EA">
           EVENTS
         </Text>
@@ -384,7 +398,7 @@ const Home = ({ user, myTeams }) => {
             ))}
           </Box>
         </Slide>
-      </Box> */}
+      </Box>
     </Box>
   );
 };

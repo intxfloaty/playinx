@@ -43,10 +43,10 @@ const LeaderBoard = () => {
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">
-            Team
+            Teams
           </Tab>
           <Tab fontSize="lg" color="#E7E9EA">
-            Player
+            Players
           </Tab>
         </TabList>
         <TabIndicator

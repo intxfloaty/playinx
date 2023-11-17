@@ -249,7 +249,7 @@ const Home = ({ user, myTeams }) => {
           <img
             style={{ maxWidth: "100%", objectFit: "contain" }}
             alt="Logo"
-            src="/images/footballGround.jpg"
+            src="/images/Football_field.svg"
           />
           <Wrap style={{
             position: 'absolute',
@@ -341,12 +341,7 @@ const Home = ({ user, myTeams }) => {
             </WrapItem>
           </Wrap>
         </Box>
-        <Text mb={2} fontSize="xx-small" textAlign="right" fontWeight="medium" color="gray">
-          Image by macrovector on Freepik
-        </Text>
       </Box>
-
-
 
       {/* events box */}
       <Box mt={4} >

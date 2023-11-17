@@ -21,8 +21,16 @@ jobs:
       - name: Verify generated types are checked in
         run: |
           supabase gen types typescript --local > types.gen.ts
-          if git diff --ignore-space-at-eol --exit-code --quiet types.gen.ts; then
+          if git diff --ignore-space-at-eol --exit-code types.gen.ts; then
             echo "Detected uncommitted changes after build. See status below:"
             git diff
             exit 1
           fi
+
+      - name: Debugging Info
+        run: |
+            ls -la         # List all files in the current directory for debugging
+            git status     # Show the current Git status
+            supabase gen types typescript --local > types.gen.ts
+            ls -la         # List files again to check if types.gen.ts is generated
+            git status     # Show Git status after generating types

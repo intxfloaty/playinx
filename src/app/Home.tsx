@@ -142,7 +142,7 @@ const Home = ({ user, myTeams }) => {
                   mb={6}
                   mx={2}
                   p={2}
-                  width="75vw" flexShrink={0} 
+                  width="75vw" flexShrink={0}
                   key={idx}
                   onClick={() => {
                     router.push(
@@ -251,7 +251,7 @@ const Home = ({ user, myTeams }) => {
             alt="Logo"
             src="/images/Football_field.svg"
           />
-          <Wrap style={{
+          {/* <Wrap style={{
             position: 'absolute',
             top: '40%',
             left: '20%',
@@ -339,7 +339,7 @@ const Home = ({ user, myTeams }) => {
               // src="https://doplgubkrufldxyduvlh.supabase.co/storage/v1/object/public/user_avatar/b7b000e5-234a-4719-beba-2211c8d16e9e/1d733274-7830-489c-9887-ffa2cc289e70"
               />
             </WrapItem>
-          </Wrap>
+          </Wrap> */}
         </Box>
       </Box>
 
@@ -357,6 +357,22 @@ const Home = ({ user, myTeams }) => {
             maxWidth="100%"
             whiteSpace="nowrap"
           >
+
+            {eventsList?.length === 0 &&
+              <Flex
+                flexDir="column"
+                backgroundColor="#161616"
+                borderRadius={7}
+                p={4}
+              >
+                <Center >
+                  <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
+                    No upcoming events!
+                  </Text>
+                </Center>
+              </Flex>}
+
+
             {eventsList.map((tourna, idx) => (
               <Box
                 key={idx}

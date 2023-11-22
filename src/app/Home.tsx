@@ -93,7 +93,7 @@ const Home = ({ user, myTeams }) => {
   }
 
   useEffect(() => {
-    fetchEventstList()
+    // fetchEventstList()
     // getMyTeams();
   }, [])
 
@@ -103,6 +103,7 @@ const Home = ({ user, myTeams }) => {
 
 
   console.log(myTeams, "myTeams")
+  console.log(matches, "matches")
   return (
     <Box p={4}>
       {/* Upcoming matches box */}

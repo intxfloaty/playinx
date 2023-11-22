@@ -8,11 +8,36 @@ import {
   IoLocationOutline,
   IoPeopleOutline,
 } from "react-icons/io5";
-import { GiWhistle } from "react-icons/gi";
+import { GiWhistle, GiSoccerKick } from "react-icons/gi";
 
 const Overview = ({ match }) => {
   return (
     <>
+      {match?.match_status === "completed" &&
+        <Box backgroundColor="#161616" borderRadius={7} mt={4}>
+          <Flex
+            justifyContent="flex-start"
+            p={4}
+            borderBottomColor="gray"
+            borderBottomWidth="1px"
+          >
+            <Text fontSize="sm" color="#E7E9EA">
+              PLAYER OF THE MATCH
+            </Text>
+          </Flex>
+
+          <Flex flexDir="column" p={4}>
+            <Flex flexDir="row" alignItems="center" mb={3}>
+              <GiSoccerKick size={24} color="#E7E9EA" />
+              <Flex flexDir="column" alignItems="flex-start" pl={5}>
+                <Text fontSize="lg" fontWeight="medium" color="#E7E9EA">
+                  {match?.best_player}
+                </Text>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Box>}
+
       <Box backgroundColor="#161616" borderRadius={7} mt={4}>
         <Flex
           justifyContent="flex-start"
@@ -20,7 +45,7 @@ const Overview = ({ match }) => {
           borderBottomColor="gray"
           borderBottomWidth="1px"
         >
-          <Text fontSize="md" color="#E7E9EA">
+          <Text fontSize="sm" color="#E7E9EA">
             MATCH INFORMATION
           </Text>
         </Flex>

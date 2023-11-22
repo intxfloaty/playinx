@@ -8,7 +8,7 @@ type Player = {
 
 const PlayersList = ({ players, getPlayers, team_id }) => {
   const supabase = createClientComponentClient();
- 
+
   useEffect(() => {
     const channel = supabase
       .channel("players list")
@@ -51,6 +51,11 @@ const PlayersList = ({ players, getPlayers, team_id }) => {
             borderBottomWidth="0.1px"
             borderBottomColor="gray"
             paddingBottom={2}
+            _active={{
+              transform: "scale(0.95)", // Add a slight scale-down effect when clicked
+              backgroundColor: "#333" // Change the background color when clicked
+            }}
+            onClick={() => console.log("player clicked")}
           >
             <Wrap>
               <WrapItem>

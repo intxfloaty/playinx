@@ -68,6 +68,7 @@ const Team = ({ user }) => {
     let { data: matches, error } = await supabase
       .from("matches")
       .select("*")
+      .order('created_at', { ascending: false })
       .or(
         `team_id.eq.${team_id},opponent_id.eq.${team_id}`
       );
@@ -122,11 +123,11 @@ const Team = ({ user }) => {
     getPlayers()
   }, [])
 
-  useEffect(() => {
-    if (team && team?.events?.length > 0) {
-      fetchEventstList()
-    }
-  }, [team])
+  // useEffect(() => {
+  //   if (team && team?.events?.length > 0) {
+  //     fetchEventstList()
+  //   }
+  // }, [team])
 
 
   return (
@@ -168,9 +169,9 @@ const Team = ({ user }) => {
           <Tab fontSize="lg" color="#E7E9EA">
             Matches
           </Tab>
-          <Tab fontSize="lg" color="#E7E9EA">
+          {/* <Tab fontSize="lg" color="#E7E9EA">
             Season
-          </Tab>
+          </Tab> */}
           <Tab fontSize="lg" color="#E7E9EA">
             Squad
           </Tab>
@@ -187,9 +188,9 @@ const Team = ({ user }) => {
             <MatchList team={team} userId={userId} matches={matches} setMatches={setMatches} getMatches={getMatches} />
           </TabPanel>
 
-          <TabPanel>
+          {/* <TabPanel>
             <Season eventsList={eventsList} />
-          </TabPanel>
+          </TabPanel> */}
 
           <TabPanel>
             <PlayersList players={players} getPlayers={getPlayers} team_id={team_id} />

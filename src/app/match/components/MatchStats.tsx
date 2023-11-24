@@ -601,7 +601,7 @@ const MatchStats = ({ matchId, match }) => {
   } else {
     return (
       <>
-        <Center mt={50}><Text fontSize="xl" color="#E7E9EA">Match Stats will be available after the match!</Text></Center>
+        <Center mt={50}><Text fontSize="xl" color="GrayText">Match Stats will be available after the match!</Text></Center>
       </>
     )
   }

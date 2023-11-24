@@ -67,7 +67,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
     try {
       let { data: profiles, error } = await supabase
         .from("profiles")
-        .select("name,phone")
+        .select("*")
         .eq("user_id", `${myUserId}`);
       if (profiles && error === null) {
         setMyProfile(profiles[0])

@@ -162,7 +162,7 @@ const EditMatchModal = ({ isOpen, onClose, activeTeam, match }) => {
     setTime(match?.time)
   }, [match])
 
-  console.log(!(match?.opponent_status == "accepted"), "matchStatus")
+  // console.log(!(match?.opponent_status == "accepted"), "matchStatus")
 
   return (
     <Modal

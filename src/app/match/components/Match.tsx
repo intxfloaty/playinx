@@ -115,7 +115,7 @@ const Match = ({ user }) => {
       .select("*")
       .eq("match_id", `${match_Id}`);
 
-    console.log(matches, "matches");
+    // console.log(matches, "matches");
     console.log(error, "err");
     if (!error) {
       setMatch(matches[0]);

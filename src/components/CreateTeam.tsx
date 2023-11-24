@@ -73,7 +73,7 @@ const CreateTeam = ({ user, myProfile }) => {
       p_user_id: `${user_id}`,
     });
 
-    console.log(data, "rpcData");
+    // console.log(data, "rpcData");
     console.log(error, "rpcErr");
   };
 
@@ -107,7 +107,7 @@ const CreateTeam = ({ user, myProfile }) => {
             format: format,
             location: location,
             team_admin: user_id,
-            rating: "2000",
+            rating: "1000",
           },
         ])
         .select();
@@ -123,7 +123,7 @@ const CreateTeam = ({ user, myProfile }) => {
           position: 'top',
           description: `New team - ${teamName} is created!.`,
           status: 'success',
-          duration: 9000,
+          duration: 3000,
           isClosable: true,
         })
       }

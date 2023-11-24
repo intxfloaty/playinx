@@ -253,14 +253,14 @@ const MatchStats = ({ matchId, match }) => {
 
                   // Create an array with the desired number of goal icons
                   const goalIcons = Array.from({ length: numberOfGoals }, (_, goalIdx) => (
-                    <Box key={goalIdx}>
-                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    <Box key={goalIdx} mr={1}>
+                      <IoFootballOutline color="gray" size={16} />
                     </Box>
                   ));
 
                   const assistIcons = Array.from({ length: numberOfAssists }, (_, goalIdx) => (
-                    <Box key={goalIdx}>
-                      <GiSoccerKick color="#E7E9EA" size={16} />
+                    <Box key={goalIdx} mr={1}>
+                      <GiSoccerKick color="gray" size={16} />
                     </Box>
                   ));
                   return (
@@ -307,13 +307,13 @@ const MatchStats = ({ matchId, match }) => {
                   // Create an array with the desired number of goal icons
                   const goalIcons = Array.from({ length: numberOfGoals }, (_, goalIdx) => (
                     <Box key={goalIdx} mr={1}>
-                      <IoFootballOutline color="#E7E9EA" size={16} />
+                      <IoFootballOutline color="gray" size={16} />
                     </Box>
                   ));
 
                   const assistIcons = Array.from({ length: numberOfAssists }, (_, goalIdx) => (
                     <Box key={goalIdx} mr={1}>
-                      <GiSoccerKick color="#E7E9EA" size={16} />
+                      <GiSoccerKick color="gray" size={16} />
                     </Box>
                   ));
                   return (

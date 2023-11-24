@@ -193,15 +193,25 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
         <Flex alignItems="center" justifyContent="center" mt={10}>
           {match?.team_id === activeTeam?.team_id &&
             !mySquad?.some((player) => player?.player_id === userId) && (
-              <Button colorScheme="messenger" onClick={handleJoinMySquadBtn}>
-                Join squad
-              </Button>
+              <Flex flexDir="column">
+                <Button colorScheme="messenger" onClick={handleJoinMySquadBtn}>
+                  Join squad
+                </Button>
+                <Text fontSize="lg" color="GrayText" mt={2}>
+                Cost to join a game is ₹35/player to be collected by team admin/captain and paid at the venue before the start of the game.
+                </Text>
+              </Flex>
             )}
           {match?.opponent_id === activeTeam?.team_id &&
             !oppSquad?.some((player) => player?.player_id === userId) && (
-              <Button colorScheme="messenger" onClick={handleJoinOppSquadBtn}>
-                Join squad
-              </Button>
+              <Flex flexDir="column">
+                <Button colorScheme="messenger" onClick={handleJoinOppSquadBtn}>
+                  Join squad
+                </Button>
+                <Text fontSize="lg" color="GrayText" mt={2}>
+                  Cost to join a game is ₹35/player to be collected by team admin/captain and paid at the venue before the start of the game.
+                </Text>
+              </Flex>
             )}
         </Flex>}
     </>

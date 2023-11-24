@@ -92,22 +92,19 @@ const Home = ({ user, myTeams }) => {
     console.log(error, "eventsErr");
   }
 
-  useEffect(() => {
-    // fetchEventstList()
-    // getMyTeams();
-  }, [])
+  // useEffect(() => {
+  //   fetchEventstList()
+  //   getMyTeams();
+  // }, [])
 
-  useEffect(() => {
-    if (myTeams?.length > 0) getMatches()
-  }, [myTeams])
+  // useEffect(() => {
+  //   if (myTeams?.length > 0) getMatches()
+  // }, [myTeams])
 
-
-  console.log(myTeams, "myTeams")
-  console.log(matches, "matches")
   return (
     <Box p={4}>
       {/* Upcoming matches box */}
-      <Box>
+      {/* <Box>
         <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
           UPCOMING MATCHES
         </Text>
@@ -151,10 +148,9 @@ const Home = ({ user, myTeams }) => {
                     );
                   }}
                   _active={{
-                    transform: "scale(0.95)", // Add a slight scale-down effect when clicked
-                    backgroundColor: "#333" // Change the background color when clicked
+                    transform: "scale(0.95)", 
+                    backgroundColor: "#333" 
                   }}>
-                  {/* upper container */}
                   <Flex
                     flexDir="row"
                     justifyContent="space-between"
@@ -182,9 +178,7 @@ const Home = ({ user, myTeams }) => {
                     </Box>
                   </Flex>
 
-                  {/* lower container */}
                   <Flex paddingX={4} paddingY={4} justifyContent="space-between">
-                    {/* team box */}
                     <Box
                       flex="4"
                       borderRightColor="gray"
@@ -220,7 +214,6 @@ const Home = ({ user, myTeams }) => {
                       </Flex>
                     </Box>
 
-                    {/*  time box */}
                     <Box
                       flex="1"
                       display="flex"
@@ -238,7 +231,7 @@ const Home = ({ user, myTeams }) => {
             }
           </Box>
         </Slide>
-      </Box>
+      </Box> */}
 
 
       {/* team of the week box */}

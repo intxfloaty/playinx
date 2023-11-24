@@ -77,13 +77,14 @@ const CreateTeam = ({ user, myProfile }) => {
     console.log(error, "rpcErr");
   };
 
-  const addMyselfToTheTeam = async (team_id) => {
+  const addMyselfToTheTeam = async (team_id, teamName) => {
       await updateTeamWithPlayer(team_id);
       const { data, error } = await supabase
         .from("players")
         .insert([
           {
             team_id: team_id,
+            team_name: teamName,
             player_phone: myProfile?.phone,
             player_name: myProfile?.name,
             player_dob: myProfile?.dob,
@@ -115,7 +116,7 @@ const CreateTeam = ({ user, myProfile }) => {
       if (data && data.length > 0 && error === null) {
         const newTeam = data[0];
         const team_id = newTeam?.team_id
-        await addMyselfToTheTeam(team_id)
+        await addMyselfToTheTeam(team_id, teamName)
         addTeam(newTeam);
         onClose();
         toast({

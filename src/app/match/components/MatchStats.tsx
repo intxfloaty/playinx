@@ -14,13 +14,7 @@ import {
   Center,
 } from "../../chakraExports";
 import { IoFootballOutline } from "react-icons/io5";
-
-type Squad = {
-  goalKeeper: [];
-  midField: [];
-  defence: [];
-  attack: [];
-};
+import { GiSoccerKick } from "react-icons/gi";
 
 type Player = {
   player_name: string;
@@ -29,12 +23,14 @@ type Player = {
   player_id: string;
   match_rating: string
   team_id: string;
+  goals: string;
+  assists: string;
 };
 
 const MatchStats = ({ matchId, match }) => {
   const supabase = createClientComponentClient();
-  const [mySquad, setMySquad] = useState<Squad>();
-  const [oppSquad, setOppSquad] = useState<Squad>();
+  const [mySquad, setMySquad] = useState<Player[]>([]);
+  const [oppSquad, setOppSquad] = useState<Player[]>([]);
 
   const fetchMyTeamLineup = async () => {
     let { data: lineup, error } = await supabase
@@ -44,35 +40,7 @@ const MatchStats = ({ matchId, match }) => {
       .eq("team_id", match?.team_id);
 
     if (!error) {
-      const initialSquad = {
-        goalKeeper: [],
-        defence: [],
-        midField: [],
-        attack: [],
-      };
-
-      const updatedSquad = lineup?.reduce((acc, player) => {
-        switch (player.player_position) {
-          case "Goal-Keeper":
-            acc.goalKeeper.push(player);
-            break;
-          case "Defence":
-            acc.defence.push(player);
-            break;
-          case "Mid-Field":
-            acc.midField.push(player);
-            break;
-          case "Attack":
-            acc.attack.push(player);
-            break;
-          default:
-            // Handle any other positions as needed
-            break;
-        }
-        return acc;
-      }, initialSquad);
-
-      setMySquad(updatedSquad);
+      setMySquad(lineup);
     }
   };
 
@@ -84,35 +52,7 @@ const MatchStats = ({ matchId, match }) => {
       .eq("team_id", match?.opponent_id);
 
     if (!error) {
-      const initialSquad = {
-        goalKeeper: [],
-        defence: [],
-        midField: [],
-        attack: [],
-      };
-
-      const updatedSquad = lineup?.reduce((acc, player) => {
-        switch (player.player_position) {
-          case "Goal-Keeper":
-            acc.goalKeeper.push(player);
-            break;
-          case "Defence":
-            acc.defence.push(player);
-            break;
-          case "Mid-Field":
-            acc.midField.push(player);
-            break;
-          case "Attack":
-            acc.attack.push(player);
-            break;
-          default:
-            // Handle any other positions as needed
-            break;
-        }
-        return acc;
-      }, initialSquad);
-
-      setOppSquad(updatedSquad);
+      setOppSquad(lineup);
     }
   };
 
@@ -305,124 +245,24 @@ const MatchStats = ({ matchId, match }) => {
           <TabPanels>
             <TabPanel p={0}>
               <Box backgroundColor="#161616" borderRadius={7} mt={6}>
-                <Flex
-                  justifyContent="flex-start"
-                  p={3}
-                  borderBottom="1px solid gray"
-                >
-                  <Text fontSize="md" color="gray">
-                    GOAL KEEPER
-                  </Text>
-                </Flex>
-                {mySquad?.goalKeeper?.map((squad: Player, idx) => {
-                  return (
-                    <Flex
-                      key={idx}
-                      flexDir="row"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      p={3}
-                      borderBottom="1px solid gray"
-                    >
-                      <Flex flexDir="column">
-                        <Text fontSize="md" color="#E7E9EA" my={1}>
-                          {squad?.player_name}
-                        </Text>
-                        <IoFootballOutline color="#E7E9EA" size={16} />
-                      </Flex>
-                      <Flex>
-                        <Text fontSize="md" color="#E7E9EA">
-                          {squad?.match_rating}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  );
-                })}
-              </Box>
+                {mySquad?.map((squad: Player, idx) => {
 
-              <Box backgroundColor="#161616" borderRadius={7} mt={6}>
-                <Flex
-                  justifyContent="flex-start"
-                  p={3}
-                  borderBottom="1px solid gray"
-                >
-                  <Text fontSize="md" color="gray">
-                    DEFENCE
-                  </Text>
-                </Flex>
-                {mySquad?.defence?.map((squad: Player, idx) => {
-                  return (
-                    <Flex
-                      key={idx}
-                      flexDir="row"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      p={3}
-                      borderBottom="1px solid gray"
-                    >
-                      <Flex flexDir="column">
-                        <Text fontSize="md" color="#E7E9EA" my={1}>
-                          {squad?.player_name}
-                        </Text>
-                        <IoFootballOutline color="#E7E9EA" size={16} />
-                      </Flex>
-                      <Flex>
-                        <Text fontSize="md" color="#E7E9EA">
-                          {squad?.match_rating}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  );
-                })}
-              </Box>
+                  const numberOfGoals = Number(squad?.goals)
 
-              <Box backgroundColor="#161616" borderRadius={7} mt={6}>
-                <Flex
-                  justifyContent="flex-start"
-                  p={3}
-                  borderBottom="1px solid gray"
-                >
-                  <Text fontSize="md" color="gray">
-                    MID-FIELD
-                  </Text>
-                </Flex>
-                {mySquad?.midField?.map((squad: Player, idx) => {
-                  return (
-                    <Flex
-                      key={idx}
-                      flexDir="row"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      p={3}
-                      borderBottom="1px solid gray"
-                    >
-                      <Flex flexDir="column">
-                        <Text fontSize="md" color="#E7E9EA" my={1}>
-                          {squad?.player_name}
-                        </Text>
-                        <IoFootballOutline color="#E7E9EA" size={16} />
-                      </Flex>
-                      <Flex>
-                        <Text fontSize="md" color="#E7E9EA">
-                          {squad?.match_rating}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  );
-                })}
-              </Box>
+                  const numberOfAssists = Number(squad?.assists)
 
-              <Box backgroundColor="#161616" borderRadius={7} mt={6}>
-                <Flex
-                  justifyContent="flex-start"
-                  p={3}
-                  borderBottom="1px solid gray"
-                >
-                  <Text fontSize="md" color="gray">
-                    ATTACK
-                  </Text>
-                </Flex>
-                {mySquad?.attack?.map((squad: Player, idx) => {
+                  // Create an array with the desired number of goal icons
+                  const goalIcons = Array.from({ length: numberOfGoals }, (_, goalIdx) => (
+                    <Box key={goalIdx}>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Box>
+                  ));
+
+                  const assistIcons = Array.from({ length: numberOfAssists }, (_, goalIdx) => (
+                    <Box key={goalIdx}>
+                      <GiSoccerKick color="#E7E9EA" size={16} />
+                    </Box>
+                  ));
                   return (
                     <Flex
                       key={idx}
@@ -436,7 +276,14 @@ const MatchStats = ({ matchId, match }) => {
                         <Text fontSize="md" color="#E7E9EA" my={1}>
                           {squad?.player_name}
                         </Text>
-                        <IoFootballOutline color="#E7E9EA" size={16} />
+                        <Flex>
+                          <Flex>
+                            {goalIcons}
+                          </Flex>
+                          <Flex>
+                            {assistIcons}
+                          </Flex>
+                        </Flex>
                       </Flex>
                       <Flex>
                         <Text fontSize="md" color="#E7E9EA">
@@ -451,124 +298,24 @@ const MatchStats = ({ matchId, match }) => {
 
             <TabPanel p={0}>
               <Box backgroundColor="#161616" borderRadius={7} mt={6}>
-                <Flex
-                  justifyContent="flex-start"
-                  p={3}
-                  borderBottom="1px solid gray"
-                >
-                  <Text fontSize="md" color="gray">
-                    GOAL KEEPER
-                  </Text>
-                </Flex>
-                {oppSquad?.goalKeeper?.map((squad: Player, idx) => {
-                  return (
-                    <Flex
-                      key={idx}
-                      flexDir="row"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      p={3}
-                      borderBottom="1px solid gray"
-                    >
-                      <Flex flexDir="column">
-                        <Text fontSize="md" color="#E7E9EA" my={1}>
-                          {squad?.player_name}
-                        </Text>
-                        <IoFootballOutline color="#E7E9EA" size={16} />
-                      </Flex>
-                      <Flex>
-                        <Text fontSize="md" color="#E7E9EA">
-                          {squad?.match_rating}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  );
-                })}
-              </Box>
+                {oppSquad?.map((squad: Player, idx) => {
+                  const numberOfGoals = Number(squad?.goals)
 
-              <Box backgroundColor="#161616" borderRadius={7} mt={6}>
-                <Flex
-                  justifyContent="flex-start"
-                  p={3}
-                  borderBottom="1px solid gray"
-                >
-                  <Text fontSize="md" color="gray">
-                    DEFENCE
-                  </Text>
-                </Flex>
-                {oppSquad?.defence?.map((squad: Player, idx) => {
-                  return (
-                    <Flex
-                      key={idx}
-                      flexDir="row"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      p={3}
-                      borderBottom="1px solid gray"
-                    >
-                      <Flex flexDir="column">
-                        <Text fontSize="md" color="#E7E9EA" my={1}>
-                          {squad?.player_name}
-                        </Text>
-                        <IoFootballOutline color="#E7E9EA" size={16} />
-                      </Flex>
-                      <Flex>
-                        <Text fontSize="md" color="#E7E9EA">
-                          {squad?.match_rating}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  );
-                })}
-              </Box>
+                  const numberOfAssists = Number(squad?.assists)
 
-              <Box backgroundColor="#161616" borderRadius={7} mt={6}>
-                <Flex
-                  justifyContent="flex-start"
-                  p={3}
-                  borderBottom="1px solid gray"
-                >
-                  <Text fontSize="md" color="gray">
-                    MID-FIELD
-                  </Text>
-                </Flex>
-                {oppSquad?.midField?.map((squad: Player, idx) => {
-                  return (
-                    <Flex
-                      key={idx}
-                      flexDir="row"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      p={3}
-                      borderBottom="1px solid gray"
-                    >
-                      <Flex flexDir="column">
-                        <Text fontSize="md" color="#E7E9EA" my={1}>
-                          {squad?.player_name}
-                        </Text>
-                        <IoFootballOutline color="#E7E9EA" size={16} />
-                      </Flex>
-                      <Flex>
-                        <Text fontSize="md" color="#E7E9EA">
-                          {squad?.match_rating}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  );
-                })}
-              </Box>
 
-              <Box backgroundColor="#161616" borderRadius={7} mt={6}>
-                <Flex
-                  justifyContent="flex-start"
-                  p={3}
-                  borderBottom="1px solid gray"
-                >
-                  <Text fontSize="md" color="gray">
-                    ATTACK
-                  </Text>
-                </Flex>
-                {oppSquad?.attack?.map((squad: Player, idx) => {
+                  // Create an array with the desired number of goal icons
+                  const goalIcons = Array.from({ length: numberOfGoals }, (_, goalIdx) => (
+                    <Box key={goalIdx} mr={1}>
+                      <IoFootballOutline color="#E7E9EA" size={16} />
+                    </Box>
+                  ));
+
+                  const assistIcons = Array.from({ length: numberOfAssists }, (_, goalIdx) => (
+                    <Box key={goalIdx} mr={1}>
+                      <GiSoccerKick color="#E7E9EA" size={16} />
+                    </Box>
+                  ));
                   return (
                     <Flex
                       key={idx}
@@ -582,7 +329,14 @@ const MatchStats = ({ matchId, match }) => {
                         <Text fontSize="md" color="#E7E9EA" my={1}>
                           {squad?.player_name}
                         </Text>
-                        <IoFootballOutline color="#E7E9EA" size={16} />
+                        <Flex>
+                          <Flex>
+                            {goalIcons}
+                          </Flex>
+                          <Flex>
+                            {assistIcons}
+                          </Flex>
+                        </Flex>
                       </Flex>
                       <Flex>
                         <Text fontSize="md" color="#E7E9EA">

@@ -45,6 +45,7 @@ function ProfileWorkflow() {
 
   const handlePositionChange = async (newPosition: string) => {
     setIsLoading(true)
+    setPosition(newPosition)
     const { data, error } = await supabase.from("profiles").insert([
       {
         name: name,
@@ -59,7 +60,6 @@ function ProfileWorkflow() {
     console.log(data, "data");
     console.log(error, "error");
     if (error === null) router.push("/");
-    setIsLoading(false)
   };
 
   const stepProps = {

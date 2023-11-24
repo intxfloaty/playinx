@@ -309,7 +309,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
               <ComingSoonModal isOpen={pickup.isOpen} onClose={pickup.onClose} /> */}
 
 
-              <Button w="100%" variant="unstyled" onClick={rewards.onOpen}>
+              {/* <Button w="100%" variant="unstyled" onClick={rewards.onOpen}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}
@@ -322,7 +322,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                     </Text>
                   </Flex>
                 </Box>
-              </Button>
+              </Button> */}
             </Stack>
           </DrawerBody>
           <ComingSoonModal isOpen={rewards.isOpen} onClose={rewards.onClose} />

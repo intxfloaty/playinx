@@ -24,10 +24,10 @@ type Squad = {
 const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, oppSquad, setOppSquad }) => {
   const supabase = createClientComponentClient<Database>();
   const minSquadSizes = {
-    "5v5": 8,
-    "6v6": 1,
-    "7v7": 10,
-    "8v8": 11,
+    "5v5": 7,
+    "6v6": 8,
+    "7v7": 9,
+    "8v8": 10,
     "9v9": 12,
     "10v10": 13,
     "11v11": 15,
@@ -127,22 +127,22 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
       {/* <Box> */}
       {match?.format === "5v5" && (
         <Text fontSize="lg" color="gray">
-          Min Squad Size: 8 ({match?.format})
+          Min Squad Size: 7 ({match?.format})
         </Text>
       )}
       {match?.format === "6v6" && (
         <Text fontSize="lg" color="gray">
-          Min Squad Size: 9 ({match?.format})
+          Min Squad Size: 8 ({match?.format})
         </Text>
       )}
       {match?.format === "7v7" && (
         <Text fontSize="lg" color="gray">
-          Min Squad Size: 10 ({match?.format})
+          Min Squad Size: 9 ({match?.format})
         </Text>
       )}
       {match?.format === "8v8" && (
         <Text fontSize="lg" color="gray">
-          Min Squad Size: 11 ({match?.format})
+          Min Squad Size: 10 ({match?.format})
         </Text>
       )}
       {match?.format === "9v9" && (
@@ -189,7 +189,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
         </Box>
       </Flex>
 
-      {!(match?.match_type === "Tournament") &&
+      {!(match?.match_type === "Tournament") && !(match?.match_status === "completed") &&
         <Flex alignItems="center" justifyContent="center" mt={10}>
           {match?.team_id === activeTeam?.team_id &&
             !mySquad?.some((player) => player?.player_id === userId) && (

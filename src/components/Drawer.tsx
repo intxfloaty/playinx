@@ -19,7 +19,8 @@ import {
   AccordionPanel,
   AccordionIcon,
   useDisclosure as RewardsDisclosure,
-  useDisclosure as PickupDisclosure
+  useDisclosure as PickupDisclosure,
+  useDisclosure as FaqDisclosure,
 } from "../app/chakraExports";
 import { User, createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
@@ -39,6 +40,8 @@ import { FaAward } from "react-icons/fa";
 import { GiSoccerKick } from "react-icons/gi";
 import CreateTeam from "./CreateTeam";
 import ComingSoonModal from "./ComingSoonModal";
+import FAQsModal from "../app/my-profile/components/FAQsModal";
+import { GoQuestion } from "react-icons/go";
 
 interface DrawerProps {
   children: React.ReactNode;
@@ -60,6 +63,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const rewards = RewardsDisclosure()
   const pickup = PickupDisclosure()
+  const faqDisclosure = FaqDisclosure()
   const [myProfile, setMyProfile] = useState<Profile>({})
   const [myTeams, setMyTeams] = useState([]);
 
@@ -291,6 +295,22 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                   </Flex>
                 </Box>
               </Link>
+
+              <Button w="100%" variant="unstyled" onClick={faqDisclosure.onOpen}>
+                <Box
+                  padding={2}
+                  _hover={{ backgroundColor: "#161616" }}
+                  borderRadius={5}
+                >
+                  <Flex align="center" flexDir="row" gap={5}>
+                  <GoQuestion color="#E7E9EA" size={20} />
+                    <Text color="#E7E9EA" fontSize="md">
+                      FAQs
+                    </Text>
+                  </Flex>
+                </Box>
+              </Button>
+              <FAQsModal isOpen={faqDisclosure.isOpen} onClose={faqDisclosure.onClose} />
 
               {/* <Button w="100%" variant="unstyled" onClick={pickup.onOpen}>
                 <Box

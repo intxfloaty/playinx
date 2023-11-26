@@ -8,10 +8,12 @@ import {
   Flex,
   List,
   ListItem,
+  useDisclosure as LineupDisclosure,
 } from "../../chakraExports";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "../../../database.types";
 import useTeamStore from "../../../utils/store/teamStore";
+import CreateLineupModal from "./CreateLineupModal";
 
 type Squad = {
   player_name: string;
@@ -21,7 +23,8 @@ type Squad = {
   team_id: string;
 };
 
-const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, oppSquad, setOppSquad }) => {
+const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, oppSquad, setOppSquad, players }) => {
+  const lineupDisc = LineupDisclosure()
   const supabase = createClientComponentClient<Database>();
   const minSquadSizes = {
     "5v5": 7,
@@ -33,18 +36,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
     "11v11": 15,
   };
 
-
-
-  // const updateMatchStatus = async () => {
-  //   const { data, error } = await supabase
-  //     .from("matches")
-  //     .update({ match_status: "fixed" })
-  //     .eq("match_id", `${matchId}`)
-  //     .select();
-
-  //   console.log(data, "match_status");
-  //   console.log(error, "match_statusErr");
-  // };
+  console.log(mySquad, "mySquad")
 
   const handleJoinMySquadBtn = async () => {
     const player = mySquad?.find((player) => player.player_id === userId);
@@ -78,19 +70,6 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
     }
   };
 
-
-
-  // useEffect(() => {
-  //   const requiredSize = minSquadSizes[match?.format];
-  //   if (
-  //     requiredSize !== undefined &&
-  //     mySquad.length >= requiredSize &&
-  //     oppSquad.length >= requiredSize
-  //   ) {
-  //     updateMatchStatus();
-  //   }
-  // }, [mySquad, oppSquad, match?.format]);
-
   useEffect(() => {
     const channel = supabase
       .channel("squad")
@@ -100,15 +79,16 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
           event: "*",
           schema: "public",
           table: "lineup",
+          filter: `match_id=eq.${match?.match_id}`
         },
         (payload) => {
           console.log(payload, "payload");
           const newSquad = payload.new as Squad;
           if (newSquad.team_id === match?.team_id) {
-            setMySquad([...mySquad, newSquad]);
+            setMySquad((prevSquad) => [...prevSquad, newSquad]);
           }
           if (newSquad.team_id === match?.opponent_id) {
-            setOppSquad([...oppSquad, newSquad]);
+            setOppSquad((prevSquad) => [...prevSquad, newSquad]);
           }
         }
       )
@@ -118,9 +98,6 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
       supabase.removeChannel(channel);
     };
   }, [supabase, mySquad, oppSquad, setMySquad, setOppSquad]);
-
-  // console.log(mySquad, "mySquad");
-  // console.log(oppSquad, "oppSquad");
 
   return (
     <>
@@ -189,6 +166,20 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
         </Box>
       </Flex>
 
+      {activeTeam?.team_admin === userId &&
+        <Button colorScheme="messenger" onClick={lineupDisc.onOpen} mt={8}>
+          Create Lineup
+        </Button>}
+
+      <CreateLineupModal
+        isOpen={lineupDisc.isOpen}
+        onClose={lineupDisc.onClose}
+        players={players}
+        mySquad={mySquad}
+        oppSquad={oppSquad}
+        matchId={match?.match_id}
+        team_id={activeTeam?.team_id} />
+
       {!(match?.match_type === "Tournament") && !(match?.match_status === "completed") &&
         <Flex alignItems="center" justifyContent="center" mt={10}>
           {match?.team_id === activeTeam?.team_id &&
@@ -198,7 +189,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
                   Join squad
                 </Button>
                 <Text fontSize="lg" color="GrayText" mt={2}>
-                Cost to join a game is ₹35/player to be collected by team admin/captain and paid at the venue before the start of the game.
+                  Cost to join a game is ₹35/player to be collected by team admin/captain and paid at the venue before the start of the game.
                 </Text>
               </Flex>
             )}

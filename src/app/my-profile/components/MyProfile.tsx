@@ -14,6 +14,7 @@ import {
   useDisclosure as SupportDisclosure,
   useDisclosure as FaqDisclosure,
   useDisclosure as TcDisclosure,
+  useDisclosure as RefundDisclosure,
   Wrap,
   WrapItem,
 } from "../../chakraExports";
@@ -27,6 +28,7 @@ import { GoQuestion } from "react-icons/go";
 import SupportModal from "./SupportModal";
 import FAQsModal from "./FAQsModal";
 import TcModal from "./TcModal";
+import RefundPolicyModal from "./RefundPolicyModal";
 
 type Profile = {
   [key: string]: string
@@ -42,6 +44,7 @@ const MyProfile = ({ user }) => {
   const supportDisclosure = SupportDisclosure()
   const faqDisclosure = FaqDisclosure()
   const tcDisclosure = TcDisclosure()
+  const refundDisclosure = RefundDisclosure()
 
   const getNameAndPhone = async () => {
     try {
@@ -171,22 +174,7 @@ const MyProfile = ({ user }) => {
         </Button>
       </Box> */}
 
-      {/* <Box mt={10} p={3}>
-        <Button w="100%" variant="unstyled" onClick={tcDisclosure.onOpen}>
-          <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
-            <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
-              <IoDocumentTextOutline color="#E7E9EA" size={20} />
-              <Text color="#E7E9EA" fontSize="md">
-                Terms and Conditions
-              </Text>
-            </Flex>
-            <Box flex={1}>
-              <IoChevronForwardOutline color="#E7E9EA" size={20} />
-            </Box>
-          </Flex>
-        </Button>
-        <TcModal isOpen={tcDisclosure.isOpen} onClose={tcDisclosure.onClose}/>
-      </Box> */}
+
 
       <Box mt={10} p={3}>
         <Button w="100%" variant="unstyled" onClick={faqDisclosure.onOpen}>
@@ -220,6 +208,40 @@ const MyProfile = ({ user }) => {
           </Flex>
         </Button>
         <SupportModal isOpen={supportDisclosure.isOpen} onClose={supportDisclosure.onClose} />
+      </Box>
+
+      <Box p={3}>
+        <Button w="100%" variant="unstyled" onClick={tcDisclosure.onOpen}>
+          <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
+            <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
+              <IoDocumentTextOutline color="#E7E9EA" size={20} />
+              <Text color="#E7E9EA" fontSize="md">
+                Terms and Conditions
+              </Text>
+            </Flex>
+            <Box flex={1}>
+              <IoChevronForwardOutline color="#E7E9EA" size={20} />
+            </Box>
+          </Flex>
+        </Button>
+        <TcModal isOpen={tcDisclosure.isOpen} onClose={tcDisclosure.onClose} />
+      </Box>
+
+      <Box p={3}>
+        <Button w="100%" variant="unstyled" onClick={refundDisclosure.onOpen}>
+          <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
+            <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
+              <IoDocumentTextOutline color="#E7E9EA" size={20} />
+              <Text color="#E7E9EA" fontSize="md">
+                Refund Policy
+              </Text>
+            </Flex>
+            <Box flex={1}>
+              <IoChevronForwardOutline color="#E7E9EA" size={20} />
+            </Box>
+          </Flex>
+        </Button>
+        <RefundPolicyModal isOpen={refundDisclosure.isOpen} onClose={refundDisclosure.onClose} />
       </Box>
 
       <Box p={3}>

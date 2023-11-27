@@ -189,7 +189,11 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
                   Join squad
                 </Button>
                 <Text fontSize="lg" color="GrayText" mt={2}>
+
                   Cost to join a game is ₹35/player to be collected by team admin/captain and paid at the venue before the start of the game.
+
+                Cost to join a game is ₹35/player to be collected by team admin/captain and paid at the venue before the start of the game.
+
                 </Text>
               </Flex>
             )}

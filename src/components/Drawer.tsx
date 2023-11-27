@@ -312,7 +312,6 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
               </Button>
               <FAQsModal isOpen={faqDisclosure.isOpen} onClose={faqDisclosure.onClose} />
 
-              
 
               {/* <Button w="100%" variant="unstyled" onClick={pickup.onOpen}>
                 <Box

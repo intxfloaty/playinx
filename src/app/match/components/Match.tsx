@@ -67,6 +67,20 @@ const Match = ({ user }) => {
   const [team, setTeam] = useState<Team>()
   const [mySquad, setMySquad] = useState<Squad[]>([]);
   const [oppSquad, setOppSquad] = useState<Squad[]>([]);
+  const [players, setPlayers] = useState([]);
+
+
+  // Function to retrieve team_id from localStorage
+  const getActiveTeamFromLocalStorage = () => {
+    const storedTeam = localStorage.getItem("activeTeam");
+    if (storedTeam) {
+      return JSON.parse(storedTeam);
+    }
+    return null; // Return null if no activeTeam is stored in localStorage
+  };
+
+
+
 
   const fetchMyTeamLineup = async () => {
     let { data: lineup, error } = await supabase
@@ -122,14 +136,21 @@ const Match = ({ user }) => {
     }
   };
 
-  // Function to retrieve team_id from localStorage
-  const getActiveTeamFromLocalStorage = () => {
-    const storedTeam = localStorage.getItem("activeTeam");
-    if (storedTeam) {
-      return JSON.parse(storedTeam);
+  const getPlayers = async () => {
+    const team_id = getActiveTeamFromLocalStorage()
+    let { data: players, error } = await supabase
+      .from("players")
+      .select("*")
+      .eq("team_id", `${team_id}`);
+
+    console.log(error, "PlayersListErr")
+
+    if (!error) {
+      setPlayers(players);
     }
-    return null; // Return null if no activeTeam is stored in localStorage
   };
+
+
 
   const fetchTeamInfo = async () => {
     const team_id = getActiveTeamFromLocalStorage()
@@ -156,6 +177,7 @@ const Match = ({ user }) => {
     if (match) {
       fetchTeamInfo();
       fetchMyTeamLineup();
+      getPlayers()
       if (match?.opponent_id) {
         fetchOppTeamLineup();
       }
@@ -224,6 +246,7 @@ const Match = ({ user }) => {
               setMySquad={setMySquad}
               oppSquad={oppSquad}
               setOppSquad={setOppSquad}
+              players={players}
             />
           </TabPanel>
 

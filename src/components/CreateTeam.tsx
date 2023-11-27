@@ -73,17 +73,18 @@ const CreateTeam = ({ user, myProfile }) => {
       p_user_id: `${user_id}`,
     });
 
-    console.log(data, "rpcData");
+    // console.log(data, "rpcData");
     console.log(error, "rpcErr");
   };
 
-  const addMyselfToTheTeam = async (team_id) => {
+  const addMyselfToTheTeam = async (team_id, teamName) => {
       await updateTeamWithPlayer(team_id);
       const { data, error } = await supabase
         .from("players")
         .insert([
           {
             team_id: team_id,
+            team_name: teamName,
             player_phone: myProfile?.phone,
             player_name: myProfile?.name,
             player_dob: myProfile?.dob,
@@ -107,7 +108,7 @@ const CreateTeam = ({ user, myProfile }) => {
             format: format,
             location: location,
             team_admin: user_id,
-            rating: "2000",
+            rating: "1000",
           },
         ])
         .select();
@@ -115,7 +116,7 @@ const CreateTeam = ({ user, myProfile }) => {
       if (data && data.length > 0 && error === null) {
         const newTeam = data[0];
         const team_id = newTeam?.team_id
-        await addMyselfToTheTeam(team_id)
+        await addMyselfToTheTeam(team_id, teamName)
         addTeam(newTeam);
         onClose();
         toast({
@@ -123,7 +124,7 @@ const CreateTeam = ({ user, myProfile }) => {
           position: 'top',
           description: `New team - ${teamName} is created!.`,
           status: 'success',
-          duration: 9000,
+          duration: 3000,
           isClosable: true,
         })
       }

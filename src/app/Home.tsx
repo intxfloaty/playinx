@@ -342,6 +342,20 @@ const Home = ({ user, myTeams }) => {
         <Text fontSize="md" fontWeight="medium" color="#E7E9EA">
           EVENTS
         </Text>
+        {eventsList?.length === 0 &&
+          <Flex
+            flexDir="column"
+            backgroundColor="#161616"
+            borderRadius={7}
+            mt={2}
+            p={4}
+          >
+            <Center >
+              <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
+                No upcoming events!
+              </Text>
+            </Center>
+          </Flex>}
         <Slide direction="right" in={true} style={{ position: "static" }}>
           <Box
             mt={2}
@@ -351,20 +365,6 @@ const Home = ({ user, myTeams }) => {
             maxWidth="100%"
             whiteSpace="nowrap"
           >
-
-            {eventsList?.length === 0 &&
-              <Flex
-                flexDir="column"
-                backgroundColor="#161616"
-                borderRadius={7}
-                p={4}
-              >
-                <Center >
-                  <Text mb={2} fontSize="md" fontWeight="medium" color="#E7E9EA">
-                    No upcoming events!
-                  </Text>
-                </Center>
-              </Flex>}
 
 
             {eventsList.map((tourna, idx) => (

@@ -31,7 +31,6 @@ export {
   PopoverTrigger,
   PopoverArrow,
   Button,
-  Checkbox,
   Grid,
   GridItem,
   Drawer as SideMenu,
@@ -84,6 +83,8 @@ export {
   RadioGroup,
   Slide,
   Spinner,
+  Checkbox, 
+  CheckboxGroup
 } from "@chakra-ui/react";
 
 export { Link } from "@chakra-ui/next-js";

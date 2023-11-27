@@ -9,6 +9,7 @@ import {
   Text,
 } from "../../chakraExports";
 import Link from "next/link";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 function PlayingPosition({ onNext, goBack, onPositionChange, isLoading }) {
   const [position, setPosition] = useState("");
@@ -25,7 +26,6 @@ function PlayingPosition({ onNext, goBack, onPositionChange, isLoading }) {
   const handlePositionUpdate = () => {
     onPositionChange(position);
   };
-  console.log(position, "pos");
 
   useEffect(() => {
     if (positionError !== "") {
@@ -64,7 +64,6 @@ function PlayingPosition({ onNext, goBack, onPositionChange, isLoading }) {
         mt={7}
         colorScheme="messenger"
         size="md"
-        isLoading={isLoading}
         onClick={() => {
           const error = validate();
           setPositionError(error);
@@ -75,6 +74,7 @@ function PlayingPosition({ onNext, goBack, onPositionChange, isLoading }) {
       >
         Continue
       </Button>
+      {isLoading && <LoadingSpinner />}
       <Center mt={1}>
         <button onClick={goBack}>
           <Text fontSize="md" color="messenger.300">

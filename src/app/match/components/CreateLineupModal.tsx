@@ -83,7 +83,7 @@ const CreateLineupModal = ({ isOpen, onClose, players, mySquad, oppSquad, matchI
     setIsLoading(true)
     // Iterate over selected players and add to lineupData array
     selectedPlayers.forEach((player) => {
-      const pId = player?.player_id
+      const pId = player?.player_user_id
       const pName = player?.player_name;
       const pPosition = player?.player_position;
       const pRating = player?.player_rating;
@@ -113,13 +113,12 @@ const CreateLineupModal = ({ isOpen, onClose, players, mySquad, oppSquad, matchI
           {players?.map((player, idx) => {
             const isDuplicate = mySquad?.some((lineup) =>
               lineup.player_name === player.player_name &&
-              lineup.player_position === player.player_position &&
-              lineup.player_rating === player.player_rating)
+              lineup.player_id === player.player_user_id
+            )
               ||
               oppSquad?.some((lineup) =>
                 lineup.player_name === player.player_name &&
-                lineup.player_position === player.player_position &&
-                lineup.player_rating === player.player_rating
+                lineup.player_id === player.player_user_id
               )
             return (
               <Flex key={idx} mt={10}>

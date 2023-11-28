@@ -6,4 +6,4 @@ alter table "public"."players" add constraint "players_player_user_id_fkey" FORE
 
 alter table "public"."players" validate constraint "players_player_user_id_fkey";
 
-
+alter table "public"."players" alter column "player_user_id" drop not null;

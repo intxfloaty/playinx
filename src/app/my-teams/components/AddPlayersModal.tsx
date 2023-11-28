@@ -100,6 +100,7 @@ const AddPlayers = ({ isAddPlayerOpen, onAddPlayerClose, activeTeam }) => {
               team_name: activeTeam?.team_name,
               player_phone: phoneNumber,
               player_name: playerDetails?.name,
+              player_user_id: playerDetails?.user_id,
               player_dob: playerDetails?.dob,
               player_position: playerDetails?.position,
               player_rating: playerDetails?.rating,

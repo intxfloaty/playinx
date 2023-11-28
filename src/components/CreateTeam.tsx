@@ -87,6 +87,7 @@ const CreateTeam = ({ user, myProfile }) => {
             team_name: teamName,
             player_phone: myProfile?.phone,
             player_name: myProfile?.name,
+            player_user_id: myProfile?.user_id,
             player_dob: myProfile?.dob,
             player_position: myProfile?.position,
             player_rating: myProfile?.rating,

@@ -45,6 +45,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
         {
           match_id: match?.match_id,
           player_name: profile?.name,
+          player_id: profile?.user_id,
           player_position: profile?.position,
           player_rating: profile?.rating,
           team_id: match?.team_id,
@@ -61,6 +62,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
         {
           match_id: match?.match_id,
           player_name: profile?.name,
+          player_id: profile?.user_id,
           player_position: profile?.position,
           player_rating: profile?.rating,
           team_id: match?.opponent_id,

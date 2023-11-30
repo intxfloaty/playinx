@@ -9,6 +9,7 @@ import CreateMatchModal from "./CreateMatchModal";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import JoinTournamentModal from "../../events/[event]/components/JoinTournamentModal";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 type Team = {
   [key: string]: string;
@@ -18,12 +19,16 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
   const supabase = createClientComponentClient();
   const [activeTeam, setActiveTeam] = useState<Team>()
   const { onOpen, isOpen, onClose } = useDisclosure()
+  const [isLoading, setIsLoading] = useState(false)
+  const [isAcceptLoading, setIsAcceptLoading] = useState(false)
+  const [isDeclineLoading, setIsDeclineLoading] = useState(false)
 
   const router = useRouter();
   const createMatch = CreateMatchDisclosure()
   const joinTournament = JoinTournamentDisclosure()
 
   const handleAcceptBtn = async (match) => {
+    setIsAcceptLoading(true)
     const { data, error } = await supabase
       .from("matches")
       .update({ opponent_status: "accepted" })
@@ -32,9 +37,11 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
       .select();
     console.log(data, "currMatch");
     console.log(error, "currError");
+    setIsAcceptLoading(false)
   };
 
   const handleDeclineBtn = async (match) => {
+    setIsDeclineLoading(true)
     const { data, error } = await supabase
       .from("matches")
       .update({
@@ -58,6 +65,7 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
         return updatedMatches;
       });
     }
+    setIsDeclineLoading(false)
   };
 
   useEffect(() => {
@@ -92,6 +100,7 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
 
   return (
     <>
+      {isLoading && <LoadingSpinner />}
       {matches?.map((match, idx) => {
         const isAdmin = activeTeam?.team_admin === userId;
         const isPending = match.opponent_status === "pending";
@@ -106,6 +115,7 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
               mb={6}
               key={idx}
               onClick={() => {
+                setIsLoading(true)
                 router.push(
                   `/match/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
                 );
@@ -192,22 +202,6 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
                   </Text>
                 </Box>
               </Flex>
-              {isOpponent && isAdmin && isPending && (
-                <Flex flexDir="row" justifyContent="space-evenly" py={6}>
-                  <Button
-                    colorScheme="messenger"
-                    onClick={() => handleAcceptBtn(match)}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    colorScheme="messenger"
-                    onClick={() => handleDeclineBtn(match)}
-                  >
-                    Decline
-                  </Button>
-                </Flex>
-              )}
             </Box>
           );
         }
@@ -276,12 +270,16 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
                   <Button
                     colorScheme="messenger"
                     onClick={() => handleAcceptBtn(match)}
+                    isLoading={isAcceptLoading}
+                    isDisabled={isAcceptLoading}
                   >
                     Accept
                   </Button>
                   <Button
                     colorScheme="messenger"
                     onClick={() => handleDeclineBtn(match)}
+                    isLoading={isDeclineLoading}
+                    isDisabled={isDeclineLoading}
                   >
                     Decline
                   </Button>
@@ -294,6 +292,7 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
           return (
             <Box backgroundColor="#161616" borderRadius={7} mb={6} key={idx}
               onClick={() => {
+                setIsLoading(true)
                 router.push(
                   `/match/${match?.team_name}vs${match?.opponent_name}?matchId=${match?.match_id}`
                 );
@@ -378,22 +377,6 @@ const MatchList = ({ team, userId, matches, setMatches, getMatches }) => {
                   </Text>
                 </Box>
               </Flex>
-              {isOpponent && isAdmin && !isAccepted && (
-                <Flex flexDir="row" justifyContent="space-evenly" py={6}>
-                  <Button
-                    colorScheme="messenger"
-                    onClick={() => handleAcceptBtn(match)}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    colorScheme="messenger"
-                    onClick={() => handleDeclineBtn(match)}
-                  >
-                    Decline
-                  </Button>
-                </Flex>
-              )}
             </Box>
           );
         }

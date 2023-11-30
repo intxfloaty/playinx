@@ -24,6 +24,7 @@ type Squad = {
 };
 
 const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, oppSquad, setOppSquad, players }) => {
+  const [isLoading, setIsLoading] = useState(false)
   const lineupDisc = LineupDisclosure()
   const supabase = createClientComponentClient<Database>();
   const minSquadSizes = {
@@ -39,6 +40,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
   console.log(mySquad, "mySquad")
 
   const handleJoinMySquadBtn = async () => {
+    setIsLoading(true)
     const player = mySquad?.find((player) => player.player_id === userId);
     if (!player) {
       const { data, error } = await supabase.from("lineup").insert([
@@ -53,9 +55,11 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
       ]);
       console.log(error, "MylineupERr");
     }
+    setIsLoading(false)
   };
 
   const handleJoinOppSquadBtn = async () => {
+    setIsLoading(true)
     const player = oppSquad?.find((player) => player.player_id === userId);
     if (!player) {
       const { data, error } = await supabase.from("lineup").insert([
@@ -70,6 +74,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
       ]);
       console.log(error, "OpplineupERr");
     }
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -168,7 +173,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
         </Box>
       </Flex>
 
-      {activeTeam?.team_admin === userId &&
+      {activeTeam?.team_admin === userId && match?.match_status !== "completed" &&
         <Button colorScheme="messenger" onClick={lineupDisc.onOpen} mt={8}>
           Create Lineup
         </Button>}
@@ -187,7 +192,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
           {match?.team_id === activeTeam?.team_id &&
             !mySquad?.some((player) => player?.player_id === userId) && (
               <Flex flexDir="column">
-                <Button colorScheme="messenger" onClick={handleJoinMySquadBtn}>
+                <Button colorScheme="messenger" onClick={handleJoinMySquadBtn} isLoading={isLoading} isDisabled={isLoading}>
                   Join squad
                 </Button>
                 <Text fontSize="lg" color="GrayText" mt={2}>
@@ -202,7 +207,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
           {match?.opponent_id === activeTeam?.team_id &&
             !oppSquad?.some((player) => player?.player_id === userId) && (
               <Flex flexDir="column">
-                <Button colorScheme="messenger" onClick={handleJoinOppSquadBtn}>
+                <Button colorScheme="messenger" onClick={handleJoinOppSquadBtn} isLoading={isLoading} isDisabled={isLoading}>
                   Join squad
                 </Button>
                 <Text fontSize="lg" color="GrayText" mt={2}>

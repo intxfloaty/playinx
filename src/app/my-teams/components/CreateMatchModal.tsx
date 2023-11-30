@@ -38,6 +38,7 @@ const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
   const [opponentName, setOpponentName] = useState("");
   const [opponentId, setOpponentId] = useState("");
   const [opponentRating, setOpponentRating] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
 
   const [fieldErrors, setFieldErrors] = useState<Errors>({});
 
@@ -94,6 +95,7 @@ const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
   };
 
   const onCreateClicked = async () => {
+    setIsLoading(true)
     const errors = validate();
     setFieldErrors(errors);
     if (Object.keys(errors).length === 0) {
@@ -144,6 +146,7 @@ const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
         onClose();
       }
     }
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -289,7 +292,7 @@ const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="messenger" onClick={onCreateClicked}>
+          <Button colorScheme="messenger" onClick={onCreateClicked} isLoading={isLoading} isDisabled={isLoading}>
             Create
           </Button>
         </ModalFooter>

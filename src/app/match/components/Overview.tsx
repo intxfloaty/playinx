@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Box, Flex, Text } from "../../chakraExports";
+import YouTube from 'react-youtube';
 import {
   IoAddOutline,
   IoFootballOutline,
@@ -10,11 +11,31 @@ import {
 } from "react-icons/io5";
 import { GiWhistle, GiSoccerKick } from "react-icons/gi";
 
+
 const Overview = ({ match }) => {
+
   return (
     <>
+      {/* Video highlights */}
       {match?.match_status === "completed" &&
-        <Box backgroundColor="#161616" borderRadius={7} mt={4}>
+        <Box>
+          <YouTube
+            videoId="fGCSJy3LOKc"
+            opts={{
+              height: '360',
+              width: '100%',
+              playerVars: {
+                autoplay: 0,
+              },
+            }}
+          />
+        </Box>
+      }
+
+
+      {
+        match?.match_status === "completed" &&
+        <Box backgroundColor="#161616" borderRadius={7} >
           <Flex
             justifyContent="flex-start"
             p={4}
@@ -36,7 +57,8 @@ const Overview = ({ match }) => {
               </Flex>
             </Flex>
           </Flex>
-        </Box>}
+        </Box>
+      }
 
       <Box backgroundColor="#161616" borderRadius={7} mt={4}>
         <Flex

@@ -173,7 +173,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
         </Box>
       </Flex>
 
-      {activeTeam?.team_admin === userId &&
+      {activeTeam?.team_admin === userId && match?.match_status !== "completed" &&
         <Button colorScheme="messenger" onClick={lineupDisc.onOpen} mt={8}>
           Create Lineup
         </Button>}

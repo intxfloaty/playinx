@@ -16,9 +16,26 @@ const Overview = ({ match }) => {
 
   return (
     <>
+      {/* Video highlights */}
+      {match?.match_status === "completed" &&
+        <Box>
+          <YouTube
+            videoId="fGCSJy3LOKc"
+            opts={{
+              height: '360',
+              width: '100%',
+              playerVars: {
+                autoplay: 0,
+              },
+            }}
+          />
+        </Box>
+      }
+
+
       {
         match?.match_status === "completed" &&
-        <Box backgroundColor="#161616" borderRadius={7} mt={4}>
+        <Box backgroundColor="#161616" borderRadius={7} >
           <Flex
             justifyContent="flex-start"
             p={4}
@@ -42,20 +59,6 @@ const Overview = ({ match }) => {
           </Flex>
         </Box>
       }
-
-      {/* Video highlights */}
-      <Box>
-        <YouTube
-          videoId="CD3hjodr8s8"
-          opts={{
-            height: '360',
-            width: '100%',
-            playerVars: {
-              autoplay: 0,
-            },
-          }}
-        />
-      </Box>
 
       <Box backgroundColor="#161616" borderRadius={7} mt={4}>
         <Flex

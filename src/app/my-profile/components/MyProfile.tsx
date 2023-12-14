@@ -153,11 +153,11 @@ const MyProfile = ({ user }) => {
         <EditProfileModal isOpen={editProfileDisclosure.isOpen} onClose={editProfileDisclosure.onClose} myProfile={myProfile} myUserId={myUserId} />
       </Box>
 
-      {/* <Box mt={10} p={3}>
+      <Box mt={10} p={3}>
         <Button
           w="100%"
           variant="unstyled"
-        // onClick={onRechargeWalletClicked}
+        onClick={onRechargeWalletClicked}
         >
           <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
             <Flex alignItems="center" flexDir="row" gap={5} flex={10}>
@@ -172,7 +172,7 @@ const MyProfile = ({ user }) => {
             </Box>
           </Flex>
         </Button>
-      </Box> */}
+      </Box>
 
 
 

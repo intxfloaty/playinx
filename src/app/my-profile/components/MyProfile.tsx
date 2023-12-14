@@ -61,7 +61,7 @@ const MyProfile = ({ user }) => {
   };
 
   const onRechargeWalletClicked = async () => {
-    const data = await fetch('http://localhost:3000/my-profile/api/phonePe', { method: 'POST' }).then((t) => t.json())
+    const data = await fetch('https://playinx.vercel.app/my-profile/api/phonePe', { method: 'POST' }).then((t) => t.json())
     console.log(data, "data ==>>>")
   }
 

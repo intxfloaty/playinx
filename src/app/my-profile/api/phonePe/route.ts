@@ -40,7 +40,6 @@ export async function POST(request: NextRequest) {
     const response = await fetch('https://api.phonepe.com/apis/hermes/pg/v1/pay', {
       method: "POST",
       headers: {
-        // 'Access-Control-Allow-Origin': 'https://playinx.vercel.app/',
         accept: 'application/json',
         "Content-Type": "application/json",
         "X-VERIFY": checksum,
@@ -67,7 +66,7 @@ export async function POST(request: NextRequest) {
       const errorResponse = {
         status: response.status,
         statusText: response.statusText,
-        response: Object.fromEntries(response.headers),
+        // response: Object.fromEntries(response.headers),
         // You can include more details from the response if needed
       };
       return NextResponse.json(errorResponse);

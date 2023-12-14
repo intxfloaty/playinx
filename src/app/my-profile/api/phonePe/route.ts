@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
 
   // Define the headers for POST request
   const headers = {
+    'Access-Control-Allow-Origin': 'https://playinx.vercel.app',
     accept: 'application/json',
     "Content-Type": "application/json",
     "X-VERIFY": checksum,

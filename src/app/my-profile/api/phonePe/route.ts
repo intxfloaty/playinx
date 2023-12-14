@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch('https://api.phonepe.com/apis/hermes/pg/v1/pay', {
       method: "POST",
       headers: {
-        'Access-Control-Allow-Origin': 'https://playinx.vercel.app/',
+        // 'Access-Control-Allow-Origin': 'https://playinx.vercel.app/',
         accept: 'application/json',
         "Content-Type": "application/json",
         "X-VERIFY": checksum,

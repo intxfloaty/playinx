@@ -5,19 +5,20 @@ import crypto from 'crypto'
 export async function POST(request: NextRequest) {
   // Define API endpoint URL
   const apiUrl = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+  const merchantId = process.env.NEXT_PUBLIC_MERCHANT_ID
 
   // Define payload as a JavaScript object
   const payload = {
-    merchantId: "M1JTWW4MP7KN",
+    merchantId: merchantId,
     merchantTransactionId: "MT7850590068188104",
     merchantUserId: "MUID123",
-    amount: 10000,
+    amount: 100 * 100,
     redirectUrl: "http://localhost:3000/my-profile",
     redirectMode: "REDIRECT",
     callbackUrl: "https://webhook.site/callback-url",
     mobileNumber: "9999999999",
     paymentInstrument: {
-      "type": "PAY_PAGE"
+      type: "PAY_PAGE"
     }
   };
 
@@ -25,32 +26,28 @@ export async function POST(request: NextRequest) {
   const payloadString = JSON.stringify(payload);
 
   // Define salt key and salt index
-  const saltKey = "b4fe2d4e-3ad6-4420-aad3-623676848d84";
-  const saltIndex = "1";
+  const saltKey = process.env.NEXT_PUBLIC_SALT_KEY;
+  const saltIndex = process.env.NEXT_PUBLIC_SALT_INDEX;
 
   // Calculate the X-VERIFY header value
   const base64EncodedPayload = Buffer.from(payloadString).toString("base64");
   const string = base64EncodedPayload + '/pg/v1/pay' + saltKey;
-  // const xVerifyHeaderValue = `SHA256(${base64EncodedPayload}/pg/v1/pay${saltKey}) + ### + ${saltIndex}`;
   const sha256 = crypto.createHash('sha256').update(string).digest("hex");
   const checksum = sha256 + '###' + saltIndex;
 
-
-
-  // Define the headers for POST request
-  const headers = {
-    'Access-Control-Allow-Origin': 'https://playinx.vercel.app/my-profile',
-    accept: 'application/json',
-    "Content-Type": "application/json",
-    "X-VERIFY": checksum,
-  };
-
   try {
     // Make the POST request to the PhonePe API
-    const response = await fetch(apiUrl, {
+    const response = await fetch('https://api.phonepe.com/apis/hermes/pg/v1/pay', {
       method: "POST",
-      headers: headers,
-      body: string,
+      headers: {
+        'Access-Control-Allow-Origin': 'https://playinx.vercel.app/',
+        accept: 'application/json',
+        "Content-Type": "application/json",
+        "X-VERIFY": checksum,
+      },
+      body: JSON.stringify({
+        request: base64EncodedPayload
+      }),
     });
 
 
@@ -58,8 +55,6 @@ export async function POST(request: NextRequest) {
     console.log(response);
     console.log(payloadString, "payloadString")
     console.log("base64EncodedPayload:", base64EncodedPayload);
-    console.log("saltKey:", saltKey);
-    console.log("saltIndex:", saltIndex);
     console.log("checksum:", checksum);
 
 
@@ -72,7 +67,7 @@ export async function POST(request: NextRequest) {
       const errorResponse = {
         status: response.status,
         statusText: response.statusText,
-        headers: Object.fromEntries(response.headers),
+        response: Object.fromEntries(response.headers),
         // You can include more details from the response if needed
       };
       return NextResponse.json(errorResponse);

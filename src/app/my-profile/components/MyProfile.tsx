@@ -157,7 +157,7 @@ const MyProfile = ({ user }) => {
         <Button
           w="100%"
           variant="unstyled"
-        onClick={onRechargeWalletClicked}
+          onClick={onRechargeWalletClicked}
         >
           <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
             <Flex alignItems="center" flexDir="row" gap={5} flex={10}>

@@ -13,10 +13,10 @@ export async function POST(request: NextRequest) {
     merchantTransactionId: "MT7850590068188104",
     merchantUserId: "MUID123",
     amount: 100 * 100,
-    redirectUrl: "http://localhost:3000/my-profile",
+    redirectUrl: "https://playinx.vercel.app/my-profile",
     redirectMode: "REDIRECT",
-    callbackUrl: "https://webhook.site/callback-url",
-    mobileNumber: "9999999999",
+    callbackUrl: "https://playinx.vercel.app/my-profile/api",
+    mobileNumber: "9540281134",
     paymentInstrument: {
       type: "PAY_PAGE"
     }
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
   // Define salt key and salt index
   const saltKey = process.env.NEXT_PUBLIC_SALT_KEY;
-  const saltIndex = process.env.NEXT_PUBLIC_SALT_INDEX;
+  const saltIndex = 1;
 
   // Calculate the X-VERIFY header value
   const base64EncodedPayload = Buffer.from(payloadString).toString("base64");
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: {
         accept: 'application/json',
+        "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
         "X-VERIFY": checksum,
       },
@@ -66,7 +67,7 @@ export async function POST(request: NextRequest) {
       const errorResponse = {
         status: response.status,
         statusText: response.statusText,
-        // response: Object.fromEntries(response.headers),
+        headers: Object.fromEntries(response.headers),
         // You can include more details from the response if needed
       };
       return NextResponse.json(errorResponse);

@@ -296,7 +296,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                 </Box>
               </Link>
 
-              <Button w="100%" variant="unstyled" onClick={faqDisclosure.onOpen}>
+              {/* <Button w="100%" variant="unstyled" onClick={faqDisclosure.onOpen}>
                 <Box
                   padding={2}
                   _hover={{ backgroundColor: "#161616" }}
@@ -310,7 +310,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
                   </Flex>
                 </Box>
               </Button>
-              <FAQsModal isOpen={faqDisclosure.isOpen} onClose={faqDisclosure.onClose} />
+              <FAQsModal isOpen={faqDisclosure.isOpen} onClose={faqDisclosure.onClose} /> */}
 
 
               {/* <Button w="100%" variant="unstyled" onClick={pickup.onOpen}>

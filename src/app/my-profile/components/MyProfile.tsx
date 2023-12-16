@@ -61,7 +61,7 @@ const MyProfile = ({ user }) => {
   };
 
   const onRechargeWalletClicked = async () => {
-    const data = await fetch('http://localhost:3000/my-profile/api/phonePe', { method: 'POST' }).then((t) => t.json())
+    const data = await fetch('https://playinx.vercel.app/my-profile/api/phonePe', { method: 'POST' }).then((t) => t.json())
     console.log(data, "data ==>>>")
   }
 
@@ -157,7 +157,7 @@ const MyProfile = ({ user }) => {
         <Button
           w="100%"
           variant="unstyled"
-        onClick={onRechargeWalletClicked}
+          onClick={onRechargeWalletClicked}
         >
           <Flex p={4} backgroundColor="#161616" borderRadius={7} justifyContent="flex-start" align="center" flexDir="row">
             <Flex alignItems="center" flexDir="row" gap={5} flex={10}>

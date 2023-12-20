@@ -61,9 +61,29 @@ const MyProfile = ({ user }) => {
   };
 
   const onRechargeWalletClicked = async () => {
-    const data = await fetch('https://playinx.vercel.app/my-profile/api/phonePe', { method: 'POST' }).then((t) => t.json())
-    console.log(data, "data ==>>>")
-  }
+    try {
+      const response = await fetch('https://playinx.vercel.app/my-profile/api/phonePe', { method: 'POST' });
+  
+      if (!response.ok) {
+        // Handle the error, e.g., throw an exception or log an error
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      const payment_url = data?.data?.instrumentResponse?.redirectInfo?.url;
+  
+      if (payment_url) {
+        console.log(payment_url, "data ==>>>");
+        router.push(payment_url);
+      } else {
+        // Handle the case when payment_url is not available
+        console.error("Payment URL not found in the response");
+      }
+    } catch (error) {
+      // Handle fetch or JSON parsing errors
+      console.error("Error:", error);
+    }
+  };
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();

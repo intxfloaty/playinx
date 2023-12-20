@@ -1,21 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from 'crypto'
 
-
 export async function POST(request: NextRequest) {
-  // Define API endpoint URL
-  const apiUrl = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+
   const merchantId = process.env.NEXT_PUBLIC_MERCHANT_ID
+  // Define salt key and salt index
+  const saltKey = process.env.NEXT_PUBLIC_SALT_KEY;
+  const saltIndex = 1;
 
   // Define payload as a JavaScript object
   const payload = {
     merchantId: merchantId,
-    merchantTransactionId: "MT7850590068188104",
+    merchantTransactionId: "MT78505900687956",
     merchantUserId: "MUID123",
-    amount: 100 * 100,
-    redirectUrl: "https://playinx.vercel.app/my-profile",
+    amount: 100,
+    redirectUrl: "https://playinx.vercel.app/my-profile/",
     redirectMode: "REDIRECT",
-    callbackUrl: "https://playinx.vercel.app/my-profile/api",
+    callbackUrl: "https://playinx.vercel.app/my-profile/api/serverCallBack",
     mobileNumber: "9540281134",
     paymentInstrument: {
       type: "PAY_PAGE"
@@ -25,15 +26,11 @@ export async function POST(request: NextRequest) {
   // Convert the payload to a JSON string
   const payloadString = JSON.stringify(payload);
 
-  // Define salt key and salt index
-  const saltKey = process.env.NEXT_PUBLIC_SALT_KEY;
-  const saltIndex = 1;
-
   // Calculate the X-VERIFY header value
-  const base64EncodedPayload = Buffer.from(payloadString).toString("base64");
-  const string = base64EncodedPayload + '/pg/v1/pay' + saltKey;
+  const base64EncodedPayload = Buffer.from(payloadString).toString("base64url");
+  const string = base64EncodedPayload + `/pg/v1/pay${saltKey}`;
   const sha256 = crypto.createHash('sha256').update(string).digest("hex");
-  const checksum = sha256 + '###' + saltIndex;
+  const checksum = sha256 + '###' + `${saltIndex}`;
 
   try {
     // Make the POST request to the PhonePe API
@@ -43,7 +40,7 @@ export async function POST(request: NextRequest) {
         accept: 'application/json',
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
-        "X-VERIFY": checksum,
+        "x-verify": `${checksum}`,
       },
       body: JSON.stringify({
         request: base64EncodedPayload
@@ -55,6 +52,7 @@ export async function POST(request: NextRequest) {
     console.log(response);
     console.log(payloadString, "payloadString")
     console.log("base64EncodedPayload:", base64EncodedPayload);
+    console.log(string, "string")
     console.log("checksum:", checksum);
 
 
@@ -76,5 +74,4 @@ export async function POST(request: NextRequest) {
     // Handle any network or request errors
     return NextResponse.json("An error occurred while making the request.");
   }
-
 }

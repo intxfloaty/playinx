@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     // Validate the checksum received in the response
     const receivedChecksum = request.headers.get('X-VERIFY');
     const saltKey = process.env.NEXT_PUBLIC_SALT_KEY;
-    const calculatedChecksum = crypto.createHash('sha256').update(`${data}${saltKey}`).digest("hex") + '###1';
+    const calculatedChecksum = crypto.createHash('sha256').update(`${data.response}${saltKey}`).digest("hex") + '###1';
 
     if (receivedChecksum !== calculatedChecksum) {
       // Checksum validation failed
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Decode the base64-encoded JSON payload
-    const decodedPayload = Buffer.from(data).toString('utf-8');
+    const decodedPayload = Buffer.from(data.response).toString('utf-8');
 
     // Parse the JSON payload
     const payload = JSON.parse(decodedPayload);
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Amount validation failed' }, { status: 400 });
     }
 
-    console.log("PAYMENT_COMPLETED")
+    console.log("PAYMENT_COMPLETED", payload)
     // Process the callback and update your system accordingly
     // ...
 

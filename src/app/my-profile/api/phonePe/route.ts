@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   // Define payload as a JavaScript object
   const payload = {
     merchantId: merchantId,
-    merchantTransactionId: "MT78505900687956",
+    merchantTransactionId: "MT785059001",
     merchantUserId: "MUID123",
     amount: 100,
     redirectUrl: "https://playinx.vercel.app/my-profile/",

@@ -13,6 +13,12 @@ export async function POST(request: NextRequest) {
 
     if (receivedChecksum !== calculatedChecksum) {
       // Checksum validation failed
+      console.error('Checksum validation failed');
+      console.log(data, "data")
+      console.log(receivedChecksum, "receivedChecksum")
+      console.log(calculatedChecksum, "calculatedChecksum")
+      // console.log(decodedPayload, "decodedPayload")
+      // console.log(payload, "payload")
       return NextResponse.json({ error: 'Checksum validation failed' }, { status: 400 });
     }
 
@@ -32,6 +38,12 @@ export async function POST(request: NextRequest) {
     // Validate the amount against the original payment request
     const originalAmount = 100; // Replace with the actual amount from the payment request
     if (payload.data.amount !== originalAmount) {
+      console.error('Amount validation failed');
+      console.log(data, "data")
+      console.log(receivedChecksum, "receivedChecksum")
+      console.log(calculatedChecksum, "calculatedChecksum")
+      console.log(decodedPayload, "decodedPayload")
+      console.log(payload, "payload")
       return NextResponse.json({ error: 'Amount validation failed' }, { status: 400 });
     }
 
@@ -43,6 +55,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     // Handle errors
+    console.log(error, "catchblockerr")
     return NextResponse.json({ error: 'Invalid request or internal server error' }, { status: 500 });
   }
 }

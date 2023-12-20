@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   // Define payload as a JavaScript object
   const payload = {
     merchantId: merchantId,
-    merchantTransactionId: "MT78505911",
+    merchantTransactionId: "MT785059111123",
     merchantUserId: "MUID123",
     amount: 100,
     redirectUrl: "https://playinx.vercel.app/my-profile/",
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // Make the POST request to the PhonePe API
-    const response = await fetch('https://api.phonepe.com/apis/hermes/pg/v1/pay', {
+    const response = await fetch('https://api-preprod.phonepe.com/apis/merchant-simulator/pg/v1/pay', {
       method: "POST",
       headers: {
         accept: 'application/json',

@@ -23,10 +23,25 @@ export async function POST(request: NextRequest) {
     }
 
     // Decode the base64-encoded JSON payload
-    const decodedPayload = Buffer.from(data.response).toString('utf-8');
+    const decodedPayload = Buffer.from(data, "base64").toString('utf-8');
 
     // Parse the JSON payload
     const payload = JSON.parse(decodedPayload);
+
+    try {
+      const decodedPayload = Buffer.from(data, 'base64').toString('utf-8');
+      const payload = JSON.parse(decodedPayload);
+
+      // ... rest of the code
+    } catch (jsonError) {
+      const decodedPayload = Buffer.from(data, 'base64').toString('utf-8');
+      const payload = JSON.parse(decodedPayload);
+      console.log(decodedPayload, "decodePayloadTryBlock")
+      console.log(payload, "payloadTryblock")
+      console.log(Buffer.from(data?.response, 'base64').toString('utf-8'), "helloe")
+      console.error('JSON parsing error:', jsonError);
+      return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
+    }
 
     console.log(data, "data")
     console.log(receivedChecksum, "receivedChecksum")

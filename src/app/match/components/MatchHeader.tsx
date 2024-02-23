@@ -23,7 +23,8 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
             size={22}
           />
         </Button>
-        {activeTeam?.team_admin === userId && !(match?.match_status === "completed") && !(match?.match_type === "Tournament") &&
+        {
+          activeTeam?.team_admin === userId && !(match?.match_status === "completed") && !(match?.match_type === "Tournament") &&
           <>
             <Button variant="unstyled">
               <IoSettingsOutline
@@ -37,7 +38,8 @@ const MatchHeader = ({ activeTeam, match, userId }) => {
               onClose={onClose}
               activeTeam={activeTeam}
               match={match} />
-          </>}
+          </>
+        }
       </Flex>
       <Flex
         alignItems="center"

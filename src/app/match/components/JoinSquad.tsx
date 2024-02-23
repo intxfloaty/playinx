@@ -187,7 +187,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
         matchId={match?.match_id}
         team_id={activeTeam?.team_id} />
 
-      {!(match?.match_type === "Tournament") && !(match?.match_status === "completed") &&
+      {/* {!(match?.match_type === "Tournament") && !(match?.match_status === "completed") &&
         <Flex alignItems="center" justifyContent="center" mt={10}>
           {match?.team_id === activeTeam?.team_id &&
             !mySquad?.some((player) => player?.player_id === userId) && (
@@ -215,7 +215,7 @@ const JoinSquad = ({ activeTeam, userId, profile, match, mySquad, setMySquad, op
                 </Text>
               </Flex>
             )}
-        </Flex>}
+        </Flex>} */}
     </>
   );
 };

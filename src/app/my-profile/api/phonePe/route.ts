@@ -3,17 +3,28 @@ import crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
 
+  // Extract the payload from the request body
+  const traxnData = await request.json();
+
+  console.log(traxnData?.tranxObj?.transactionId, "trxnData")
+
+
+
   const merchantId = process.env.NEXT_PUBLIC_MERCHANT_ID
   // Define salt key and salt index
   const saltKey = process.env.NEXT_PUBLIC_SALT_KEY;
   const saltIndex = 1;
 
+  const transactionId = traxnData?.tranxObj?.transactionId
+  const amount = traxnData?.tranxObj?.amount
+  const merchantUserId = traxnData?.tranxObj?.myUserId
+
   // Define payload as a JavaScript object
   const payload = {
     merchantId: merchantId,
-    merchantTransactionId: "MT7111123",
-    merchantUserId: "MUID123",
-    amount: 100,
+    merchantTransactionId: `${transactionId}`,
+    merchantUserId: `${merchantUserId}`,
+    amount: `${amount}`,
     redirectUrl: "https://playinx.vercel.app/my-profile/",
     redirectMode: "REDIRECT",
     callbackUrl: "https://playinx.vercel.app/my-profile/api/serverCallBack",

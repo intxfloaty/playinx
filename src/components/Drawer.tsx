@@ -119,6 +119,7 @@ const Drawer: React.FC<DrawerProps> = ({ children, user, profiles, teams, TITLE 
           event: "*",
           schema: "public",
           table: "teams",
+          filter: `team_admin.eq.${myUserId},players.cs.{${myUserId}}`
         },
         (payload) => {
           console.log(payload.new, "payload");

@@ -190,7 +190,7 @@ const CreateMatchModal = ({ isOpen, onClose, activeTeam }) => {
                 <option value="6v6">11v11</option>
               </Select>
               {!fieldErrors.format ? (
-                <FormHelperText>Select most played format</FormHelperText>
+                <FormHelperText>Select match format</FormHelperText>
               ) : (
                 <Text fontSize="md" color="#FFB400">
                   {fieldErrors.format}

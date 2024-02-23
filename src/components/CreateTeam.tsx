@@ -56,7 +56,7 @@ const CreateTeam = ({ user, myProfile }) => {
   const validate = () => {
     let errors: Errors = {};
     if (!teamName) {
-      errors.teamName = "Please enter your email address";
+      errors.teamName = "Please enter the name of your team";
     }
     if (!format) {
       errors.format = "Format is required";

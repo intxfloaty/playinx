@@ -29,6 +29,9 @@ import SupportModal from "./SupportModal";
 import FAQsModal from "./FAQsModal";
 import TcModal from "./TcModal";
 import RefundPolicyModal from "./RefundPolicyModal";
+import crypto from 'crypto'
+
+
 
 type Profile = {
   [key: string]: string
@@ -46,7 +49,7 @@ const MyProfile = ({ user }) => {
   const tcDisclosure = TcDisclosure()
   const refundDisclosure = RefundDisclosure()
 
-  const getNameAndPhone = async () => {
+  const fetchMyProfile = async () => {
     try {
       let { data: profiles, error } = await supabase
         .from("profiles")
@@ -61,17 +64,29 @@ const MyProfile = ({ user }) => {
   };
 
   const onRechargeWalletClicked = async () => {
+    const transactionId = crypto.randomBytes(8).toString('hex'); //should be less than 35 characters and myUserId less than 36 , check if facing any issue
+    const amount = 100;
+
+    const tranxObj = { transactionId, amount, myUserId }
+    sessionStorage.setItem('tranxObj', JSON.stringify(tranxObj));
     try {
-      const response = await fetch('https://playinx.vercel.app/my-profile/api/phonePe', { method: 'POST' });
-  
+      const response = await fetch('http://localhost:3000/my-profile/api/phonePe',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set the content type to JSON
+          },
+          body: JSON.stringify({ tranxObj }),
+        });
+
       if (!response.ok) {
         // Handle the error, e.g., throw an exception or log an error
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
+
       const data = await response.json();
       const payment_url = data?.data?.instrumentResponse?.redirectInfo?.url;
-  
+
       if (payment_url) {
         console.log(payment_url, "data ==>>>");
         router.push(payment_url);
@@ -96,7 +111,7 @@ const MyProfile = ({ user }) => {
 
 
   useEffect(() => {
-    getNameAndPhone();
+    fetchMyProfile();
   }, []);
 
   useEffect(() => {

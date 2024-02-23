@@ -164,6 +164,8 @@ const Team = ({ user }) => {
         {/* </Button> */}
       </Flex>
       {/* <Settings isSettingsOpen={isOpen} onSettingsClose={onClose} userId={userId} activeTeam={team} /> */}
+
+      
       <Tabs align="center" isFitted variant="unstyled">
         <TabList>
           <Tab fontSize="lg" color="#E7E9EA">
